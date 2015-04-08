@@ -1,0 +1,46 @@
+﻿div.combo-block {
+	margin: 10px;
+	border: 1px solid #FEC504;
+	box-shadow: 0px 0px 2px rgba(253, 240, 178, 0.6);
+}
+
+div.combo-block:hover {
+	box-shadow: 0px 0px 15px rgba(253, 240, 178, 1.0);
+}
+
+div.combo-block img {
+	width: 640px;
+}
+
+div.combo-block p {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	margin-right: 10px;
+	font-size: 40px;
+	font-weight: bold;
+	color: #FEC504;
+	clear: both;
+}
+
+div.btn-order {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+	border: 1px solid #FEC504;
+	background-color: #FFFFFF;
+	color: #FEC504;
+	font-size: 20px;
+	font-weight: bold;
+	width: 120px;
+	height: 60px;
+	text-align: center;
+	padding: 13px 10px;
+	margin: 10px;
+}
+
+div.btn-order:hover {
+	cursor: pointer;
+	background-color: #FEC504;
+	color: white;
+}

@@ -1,0 +1,142 @@
+﻿.login-header {
+	color: #F0AD4E;
+	font-size: 26px;
+	font-weight: bold;
+	margin: 0;
+	margin-left: -15px;
+}
+
+div.hidden {
+	display: none;
+}
+
+.login-header span {
+	color: #000000;
+}
+
+.orange-color {
+	color: #F0AD4E;
+}
+
+.clear {
+	clear: both;
+}
+
+.nav-btn {
+	position:absolute;
+	left:10px;
+	top:10px;
+	border-radius:0;
+}
+
+.fleft {
+	float: left;
+}
+
+span.danger {
+	color: #D9534F;
+}
+
+span.info {
+	color: #5BC0DE;
+}
+
+div.employee-block {
+	box-shadow: 0px 0px 5px rgba(240, 173, 78, 0.8);
+	border-radius: 4px;
+	margin-left: 100px;
+	margin-top: 10px;
+	padding: 10px;
+	width: 80%;
+}
+
+div.employee-header {
+	border: 1px solid #F0AD4E;
+	border-radius: 4px;
+	text-align: center;
+	width: 100px;
+	padding: 10px;
+	float: left;
+}
+
+div.employee-header img {
+	width: 70px;
+}
+
+div.employee-header p {
+	font-size: 14px;
+	margin-bottom: 0px;
+}
+
+div.employee-process {
+	float: left;
+	width: 80%;
+	padding: 10px;
+}
+
+div.employee-clock {
+	float: left;
+	padding: 10px;
+	clear: right;
+	width: 80%;
+}
+
+div.employee-performance {
+	float: left;
+	width: 397px;
+	margin-left: 10px;
+}
+
+div.employee-performance button {
+	float: right;
+	margin-top:-5px;
+}
+
+div.employee-performance span {
+	font-size: 20px;
+	font-weight: bold;
+	color: #F0AD4E;
+}
+
+div.tb {
+	border:1px solid gray;
+}
+
+div.tbr {
+	border:1px solid red;
+}
+
+.btn-add-employee {
+	position:absolute;
+	top:57px;
+	left:10px;
+}
+
+p.model-label {
+	font-size: 18px;
+	font-weight: bold;
+	color: #F0AD4E;
+}
+
+p.model-label span {
+	color: #000;
+}
+
+div.chart-control1 {
+	width: 100px;
+	float: left;
+	margin-right: 10px;
+}
+
+div.chart-control2 {
+	width: 100px;
+	float: left;
+}
+
+div.card-chart {
+	width: 600px;
+	height: 400px;
+	margin-left: -30px;
+	margin-top: 20px;
+	margin-bottom: -40px;
+}

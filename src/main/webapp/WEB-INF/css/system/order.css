@@ -1,0 +1,102 @@
+﻿p.order-label {
+	font-size: 16px;
+	font-weight: bold;
+	color: #F0AD4E;
+	padding-right: 5px;
+	display: inline;
+}
+
+p.order-label span {
+	color: #000;
+}
+
+div.order-block {
+	margin-left: 150px;
+	margin-bottom: 10px;
+	padding: 10px;
+	box-shadow: 0px 0px 5px rgba(240, 173, 78, 0.8);
+	border-radius: 4px;
+	width: 80%;
+}
+
+div.order-bar {
+	float: left;
+	width: 100%;
+	height: 20px;
+	border: 1px solid #E6E7E8;
+}
+
+div.order-bar-step {
+	float: left;
+	width: 25%;
+	height: 100%;
+	text-align: center;
+}
+
+div.s1 {
+	background-color: #E6E7E8;
+}
+
+div.s2 {
+	background-color: #AFD790;
+}
+
+div.s3 {
+	background-color: #33BAB0;
+}
+
+div.s4 {
+	background-color: #F69E95;
+}
+
+div.order-info {
+	width: 100%;
+	float: left;
+	margin-top: 10px;
+}
+
+.btn-nextstep {
+	float: right;
+	margin-top: -5px;
+}
+
+div.photograhper-block {
+	border: 1px solid #F0AD4E;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+div.photograhper-block img {
+	float: left;
+	width: 40px;
+}
+
+div.photograhper-block p {
+	float: left;
+	margin: 8px;
+}
+
+div.photograhper-block button {
+	float: left;
+	margin: 3px;
+}
+
+div.order-process-tip {
+	display:block;
+	position:relative;
+	left:3px;
+	top: -80px;
+	background-color:rgba(255, 255, 255, 0.4);
+}
+
+div.order-process-tip .tip-context {
+	padding-bottom:0px;
+}
+
+div.order-process-tip .tip-context img {
+	width:40px;
+}
+
+div.order-process-tip .tip-context span {
+	margin-left:10px;
+}

@@ -1,0 +1,42 @@
+/*
+  darkblue  : #176785;
+  bluegreen : #499989;
+  lightgreen: #BED194;
+  milk      : #FFD7AC;
+  red       : #FF534E;
+*/
+
+.progress-control {
+  display: inline-block;
+  width: 10%;
+  cursor: pointer;
+  padding: 10px;
+  border: 2px solid #FFD7AC;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+article.num-progress {
+  position: relative;
+  padding: 0 20px;
+  border: 1px solid #BED194;
+  border-radius: 5px;
+}
+
+article.num-progress:hover {
+  border-color: #499989;
+}
+
+article.num-progress .num-progress-title {
+  position: absolute;
+  left: 10px;
+  top: -20px;
+  padding-left: 5px; padding-right: 5px;
+  background-color: #fff;
+}
+
+@media (max-width: 960px) {
+  article.num-progress {
+    padding: 0 2em;
+  }
+}

@@ -1,0 +1,193 @@
+﻿div.center-container {
+	width: 100%;
+	text-align: center;
+}
+
+div.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.underline:hover {
+	text-decoration: underline;
+}
+
+div.order-info {
+	font-size: 20px;
+	font-weight: bold;
+	color: #FEC504;
+	margin-top: 20px;
+}
+
+p.order-tip {
+	font-size: 16px;
+	color: #FEC504;
+}
+
+div.order-border {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 10px;
+	border: 1px solid #FEC504;
+	color: #FEC504;
+	box-shadow: 0px 0px 2px rgba(253, 240, 178, 0.6);
+}
+
+div.order-hover:hover {
+	cursor: pointer;
+	background-color: #FEC504;
+	color: #FFFFFF;
+	box-shadow: 0px 0px 15px rgba(253, 240, 178, 1.0);
+}
+
+div.order-block {
+	width: 640px;
+	height: 60px;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+div.order-block p {
+	margin-top: 5px;
+}
+
+div.order-bar {
+	margin-top: 20px;
+}
+
+div.btn-step {
+	width: 10px;
+	height: 10px;
+	border: 1px solid #FEC504;
+	border-radius: 5px;
+	background-color: #FEC504;
+	float: left;
+}
+
+div.btn-hollow {
+	width: 10px;
+	height: 10px;
+	border: 1px solid #FEC504;
+	border-radius: 5px;
+	background-color: #FFFFFF;
+	float: left;
+	transition: background-color 1s;
+}
+
+div.btn-line {
+	width: 100px;
+	height: 2px;
+	border: 1px solid #FEC504;
+	background-color: #FEC504;
+	margin-top: 4px;
+	float: left;
+}
+
+div.space-block {
+	width: 100%;
+	height: 100px;
+}
+
+.trans-dis {
+	transition: display 1s;
+}
+
+div.agreement-block {
+	width: 640px;
+	height: 480px;
+	font-size: 14px;
+	color: #000000;
+	font-weight: normal;
+	overflow-y: auto;
+}
+
+div.agreement-btn {
+	width: 120px;
+	height: 50px;
+	font-size: 16px;
+	float: left;
+	margin-right: 10px;
+	text-align: center;
+}
+
+.step {
+	display: none;
+}
+
+div.order-time {
+	width: 300px;
+	height: 300px;
+	font-size: 16px;
+	margin: 10px;
+	padding: 0;
+}
+
+div.order-time-header {
+	width: 100%;
+	height: 40px;
+	background-color: #FEC504;
+	text-align: center;
+	color: #FFFFFF;
+	padding-top: 8px;
+	font-weight: bold;
+}
+
+div.order-time-body {
+	padding-left: 10px;
+}
+
+div.order-time-block {
+	width: 40px;
+	height: 40px;
+	margin: 0;
+	text-align: center;
+	color: #B8B8B8;
+	float: left;
+}
+
+div.combo-info {
+	color: #FEC504;
+	font-weight: bold;
+	font-size: 16px;  
+	float: left;
+	width: 200px;
+	height: 200px;
+	margin-right: 10px;
+}
+
+p.combo-header {
+	color: #FEC504;
+	font-weight: bold;
+	font-size: 20px;
+	border-bottom: 1px solid #FEC504;
+	border-top: 1px solid #FEC504;
+}
+
+div.self-info {
+	color: #FEC504;
+	font-weight: bold;
+	font-size: 16px;  
+	float: left;
+	width: 400px;
+	height: 400px;
+	border-left: 1px solid #FEC504;
+	padding-left: 10px;
+}
+
+.comfirm-pay {
+	color: #FEC504;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.comfirm-pay img {
+	border: 1px solid #FEC504;
+}
+
+.comfirm-pay img:hover {
+	cursor: pointer;
+}
+
+.container-size {
+	height: 670px;
+}

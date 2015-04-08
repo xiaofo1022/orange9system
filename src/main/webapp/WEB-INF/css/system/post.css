@@ -1,0 +1,65 @@
+﻿div.post-block {
+	float: left;
+	padding: 10px;
+	width: 100%;
+}
+
+div.post-block p {
+	float: left;
+	margin-right: 10px;
+}
+
+div.post-img {
+	float: left;
+	padding: 5px;
+	margin-right: 10px;
+	border-radius: 4px;
+}
+
+div.post-img:hover {
+	cursor: pointer;
+}
+
+div.post-undo {
+	border: 1px solid #D9534F;
+	box-shadow: 0px 0px 3px rgba(217, 83, 79, 0.6);
+}
+
+div.post-undo:hover {
+	box-shadow: 0px 0px 8px rgba(217, 83, 79, 0.8);
+}
+
+div.post-done {
+	border: 1px solid #AFD790;
+	box-shadow: 0px 0px 3px rgba(175, 215, 144, 0.6);
+}
+
+div.post-done:hover {
+	box-shadow: 0px 0px 8px rgba(175, 215, 144, 0.8);
+}
+
+div.post-back {
+	border: 1px solid #F0AD4E;
+	box-shadow: 0px 0px 3px rgba(254, 197, 4, 0.6);
+}
+
+div.post-back:hover {
+	box-shadow: 0px 0px 8px rgba(254, 197, 4, 0.8);
+}
+
+div.post-block img {
+	float: left;
+	width: 100px;
+}
+
+.post-order {
+	margin-right: 10px;
+}
+
+.modal-body img {
+	width: 800px;
+}
+
+.pic-modal {
+	width: 830px;
+}
