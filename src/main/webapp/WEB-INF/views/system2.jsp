@@ -20,6 +20,9 @@
 <script src="<c:url value='/js/notification/modernizr.custom.js'/>"></script>
 <script src="<c:url value='/js/progress/jquery.velocity.min.js'/>"></script>
 <script src="<c:url value='/js/progress/number-pb.js'/>"></script>
+<script src="<c:url value='/js/validation/jquery.validate.min.js'/>"></script>
+<script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
+<script src="<c:url value='/js/validation/validator.js'/>"></script>
 </head>
 <body>
 <div id="st-container" class="st-container">
@@ -60,64 +63,67 @@
 					<h4 class="modal-title">员工资料</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal">
+					<form id="addEmployeeForm" class="form-horizontal">
+						<input type="hidden" name="id"/>
 						<div class="form-group">
 							<label class="col-sm-2 control-label" for="i-upload-header">上传头像</label>
 							<div class="col-sm-4">
-								<input class="btn btn-primary" type="file" id="i-upload-header"/>
+								<input class="btn btn-primary" name="header" type="file" id="i-upload-header"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label" for="i-name">称呼</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" id="i-name"/>
+								<input type="text" class="form-control" maxlength="5" name="name" id="name"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">职位</label>
 							<div class="col-sm-4">
-								<select class="form-control">
-									<option>摄影师</option>
-									<option>后期</option>
-									<option>助理</option>
-									<option>其他</option>
+								<select id="role-select" name="role" class="form-control">
 								</select>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">手机号</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control"/>
+								<input type="tel" maxlength="11" name="phone" class="form-control"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">初始账号</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control"/>
+								<input type="text" name="account" maxlength="50" class="form-control"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">初始密码</label>
 							<div class="col-sm-4">
-								<input type="password" class="form-control"/>
+								<input type="password" name="password" maxlength="50" class="form-control"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">确认密码</label>
 							<div class="col-sm-4">
-								<input type="password" class="form-control"/>
+								<input type="password" class="form-control"  maxlength="50"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">基本工资</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control"/>
+								<input type="number" name="salary" value="1500" min="1000" max="10000" step="100" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">绩效工资</label>
+							<div class="col-sm-4">
+								<input type="number" name="performance_pay" value="0" min="0" max="10000" step="10" class="form-control"/>
 							</div>
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+					<button type="button" class="btn btn-primary" onclick="submit()">确定</button>
 				</div>
 			</div>
 		</div>
@@ -351,6 +357,38 @@
 			echarts: "<c:url value='/js/chart'/>"
 		}
 	});
+	
+	getRoleList();
+	
+	function getRoleList() {
+		$.get("<c:url value='/role/getRoleList'/>", function(list, status){
+			var roleSelect = $("#role-select");
+			var html = "";
+			for (var i in list) {
+				var data = list[i];
+				html += ("<option value=" + data.id + ">" + data.nameCN + "</option>");
+			}
+			roleSelect.html(html);
+		});
+	}
+	
+	var addEmployeeRules = {
+		"name": "required",
+		"phone": {
+			required: true,
+			number: true
+		},
+		"account": "required",
+		"password": "required",
+		"salary": "digit",
+		"performance_pay": "digit"
+	};
+	
+	var validator = new Validator();
+	
+	function submit() {
+		validator.doValidate("addEmployeeForm", addEmployeeRules);
+	}
 	
 	function changeCardChart() {
 		createCardChart("2015年3月考勤统计", "沈玉琳", [28, 1, 2]);
