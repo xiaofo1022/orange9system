@@ -1,5 +1,6 @@
 ﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,14 +14,14 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/sidebar/component.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/progress/style.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/progress/number-pb.css'/>" />
-<script src="<c:url value='/js/jquery-1.11.2.min.js'/>"></script>
+<script src="<c:url value='/js/jquery-1.11.2.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <script src="<c:url value='/js/jquery-ui.js'/>"></script>
 <script src="<c:url value='/js/svg/snap.svg-min.js'/>"></script>
 <script src="<c:url value='/js/notification/modernizr.custom.js'/>"></script>
 <script src="<c:url value='/js/progress/jquery.velocity.min.js'/>"></script>
 <script src="<c:url value='/js/progress/number-pb.js'/>"></script>
-<script src="<c:url value='/js/validation/jquery.validate.min.js'/>"></script>
+<script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
 <script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
 <script src="<c:url value='/js/validation/validator.js'/>"></script>
 </head>
@@ -63,12 +64,13 @@
 					<h4 class="modal-title">员工资料</h4>
 				</div>
 				<div class="modal-body">
-					<form id="addEmployeeForm" class="form-horizontal">
+					<sf:form id="addEmployeeForm" modelAttribute="employee" class="form-horizontal" method="post">
 						<input type="hidden" name="id"/>
 						<div class="form-group">
 							<label class="col-sm-2 control-label" for="i-upload-header">上传头像</label>
 							<div class="col-sm-4">
-								<input class="btn btn-primary" name="header" type="file" id="i-upload-header"/>
+								<input type="hidden" name="header" id="header"/>
+								<input class="btn btn-primary" type="file" id="i-upload-header"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -80,7 +82,7 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">职位</label>
 							<div class="col-sm-4">
-								<select id="role-select" name="role" class="form-control">
+								<select id="role-select" name="roleId" class="form-control">
 								</select>
 							</div>
 						</div>
@@ -105,7 +107,7 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">确认密码</label>
 							<div class="col-sm-4">
-								<input type="password" class="form-control"  maxlength="50"/>
+								<input type="password" name="confirmPassword" class="form-control"  maxlength="50"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -117,10 +119,10 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">绩效工资</label>
 							<div class="col-sm-4">
-								<input type="number" name="performance_pay" value="0" min="0" max="10000" step="10" class="form-control"/>
+								<input type="number" name="performancePay" value="0" min="0" max="10000" step="10" class="form-control"/>
 							</div>
 						</div>
-					</form>
+					</sf:form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" onclick="submit()">确定</button>
@@ -373,21 +375,38 @@
 	}
 	
 	var addEmployeeRules = {
-		"name": "required",
-		"phone": {
+		name: {
+			required: true
+		},
+		phone: {
 			required: true,
 			number: true
 		},
-		"account": "required",
-		"password": "required",
-		"salary": "digit",
-		"performance_pay": "digit"
+		account: {
+			required: true
+		},
+		password: {
+			required: true
+		},
+		confirmPassword: {
+			required: true
+		},
+		salary: {
+			digits: true
+		},
+		performancePay: {
+			digits: true
+		}
 	};
 	
-	var validator = new Validator();
+	var validator = new Validator("addEmployeeForm", addEmployeeRules, "<c:url value='/user/addUser'/>", submitCallback);
 	
 	function submit() {
-		validator.doValidate("addEmployeeForm", addEmployeeRules);
+		$("#addEmployeeForm").submit();
+	}
+	
+	function submitCallback(data) {
+		console.log(data);
 	}
 	
 	function changeCardChart() {

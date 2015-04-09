@@ -1,4 +1,4 @@
-﻿.login-header {
+.login-header {
 	color: #F0AD4E;
 	font-size: 26px;
 	font-weight: bold;
@@ -139,4 +139,8 @@ div.card-chart {
 	margin-left: -30px;
 	margin-top: 20px;
 	margin-bottom: -40px;
+}
+
+p.error {
+	margin-top:6px;
 }
