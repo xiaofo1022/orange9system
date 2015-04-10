@@ -1,15 +1,28 @@
 package com.xiaofo1022.orange9.modal;
 
+import com.xiaofo1022.orange9.dao.common.Column;
+
 public class User {
+	@Column("ID")
 	private int id;
+	@Column("NAME")
 	private String name;
+	@Column("ACCOUNT")
 	private String account;
+	@Column("PASSWORD")
 	private String password;
+	@Column("PHONE")
 	private String phone;
+	@Column("ROLE_ID")
 	private int roleId;
+	@Column("SALARY")
 	private double salary;
+	@Column("PERFORMANCE_PAY")
 	private double performancePay;
+	@Column("HEADER")
 	private String header;
+	@Column("BOSS_ID")
+	private int bossId;
 	
 	public int getId() {
 		return id;
@@ -64,5 +77,11 @@ public class User {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public int getBossId() {
+		return bossId;
+	}
+	public void setBossId(int bossId) {
+		this.bossId = bossId;
 	}
 }

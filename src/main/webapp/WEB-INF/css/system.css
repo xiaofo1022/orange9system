@@ -50,17 +50,22 @@ div.employee-block {
 	width: 80%;
 }
 
+div.employee-block button {
+	margin-right: 4px;
+}
+
 div.employee-header {
 	border: 1px solid #F0AD4E;
 	border-radius: 4px;
 	text-align: center;
-	width: 100px;
+	width: 110px;
 	padding: 10px;
 	float: left;
 }
 
 div.employee-header img {
 	width: 70px;
+	height: 70px;
 }
 
 div.employee-header p {

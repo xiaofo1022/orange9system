@@ -41,6 +41,15 @@ public class CommonDao {
 		return jdbcTemplate.update(sql, args);
 	}
 	
+	public <T> T getFirst(final Class<T> cls, String sql, Object... args) {
+		List<T> resultList = query(cls, sql, args);
+		if (resultList != null && resultList.size() > 0) {
+			return resultList.get(0);
+		} else {
+			return null;
+		}
+	}
+	
 	public <T> List<T> query(final Class<T> cls, String sql, Object... args) {
 		return jdbcTemplate.query(sql, new ParameterizedRowMapper<T>() {
 			public T mapRow(ResultSet resultSet, int arg1) throws SQLException {

@@ -65,7 +65,7 @@
 				</div>
 				<div class="modal-body">
 					<sf:form id="addEmployeeForm" modelAttribute="employee" class="form-horizontal" method="post">
-						<input type="hidden" name="id"/>
+						<input type="hidden" name="id" id="id"/>
 						<div class="form-group">
 							<label class="col-sm-2 control-label" for="i-upload-header">上传头像</label>
 							<div class="col-sm-4">
@@ -101,13 +101,13 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">初始密码</label>
 							<div class="col-sm-4">
-								<input type="password" name="password" maxlength="50" class="form-control"/>
+								<input type="password" id="password" name="password" maxlength="50" class="form-control"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">确认密码</label>
 							<div class="col-sm-4">
-								<input type="password" name="confirmPassword" class="form-control"  maxlength="50"/>
+								<input type="password" id="confirmPassword" name="confirmPassword" class="form-control"  maxlength="50"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -125,7 +125,7 @@
 					</sf:form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" onclick="submit()">确定</button>
+					<button id="btnAddEmployee" type="button" class="btn btn-primary" onclick="submit()">确定</button>
 				</div>
 			</div>
 		</div>
@@ -180,155 +180,7 @@
 		</div>
 	</div>
 	
-	<div class="employee-block">
-		<div class="employee-header">
-			<img src="<c:url value='/images/header/shenyulin.png'/>"/>
-			<p>沈玉琳</p>
-			<p>设计师</p>
-			<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#addEmployee">编辑</button>
-			<button class="btn btn-danger btn-xs">删除</button>
-		</div>
-			
-		<div class="employee-process">
-			<section id="sample-pb">
-				<article class="num-progress">
-					<h4 id="t-syl" class="num-progress-title"></h4>
-					<div id="b-syl" class="number-pb">
-						<div class="number-pb-shown"></div>
-						<div class="number-pb-num">0</div>
-					</div>
-				</article>
-			</section>
-		</div>
-		
-		<div class="employee-clock">
-			本月考勤：
-			<button id="btn-hover" type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="2015-4-1: 8:23<br/>2015-4-2: 8:20<br/>2015-4-3: 8:19<br/>2015-4-4: 8:19<br/>2015-4-5: 8:19">
-				正常5天
-			</button>
-			<button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="">
-				迟到0天
-			</button>
-			<button type="button" class="btn btn-info" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="2015-4-6: <span class='info'>拉肚子</span>">
-				请假1天
-			</button>
-			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#cardStatistics">
-				考勤统计
-			</button>
-		</div>
-		
-		<div class="employee-performance">
-			本月绩效：<span>230.0元</span>
-			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#performanceStatistics">
-				绩效统计
-			</button>
-		</div>
-		
-		<div class="clear"></div>
-	</div>
-	
-	<div class="employee-block">
-		<div class="employee-header">
-			<img src="<c:url value='/images/header/old_man.png'/>"/>
-			<p>老人家</p>
-			<p>设计师</p>
-			<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#addEmployee">编辑</button>
-			<button class="btn btn-danger btn-xs">删除</button>
-		</div>
-			
-		<div class="employee-process">
-			<section id="sample-pb">
-				<article class="num-progress">
-					<h4 id="t-lr" class="num-progress-title"></h4>
-					<div id="b-lr" class="number-pb">
-						<div class="number-pb-shown"></div>
-						<div class="number-pb-num">0</div>
-					</div>
-				</article>
-			</section>
-		</div>
-		
-		<div class="employee-clock">
-			本月考勤：
-			<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="2015-4-1: 8:23<br/>2015-4-2: 8:20<br/>2015-4-3: 8:19">
-				正常3天
-			</button>
-			<button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="2015-4-4: <span class='danger'>8:46</span><br/>2015-4-5: <span class='danger'>8:31</span>">
-				迟到2天
-			</button>
-			<button type="button" class="btn btn-info" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="">
-				请假0天
-			</button>
-			<button type="button" class="btn btn-success">
-				考勤统计
-			</button>
-		</div>
-		
-		<div class="employee-performance">
-			本月绩效：<span>99.0元</span>
-			<button type="button" class="btn btn-success">
-				绩效统计
-			</button>
-		</div>
-		
-		<div class="clear"></div>
-	</div>
-	
-	<div class="employee-block">
-		<div class="employee-header">
-			<img src="<c:url value='/images/header/zhanglidong.png'/>"/>
-			<p>张立东</p>
-			<p>摄影师</p>
-			<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#addEmployee">编辑</button>
-			<button class="btn btn-danger btn-xs">删除</button>
-		</div>
-			
-		<div class="employee-process">
-			<section id="sample-pb">
-				<article class="num-progress">
-					<h4 id="t-zld" class="num-progress-title"></h4>
-					<div id="b-zld" class="number-pb">
-						<div class="number-pb-shown"></div>
-						<div class="number-pb-num">0</div>
-					</div>
-				</article>
-			</section>
-		</div>
-		
-		<div class="employee-clock">
-			本月考勤：
-			<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="2015-4-1: 8:23<br/>2015-4-2: 8:20<br/>2015-4-3: 8:19">
-				正常3天
-			</button>
-			<button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="2015-4-4: <span class='danger'>8:46</span><br/>2015-4-5: <span class='danger'>8:31</span>">
-				迟到2天
-			</button>
-			<button type="button" class="btn btn-info" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus"
-				data-content="">
-				请假0天
-			</button>
-			<button type="button" class="btn btn-success">
-				考勤统计
-			</button>
-		</div>
-		
-		<div class="employee-performance">
-			本月绩效：<span>19.0元</span>
-			<button type="button" class="btn btn-success">
-				绩效统计
-			</button>
-		</div>
-		
-		<div class="clear"></div>
-	</div>
+	<div id="employeeContainer"></div>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
@@ -338,32 +190,86 @@
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/progress/processer.js'/>"></script>
 <script src="<c:url value='/js/chart/echarts.js'/>"></script>
+<script src="<c:url value='/js/util/base64.js'/>"></script>
 <script>
-	$(function () {
-		$('[data-toggle="popover"]').popover({html:true})
-	});
-	
-	$("#btn-hover").mouseover();
-	
-	var plr = new Processer("t-lr", "b-lr", "本月进度（共100单）");
-	plr.run(60, 100);
-	
-	var psyl = new Processer("t-syl", "b-syl", "本月进度（共100单）");
-	psyl.run(88, 100);
-	
-	var pzld = new Processer("t-zld", "b-zld", "本月进度（共100单）");
-	pzld.run(12, 100);
-	
-	require.config({
-		paths: {
-			echarts: "<c:url value='/js/chart'/>"
-		}
-	});
+	var headerBase64 = new Base64("i-upload-header", "header");
 	
 	getRoleList();
 	
+	getUserList();
+	
+	function getUserList() {
+		$.get("<c:url value='/user/getUserList'/>", function(list, status) {
+			if (list) {
+				$("#employeeContainer").html("");
+				var employeeHtml = "";
+				for (var i in list) {
+					var data = list[i];
+					employeeHtml += (
+						'<div class="employee-block">'
+						+ getEmployeeHeader(data)
+						+ getEmployeeProcess(data)
+						+ getEmployeeClock(data)
+						+ getEmployeePerformance(data)
+						+ '<div class="clear"></div></div>');
+				}
+				$("#employeeContainer").html(employeeHtml);
+				for (var i in list) {
+					var data = list[i];
+					var plr = new Processer("t-" + data.id, "b-" + data.id, "本月进度（共0单）");
+					plr.run(0, 0);
+				}
+				initPopover();
+			}
+		});
+	}
+	
+	function initPopover() {
+		$(function () {
+			$('[data-toggle="popover"]').popover({html:true})
+		});
+	}
+	
+	function getEmployeeHeader(data) {
+		return '<div class="employee-header">' 
+				+ '<img src="' + headerBase64.getJpgHeader() + data.header + '"/><p>' + data.name + '</p><p>' + data.roleId + '</p>' 
+				+ '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#addEmployee">编辑</button>' 
+				+ '<button class="btn btn-danger btn-xs" onclick="deleteUser(' + data.id + ')">删除</button>' 
+				+ '</div>';
+	}
+	
+	function getEmployeeProcess(data) {
+		return '<div class="employee-process"><section><article class="num-progress">'
+			+ '<h4 id="t-' + data.id + '" class="num-progress-title"></h4>'
+			+ '<div id="b-' + data.id + '" class="number-pb"><div class="number-pb-shown"></div><div class="number-pb-num">0</div>'
+			+ '</div></article></section></div>';
+	}
+	
+	function getEmployeeClock(data) {
+		return '<div class="employee-clock">本月考勤：'
+		+ '<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="2015-4-1: 8:23<br/>2015-4-2: 8:20<br/>2015-4-3: 8:19">正常3天</button>'
+		+ '<button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="2015-4-4: 8:46<br/>2015-4-5: 8:31">迟到2天</button>'
+		+ '<button type="button" class="btn btn-info" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="">请假0天</button>'
+		+ '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#cardStatistics">考勤统计</button></div>';
+	}
+	
+	function getEmployeePerformance(data) {
+		return '<div class="employee-performance">本月绩效：<span>19.0元</span><button type="button" class="btn btn-success" data-toggle="modal" data-target="#performanceStatistics">绩效统计</button></div>';
+	}
+	
+	function deleteUser(userId) {
+		var result = confirm("确定要删除他吗？");
+		if (result) {
+			$.post("<c:url value='/user/deleteUser/" + userId + "'/>", function(data, status) {
+				if (data.status == "success") {
+					getUserList();
+				}
+			});
+		}
+	}
+	
 	function getRoleList() {
-		$.get("<c:url value='/role/getRoleList'/>", function(list, status){
+		$.get("<c:url value='/role/getRoleList'/>", function(list, status) {
 			var roleSelect = $("#role-select");
 			var html = "";
 			for (var i in list) {
@@ -375,39 +281,43 @@
 	}
 	
 	var addEmployeeRules = {
-		name: {
-			required: true
-		},
-		phone: {
-			required: true,
-			number: true
-		},
-		account: {
-			required: true
-		},
-		password: {
-			required: true
-		},
-		confirmPassword: {
-			required: true
-		},
-		salary: {
-			digits: true
-		},
-		performancePay: {
-			digits: true
-		}
+		name: { required: true },
+		phone: { required: true, number: true },
+		account: { required: true },
+		password: { required: true },
+		confirmPassword: { required: true },
+		salary: { digits: true },
+		performancePay: { digits: true }
 	};
 	
-	var validator = new Validator("addEmployeeForm", addEmployeeRules, "<c:url value='/user/addUser'/>", submitCallback);
+	var validator = new Validator("addEmployeeForm", "btnAddEmployee", addEmployeeRules, "<c:url value='/user/addUser'/>", submitCallback);
 	
 	function submit() {
+		if ($("#password").val() != $("#confirmPassword").val()) {
+			alert("密码输入不一致");
+			return;
+		}
 		$("#addEmployeeForm").submit();
 	}
 	
-	function submitCallback(data) {
-		console.log(data);
+	function submitCallback(response) {
+		if (response.status == "success") {
+			$("#addEmployee").modal("hide");
+			getUserList();
+		} else {
+			alert(response.msg);
+		}
 	}
+	
+	$('#addEmployee').on('hidden.bs.modal', function (e) {
+		document.getElementById("addEmployeeForm").reset();
+	});
+		
+	require.config({
+		paths: {
+			echarts: "<c:url value='/js/chart'/>"
+		}
+	});
 	
 	function changeCardChart() {
 		createCardChart("2015年3月考勤统计", "沈玉琳", [28, 1, 2]);

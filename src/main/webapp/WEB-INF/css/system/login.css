@@ -1,0 +1,26 @@
+@CHARSET "UTF-8";
+.login-console {
+	color: #FEC504;
+	font-size: 18px;
+	font-weight: bold;
+	padding-top: 100px;
+	text-align: center;
+}
+
+.login-header {
+	font-size: 26px;
+	margin-bottom: 20px;
+}
+
+.login-header span {
+	color: #000000;
+}
+
+.login-input {
+	display: inline;
+	width: 300px;
+}
+
+.login-btn {
+	width: 300px;
+}
