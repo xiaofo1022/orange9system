@@ -213,13 +213,13 @@
 				<div class="modal-body">
 					<div class="photograhper-block">
 						<img src="<c:url value='/images/header/zhanglidong.png'/>"/>
-						<p class="order-label"><span>张立东<span></span></p>
+						<p class="order-label"><span>张立东</span></p>
 						<button class="btn btn-warning" data-dismiss="modal">就是他了</button>
 						<div class="clear"></div>
 					</div>
 					<div class="photograhper-block">
 						<img src="<c:url value='/images/header/miyuankangzheng.png'/>"/>
-						<p class="order-label"><span>米原康正<span></span></p>
+						<p class="order-label"><span>米原康正</span></p>
 						<button class="btn btn-warning" data-dismiss="modal">就是他了</button>
 						<div class="clear"></div>
 					</div>
@@ -239,19 +239,19 @@
 				<div class="modal-body">
 					<div class="photograhper-block">
 						<img src="<c:url value='/images/header/awei.png'/>"/>
-						<p class="order-label"><span>常威<span></span></p>
+						<p class="order-label"><span>常威</span></p>
 						<button class="btn btn-warning" data-dismiss="modal">就是他了</button>
 						<div class="clear"></div>
 					</div>
 					<div class="photograhper-block">
 						<img src="<c:url value='/images/header/ruoying.png'/>"/>
-						<p class="order-label"><span>若颖<span></span></p>
+						<p class="order-label"><span>若颖</span></p>
 						<button class="btn btn-warning" data-dismiss="modal">就是她了</button>
 						<div class="clear"></div>
 					</div>
 					<div class="photograhper-block">
 						<img src="<c:url value='/images/header/nana.png'/>"/>
-						<p class="order-label"><span>娜娜<span></span></p>
+						<p class="order-label"><span>娜娜</span></p>
 						<button class="btn btn-warning" data-dismiss="modal">就是她了</button>
 						<div class="clear"></div>
 					</div>

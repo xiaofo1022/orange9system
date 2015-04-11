@@ -1,0 +1,67 @@
+@CHARSET "UTF-8";
+div.order-date-header {
+	border:1px solid #F0AD4E;
+	color:white;
+	font-weight:bold;
+	font-size:20px;
+	width:14%;
+	height:40px;
+	padding-top:3px;
+	margin-right:-1px;
+	background-color:#F0AD4E;
+	float:left;
+}
+
+div.order-date-block {
+	border:1px solid #F0AD4E;
+	font-size:14px;
+	width:14%;
+	min-height:100px;
+	margin-right:-1px;
+	margin-top:-1px;
+	background-color:#FFF;
+	float:left;
+}
+div.order-date-row {
+	width:100%;
+	padding-left:5px;
+}
+div.order-date-info {
+	text-align: left;
+}
+div.order-date-info img {
+	width: 30px;
+	height: 30px;
+}
+div.order-date-info p {
+	margin-bottom: 0;
+}
+div.order-date-info a:hover {
+	cursor: pointer;
+	text-decoration: none;
+}
+div.am {
+	border-bottom:1px solid #F0AD4E;
+}
+div.order-summary-block {
+	text-align:center;
+	width:90%;
+	margin-left:100px;
+}
+
+p.summary-label {
+	font-size: 18px;
+	font-weight: bold;
+	color: #F0AD4E;
+}
+p.summary-label a {
+	font-size: 14px;
+}
+
+p.summary-label span {
+	margin:0 20px;
+}
+
+p.summary-label a:hover {
+	cursor: pointer;
+}

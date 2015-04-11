@@ -39,13 +39,18 @@ public class MainController {
 		} else {
 			HttpSession session = request.getSession(true);
 			session.setAttribute("user", user);
-			return new SuccessResponse(Message.LOGIN_SUCCESS, "system");
+			return new SuccessResponse(Message.LOGIN_SUCCESS, "orderSummary");
 		}
 	}
 	
-	@RequestMapping(value="/system", method=RequestMethod.GET)
+	@RequestMapping(value="/employee", method=RequestMethod.GET)
 	public String system() {
-		return "system2";
+		return "system2employee";
+	}
+	
+	@RequestMapping(value="/orderSummary", method=RequestMethod.GET)
+	public String system2ordersummary() {
+		return "system2ordersummary";
 	}
 	
 	@RequestMapping(value="/order", method=RequestMethod.GET)
