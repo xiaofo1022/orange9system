@@ -110,3 +110,23 @@ CREATE TABLE orange9.order_history (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8
 COLLATE=utf8_general_ci;
+
+CREATE TABLE orange9.order_status (
+	ID INT NOT NULL AUTO_INCREMENT,
+	NAME VARCHAR(100),
+	CONSTRAINT order_status_PK PRIMARY KEY (ID)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8
+COLLATE=utf8_general_ci;
+
+INSERT INTO orange9.order_status (ID,NAME) VALUES 
+(1,'拍摄中')
+,(2,'拍摄完成')
+,(3,'导图')
+,(4,'修皮肤及褶皱')
+,(5,'修背景')
+,(6,'裁图液化')
+,(7,'审图')
+,(8,'完成')
+;

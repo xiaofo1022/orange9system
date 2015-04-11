@@ -32,7 +32,7 @@
 			<li><a class="icon icon-study" href="#">导图中(3)</a></li>
 			<li><a class="icon icon-photo" href="#">修皮肤及褶皱(10)</a></li>
 			<li><a class="icon icon-photo" href="#">修背景(4)</a></li>
-			<li><a class="icon icon-photo" href="#">截图液化(3)</a></li>
+			<li><a class="icon icon-photo" href="#">裁图液化(3)</a></li>
 			<li><a class="icon icon-location" href="#">等待审图(8)</a></li>
 			<li><a class="icon icon-location" href="#">完成(11)</a></li>
 			<li><a class="icon icon-location" href="<c:url value='/employee'/>">员工管理</a></li>
@@ -191,7 +191,7 @@
 			<a>下个月</a>
 		</p>
 		<div>
-			<div class="order-date-row">
+			<div class="order-date-row date-header">
 				<div class="order-date-header">日</div>
 				<div class="order-date-header">一</div>
 				<div class="order-date-header">二</div>
@@ -201,7 +201,8 @@
 				<div class="order-date-header">六</div>
 				<div class="clear"></div>
 			</div>
-			<div class="order-date-row">
+			<div id="date-row-1" class="order-date-row">
+				<!--
 				<div class="order-date-block"></div>
 				<div class="order-date-block"></div>
 				<div class="order-date-block"></div>
@@ -218,47 +219,12 @@
 				<div class="order-date-block">4月3日</div>
 				<div class="order-date-block">4月4日</div>
 				<div class="clear"></div>
+				-->
 			</div>
-			<div class="order-date-row">
-				<div class="order-date-block">4月5日</div>
-				<div class="order-date-block">4月6日</div>
-				<div class="order-date-block">4月7日</div>
-				<div class="order-date-block">4月8日</div>
-				<div class="order-date-block">4月9日</div>
-				<div class="order-date-block">4月10日</div>
-				<div class="order-date-block">4月11日</div>
-				<div class="clear"></div>
-			</div>
-			<div class="order-date-row">
-				<div class="order-date-block">4月12日</div>
-				<div class="order-date-block">4月13日</div>
-				<div class="order-date-block">4月14日</div>
-				<div class="order-date-block">4月15日</div>
-				<div class="order-date-block">4月16日</div>
-				<div class="order-date-block">4月17日</div>
-				<div class="order-date-block">4月18日</div>
-				<div class="clear"></div>
-			</div>
-			<div class="order-date-row">
-				<div class="order-date-block">4月19日</div>
-				<div class="order-date-block">4月20日</div>
-				<div class="order-date-block">4月21日</div>
-				<div class="order-date-block">4月22日</div>
-				<div class="order-date-block">4月23日</div>
-				<div class="order-date-block">4月24日</div>
-				<div class="order-date-block">4月25日</div>
-				<div class="clear"></div>
-			</div>
-			<div class="order-date-row">
-				<div class="order-date-block">4月26日</div>
-				<div class="order-date-block">4月27日</div>
-				<div class="order-date-block">4月28日</div>
-				<div class="order-date-block">4月29日</div>
-				<div class="order-date-block">4月30日</div>
-				<div class="order-date-block"></div>
-				<div class="order-date-block"></div>
-				<div class="clear"></div>
-			</div>
+			<div id="date-row-2" class="order-date-row"></div>
+			<div id="date-row-3" class="order-date-row"></div>
+			<div id="date-row-4" class="order-date-row"></div>
+			<div id="date-row-5" class="order-date-row"></div>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -269,11 +235,14 @@
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
 <script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
 <script src="<c:url value='/js/validation/validator.js'/>"></script>
+<script src="<c:url value='/js/util/base64.js'/>"></script>
+<script src="<c:url value='/js/util/dateUtil.js'/>"></script>
 <script>
 $('#shootDate').datepicker();
 
 getClientList();
 getUserList();
+getOrderList();
 
 var addOrderRules = {
 	shootDate: { required: true },
@@ -312,6 +281,52 @@ function getClientList() {
 	});
 }
 
+function getOrderList() {
+	$.get("<c:url value='/order/getOrderList'/>", function(list, status) {
+		if (list) {
+			createDateRect();
+			for (var i in list) {
+				var data = list[i];
+				var shootDate = new Date();
+				shootDate.setTime(data.shootDate);
+				var dateCol = $("#order-date-" + shootDate.getDate());
+				var dateHtml = dateCol.html();
+				dateHtml += '<div class="order-date-info">';
+				dateHtml += getDateColHtml(data);
+				dateHtml += '</div>';
+				dateCol.html(dateHtml);
+			}
+		}
+	});
+}
+
+var base64 = new Base64();
+
+function getDateColHtml(data) {
+	var colHtml = "";
+	colHtml += "<p>";
+	if (data.shootHalf == "AM") {
+		colHtml += "上午：";
+	} else {
+		colHtml += "下午：";
+	}
+	colHtml += ("<a>@O9" + data.id + "</a></p>");
+	if (data.photographer) {
+		colHtml += ("<p>摄影师：<img src='" + base64.getJpgHeader() + data.photographer.header + "'/>" + data.photographer.name + "</p>");
+	}
+	if (data.assistant) {
+		colHtml += ("<p>助理：<img src='" + base64.getJpgHeader() + data.assistant.header + "'/>" + data.assistant.name + "</p>");
+	}
+	colHtml += ("<p>模特：" + data.modelName + "</p>");
+	if (data.dresserName) {
+		colHtml += ("<p>化妆师：" + data.dresserName + "</p>");
+	}
+	if (data.stylistName) {
+		colHtml += ("<p>搭配师：" + data.stylistName + "</p>");
+	}
+	return colHtml;
+}
+
 function getUserList() {
 	$.get("<c:url value='/user/getUserList'/>", function(list, status) {
 		if (list) {
@@ -345,6 +360,7 @@ $('#addOrder').on('hidden.bs.modal', function (e) {
 function addOrderCallback(response) {
 	if (response.status == "success") {
 		$("#addOrder").modal("hide");
+		getOrderList();
 	} else {
 		alert(response.msg);
 	}
@@ -356,6 +372,36 @@ function addClientCallback(response) {
 		getClientList();
 	} else {
 		alert(response.msg);
+	}
+}
+
+createDateRect();
+
+function createDateRect() {
+	var now = new Date();
+	var startDate = now;
+	var rowIndex = 1;
+	var startDay = 1;
+	var lastDay = DateUtil.getLastDayOfMonth(now.getFullYear(), now.getMonth() + 1);
+	for (var i = 0; i < 5; i++) {
+		var rowBlock = $("#date-row-" + (i + 1));
+		rowBlock.html("");
+		var rowHtml = "";
+		for (var j = 0; j < 7; j++) {
+			startDate.setDate(startDay);
+			var weekDay = startDate.getDay();
+			if (weekDay == j) {
+				if (startDay != lastDay) {
+					startDay++;
+				}
+				rowHtml += ('<div id="order-date-' + startDate.getDate() + '" class="order-date-block">' + DateUtil.getDateLabel(startDate) + '</div>');
+			} else {
+				rowHtml += ('<div class="order-date-block"></div>');
+			}
+		}
+		rowHtml += ('<div class="clear"></div>');
+		rowBlock.html(rowHtml);
+		rowIndex++;
 	}
 }
 </script>

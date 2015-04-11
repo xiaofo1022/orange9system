@@ -3,6 +3,7 @@ package com.xiaofo1022.orange9.modal;
 import java.util.Date;
 
 import com.xiaofo1022.orange9.dao.common.Column;
+import com.xiaofo1022.orange9.dao.common.JoinTable;
 
 public class Order {
 	@Column("ID")
@@ -35,6 +36,13 @@ public class Order {
 	private int assistantId;
 	@Column("STATUS_ID")
 	private int statusId;
+	private int userId;
+	@JoinTable(tableName="ORDER_STATUS", joinField="statusId")
+	private OrderStatus orderStatus;
+	@JoinTable(tableName="USER", joinField="photographerId")
+	private User photographer;
+	@JoinTable(tableName="USER", joinField="assistantId")
+	private User assistant;
 	
 	public int getId() {
 		return id;
@@ -125,5 +133,29 @@ public class Order {
 	}
 	public void setStatusId(int statusId) {
 		this.statusId = statusId;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	public User getPhotographer() {
+		return photographer;
+	}
+	public void setPhotographer(User photographer) {
+		this.photographer = photographer;
+	}
+	public User getAssistant() {
+		return assistant;
+	}
+	public void setAssistant(User assistant) {
+		this.assistant = assistant;
 	}
 }

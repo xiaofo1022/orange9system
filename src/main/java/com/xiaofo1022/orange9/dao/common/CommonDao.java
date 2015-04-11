@@ -58,9 +58,9 @@ public class CommonDao {
 					entity = cls.newInstance();
 					Field[] fields = cls.getDeclaredFields();
 					for (Field field : fields) {
+						field.setAccessible(true);
 						Column column = field.getAnnotation(Column.class);
 						if (column != null) {
-							field.setAccessible(true);
 							String columnName = column.value();
 							
 							try {
@@ -73,11 +73,24 @@ public class CommonDao {
 							
 							if (type == int.class) {
 								field.set(entity, resultSet.getInt(columnName));
+							} else if (type == double.class) {
+								field.set(entity, resultSet.getDouble(columnName));
 							} else if (type == String.class) {
 								field.set(entity, resultSet.getString(columnName));
 							} else if (type == Date.class) {
 								field.set(entity, new Date(resultSet.getDate(columnName).getTime()));
 							}
+						}
+						JoinTable joinTable = field.getAnnotation(JoinTable.class);
+						if (joinTable != null) {
+							String tableName = joinTable.tableName();
+							String joinField = joinTable.joinField();
+							Field jf = cls.getDeclaredField(joinField);
+							jf.setAccessible(true);
+							Class<?> fieldType = field.getType();
+							Object fieldValue = jf.get(entity);
+							String joinSql = "SELECT * FROM " + tableName + " WHERE ID = ?";
+							field.set(entity, getFirst(fieldType, joinSql, fieldValue));
 						}
 					}
 				} catch (Exception e) {

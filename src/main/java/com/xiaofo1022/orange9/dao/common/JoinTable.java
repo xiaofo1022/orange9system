@@ -1,0 +1,14 @@
+package com.xiaofo1022.orange9.dao.common;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface JoinTable {
+	String tableName() default "";
+	String joinColumn() default "";
+	String joinField() default "";
+}
