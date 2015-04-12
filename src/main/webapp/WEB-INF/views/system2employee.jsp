@@ -58,7 +58,7 @@
 		</svg>
 	</div>
 	
-	<button class="btn btn-warning btn-add-employee" data-toggle="modal" data-target="#addEmployee">添加员工</button>
+	<button class="btn btn-warning btn-add-employee" onclick="showAddWindow()">添加员工</button>
 	
 	<!-- Add Employee Modal -->
 	<div id="addEmployee" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
@@ -71,7 +71,7 @@
 				<div class="modal-body">
 					<sf:form id="addEmployeeForm" modelAttribute="employee" class="form-horizontal" method="post">
 						<input type="hidden" name="id" id="id"/>
-						<div class="form-group">
+						<div id="fg-header" class="form-group">
 							<label class="col-sm-2 control-label" for="i-upload-header">上传头像</label>
 							<div class="col-sm-4">
 								<input type="hidden" name="header" id="header"/>
@@ -87,29 +87,29 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">职位</label>
 							<div class="col-sm-4">
-								<select id="role-select" name="roleId" class="form-control">
+								<select id="roleId" name="roleId" class="form-control">
 								</select>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">手机号</label>
 							<div class="col-sm-4">
-								<input type="tel" maxlength="11" name="phone" class="form-control"/>
+								<input type="tel" maxlength="11" id="phone" name="phone" class="form-control"/>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">初始账号</label>
+						<div id="fg-account" class="form-group">
+							<label class="col-sm-2 control-label">账号</label>
 							<div class="col-sm-4">
-								<input type="text" name="account" maxlength="50" class="form-control"/>
+								<input type="text" id="account" name="account" maxlength="50" class="form-control"/>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">初始密码</label>
+						<div id="fg-password" class="form-group">
+							<label class="col-sm-2 control-label">密码</label>
 							<div class="col-sm-4">
 								<input type="password" id="password" name="password" maxlength="50" class="form-control"/>
 							</div>
 						</div>
-						<div class="form-group">
+						<div id="fg-confirmPassword" class="form-group">
 							<label class="col-sm-2 control-label">确认密码</label>
 							<div class="col-sm-4">
 								<input type="password" id="confirmPassword" name="confirmPassword" class="form-control"  maxlength="50"/>
@@ -118,13 +118,13 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">基本工资</label>
 							<div class="col-sm-4">
-								<input type="number" name="salary" value="1500" min="1000" max="10000" step="100" class="form-control"/>
+								<input type="number" id="salary" name="salary" value="1500" min="1000" max="10000" step="100" class="form-control"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">绩效工资</label>
 							<div class="col-sm-4">
-								<input type="number" name="performancePay" value="0" min="0" max="10000" step="10" class="form-control"/>
+								<input type="number" id="performancePay" name="performancePay" value="0" min="0" max="10000" step="10" class="form-control"/>
 							</div>
 						</div>
 					</sf:form>
@@ -203,13 +203,18 @@
 	
 	getUserList();
 	
+	var updateHiddenList = ["header", "account", "password", "confirmPassword"];
+	var userMap = {};
+	
 	function getUserList() {
 		$.get("<c:url value='/user/getUserList'/>", function(list, status) {
 			if (list) {
+				userMap = {};
 				$("#employeeContainer").html("");
 				var employeeHtml = "";
 				for (var i in list) {
 					var data = list[i];
+					userMap[data.id] = data;
 					employeeHtml += (
 						'<div class="employee-block">'
 						+ getEmployeeHeader(data)
@@ -235,10 +240,54 @@
 		});
 	}
 	
+	function changeFormView(isShow) {
+		for (var i in updateHiddenList) {
+			var hiddenId = "fg-" + updateHiddenList[i];
+			var hiddenNode = $("#" + hiddenId);
+			if (hiddenNode) {
+				if (isShow) {
+					hiddenNode.show();
+				} else {
+					hiddenNode.hide();
+				}
+			}
+		}
+	}
+	
+	var addEmployeeRules = {
+		name: { required: true },
+		phone: { required: true, number: true },
+		account: { required: true },
+		password: { required: true },
+		salary: { digits: true },
+		performancePay: { digits: true }
+	};
+	
+	var validator = new Validator("addEmployeeForm", "btnAddEmployee", addEmployeeRules, "<c:url value='/user/addUser'/>", submitCallback);
+	
+	function showAddWindow() {
+		validator.url = "<c:url value='/user/addUser'/>";
+		changeFormView(true);
+		$("#addEmployee").modal("show");
+	}
+	
+	function showUpdateWindow(id) {
+		validator.url = "<c:url value='/user/updateUser'/>";
+		var user = userMap[id];
+		changeFormView(false);
+		for (var key in user) {
+			var formNode = $("#" + key);
+			if (formNode) {
+				formNode.val(user[key]);
+			}
+		}
+		$("#addEmployee").modal("show");
+	}
+	
 	function getEmployeeHeader(data) {
 		return '<div class="employee-header">' 
-				+ '<img src="' + headerBase64.getJpgHeader() + data.header + '"/><p>' + data.name + '</p><p>' + data.roleId + '</p>' 
-				+ '<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#addEmployee">编辑</button>' 
+				+ '<img src="' + headerBase64.getJpgHeader() + data.header + '"/><p>' + data.name + '</p><p>' + data.role.nameCN + '</p>' 
+				+ '<button class="btn btn-info btn-xs" onclick="showUpdateWindow(' + data.id + ')">编辑</button>' 
 				+ '<button class="btn btn-danger btn-xs" onclick="deleteUser(' + data.id + ')">删除</button>' 
 				+ '</div>';
 	}
@@ -275,7 +324,7 @@
 	
 	function getRoleList() {
 		$.get("<c:url value='/role/getRoleList'/>", function(list, status) {
-			var roleSelect = $("#role-select");
+			var roleSelect = $("#roleId");
 			var html = "";
 			for (var i in list) {
 				var data = list[i];
@@ -285,20 +334,8 @@
 		});
 	}
 	
-	var addEmployeeRules = {
-		name: { required: true },
-		phone: { required: true, number: true },
-		account: { required: true },
-		password: { required: true },
-		confirmPassword: { required: true },
-		salary: { digits: true },
-		performancePay: { digits: true }
-	};
-	
-	var validator = new Validator("addEmployeeForm", "btnAddEmployee", addEmployeeRules, "<c:url value='/user/addUser'/>", submitCallback);
-	
 	function submit() {
-		if ($("#password").val() != $("#confirmPassword").val()) {
+		if (!$("#password").is(":hidden") && $("#password").val() != $("#confirmPassword").val()) {
 			alert("密码输入不一致");
 			return;
 		}

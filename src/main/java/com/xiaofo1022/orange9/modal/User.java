@@ -1,6 +1,7 @@
 package com.xiaofo1022.orange9.modal;
 
 import com.xiaofo1022.orange9.dao.common.Column;
+import com.xiaofo1022.orange9.dao.common.JoinTable;
 
 public class User {
 	@Column("ID")
@@ -23,6 +24,8 @@ public class User {
 	private String header;
 	@Column("BOSS_ID")
 	private int bossId;
+	@JoinTable(tableName="ROLE", joinField="roleId")
+	private Role role;
 	
 	public int getId() {
 		return id;
@@ -83,5 +86,11 @@ public class User {
 	}
 	public void setBossId(int bossId) {
 		this.bossId = bossId;
+	}
+	public Role getRole() {
+		return role;
+	}
+	public void setRole(Role role) {
+		this.role = role;
 	}
 }

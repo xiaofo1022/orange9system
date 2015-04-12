@@ -51,6 +51,13 @@ public class UserController {
 		return null;
 	}
 	
+	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse updateUser(@ModelAttribute("employee") User user) {
+		userDao.updateUser(user);
+		return new SuccessResponse("Update User Success");
+	}
+	
 	@RequestMapping(value = "/deleteUser/{userId}", method = RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse deleteUser(@PathVariable int userId) {
