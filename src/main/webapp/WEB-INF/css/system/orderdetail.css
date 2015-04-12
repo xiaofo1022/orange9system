@@ -1,0 +1,48 @@
+@CHARSET "UTF-8";
+div.order-detail-block {
+	width:100%;
+	min-height:3，0px;
+	border-radius:4px;
+	font-weight:bold;
+	font-size:16px;
+	padding:10px;
+	margin-bottom: 10px;
+}
+
+.bd-blue {
+	border:1px solid #F0AD4E;
+	box-shadow: 0px 0px 5px rgba(240, 173, 78, 0.8);
+}
+
+.oc-label {
+	color:#F0AD4E;
+	margin-right:5px;
+}
+
+div.order-detail-block span {
+	margin-left:5px;
+}
+
+div.order-detail-block a:hover {
+	cursor:pointer;
+}
+div.order-detail-block img {
+	width:40px;
+}
+
+span.p-newrow {
+	padding-left:27px;
+}
+
+div.pic-block {
+	margin:10px;
+	float:left;
+}
+
+div.pic-block img {
+	width:200px;
+}
+
+div.pic-block p.chosen {
+	color:#008B00;
+}

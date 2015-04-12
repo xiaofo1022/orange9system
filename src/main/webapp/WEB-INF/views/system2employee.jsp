@@ -31,10 +31,15 @@
 	<nav class="st-menu st-effect-3">
 		<h2 class="icon icon-lab"></h2>
 		<ul>
-			<li><a class="icon icon-data" href="#">员工管理</a></li>
-			<li><a class="icon icon-study" href="<c:url value='order'/>">订单统计</a></li>
-			<li><a class="icon icon-photo" href="<c:url value='post'/>">后期进度</a></li>
-			<li><a class="icon icon-location" href="<c:url value='model'/>">模特资料</a></li>
+			<li><a class="icon icon-data" href="<c:url value='/orderSummary'/>">订单一览</a></li>
+			<li><a class="icon icon-study" href="#">拍摄中(5)</a></li>
+			<li><a class="icon icon-study" href="#">导图中(3)</a></li>
+			<li><a class="icon icon-photo" href="#">修皮肤及褶皱(10)</a></li>
+			<li><a class="icon icon-photo" href="#">修背景(4)</a></li>
+			<li><a class="icon icon-photo" href="#">截图液化(3)</a></li>
+			<li><a class="icon icon-location" href="#">等待审图(8)</a></li>
+			<li><a class="icon icon-location" href="#">完成(11)</a></li>
+			<li><a class="icon icon-location" href="#">员工管理</a></li>
 		</ul>
 	</nav>
 	

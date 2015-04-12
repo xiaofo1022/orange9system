@@ -310,7 +310,7 @@ function getDateColHtml(data) {
 	} else {
 		colHtml += "下午：";
 	}
-	colHtml += ("<a>@O9" + data.id + "</a></p>");
+	colHtml += ("<a href='<c:url value='/orderDetail'/>'>#O9" + data.id + "</a></p>");
 	if (data.photographer) {
 		colHtml += ("<p>摄影师：<img src='" + base64.getJpgHeader() + data.photographer.header + "'/>" + data.photographer.name + "</p>");
 	}

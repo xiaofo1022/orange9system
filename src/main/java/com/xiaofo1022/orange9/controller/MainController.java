@@ -58,6 +58,11 @@ public class MainController {
 		return "system2order";
 	}
 	
+	@RequestMapping(value="/orderDetail", method=RequestMethod.GET)
+	public String orderDetail() {
+		return "system2orderdetail";
+	}
+	
 	@RequestMapping(value="/post", method=RequestMethod.GET)
 	public String post() {
 		return "system2post";
