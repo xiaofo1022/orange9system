@@ -20,7 +20,7 @@ public class User {
 	private double salary;
 	@Column("PERFORMANCE_PAY")
 	private double performancePay;
-	@Column("HEADER")
+	@Column(value="HEADER", isImage=true)
 	private String header;
 	@Column("BOSS_ID")
 	private int bossId;

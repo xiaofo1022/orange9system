@@ -46,4 +46,8 @@ public class Base64Util {
 		}
 		return b;
 	}
+	
+	public static String getJpgHeader() {
+		return "data:image/jpeg;base64,";
+	}
 }

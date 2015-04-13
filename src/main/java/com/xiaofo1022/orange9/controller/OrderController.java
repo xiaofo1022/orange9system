@@ -1,22 +1,30 @@
 package com.xiaofo1022.orange9.controller;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.dao.OrderDao;
+import com.xiaofo1022.orange9.dao.OrderHistoryDao;
+import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.modal.Order;
+import com.xiaofo1022.orange9.modal.OrderStatus;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
+import com.xiaofo1022.orange9.util.DatetimeUtil;
 import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
@@ -24,6 +32,10 @@ import com.xiaofo1022.orange9.util.RequestUtil;
 public class OrderController {
 	@Autowired
 	private OrderDao orderDao;
+	@Autowired
+	private OrderStatusDao orderStatusDao;
+	@Autowired
+	private OrderHistoryDao orderHistoryDao;
 	
 	@RequestMapping(value = "/addOrder", method = RequestMethod.POST)
 	@ResponseBody
@@ -40,5 +52,41 @@ public class OrderController {
 	@ResponseBody
 	public List<Order> getOrderList() {
 		return orderDao.getOrderList();
+	}
+	
+	@RequestMapping(value = "/getOrderStatusCountMap", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Integer> getOrderStatusCountMap() {
+		return orderStatusDao.getOrderStatusCountMap();
+	}
+	
+	@RequestMapping(value="/orderDetail/{orderId}", method=RequestMethod.GET)
+	public String orderDetail(@PathVariable int orderId, ModelMap modelMap) {
+		Order orderDetail = orderDao.getOrderDetail(orderId);
+		if (orderDetail != null) {
+			modelMap.addAttribute("orderDetail", orderDetail);
+			modelMap.addAttribute("timeCost", DatetimeUtil.getDatetimeDiff(orderDetail.getInsertDatetime(), new Date()));
+			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
+			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
+		}
+		return "system2orderdetail";
+	}
+	
+	@RequestMapping(value = "/updateOrderStatus/{orderId}/{orderStatusId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse updateOrderStatus(
+			@PathVariable int orderId, 
+			@PathVariable int orderStatusId, 
+			HttpServletRequest request) {
+		Order order = orderDao.getOrderDetail(orderId);
+		OrderStatus orderStatus = orderStatusDao.getOrderStatus(orderStatusId);
+		User user = RequestUtil.getLoginUser(request);
+		if (user != null) {
+			order.setUserId(user.getId());
+		}
+		if (order != null && orderStatus != null && order.getStatusId() < orderStatusId) {
+			orderDao.updateOrderStatus(order, orderStatus);
+		}
+		return new SuccessResponse("Update Order Status Success");
 	}
 }

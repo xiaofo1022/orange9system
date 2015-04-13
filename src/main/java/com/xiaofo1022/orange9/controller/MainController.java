@@ -5,7 +5,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +31,7 @@ public class MainController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse login(@ModelAttribute("login") Login login, BindingResult result, HttpServletRequest request, ModelMap modelMap) {
+	public CommonResponse login(@ModelAttribute("login") Login login, BindingResult result, HttpServletRequest request) {
 		User user = loginDao.getUser(login);
 		if (user == null) {
 			return new FailureResponse(Message.LOGIN_FAILURE);

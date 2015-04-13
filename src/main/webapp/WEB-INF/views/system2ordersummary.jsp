@@ -24,20 +24,7 @@
 		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
 	</div>
 	
-	<nav class="st-menu st-effect-3">
-		<h2 class="icon icon-lab"></h2>
-		<ul>
-			<li><a class="icon icon-data" href="#">订单一览</a></li>
-			<li><a class="icon icon-study" href="#">拍摄中(5)</a></li>
-			<li><a class="icon icon-study" href="#">导图中(3)</a></li>
-			<li><a class="icon icon-photo" href="#">修皮肤及褶皱(10)</a></li>
-			<li><a class="icon icon-photo" href="#">修背景(4)</a></li>
-			<li><a class="icon icon-photo" href="#">裁图液化(3)</a></li>
-			<li><a class="icon icon-location" href="#">等待审图(8)</a></li>
-			<li><a class="icon icon-location" href="#">完成(11)</a></li>
-			<li><a class="icon icon-location" href="<c:url value='/employee'/>">员工管理</a></li>
-		</ul>
-	</nav>
+	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
 	<div id="st-trigger-effects">
 		<button class="btn btn-warning nav-btn" data-effect="st-effect-3">
@@ -201,26 +188,7 @@
 				<div class="order-date-header">六</div>
 				<div class="clear"></div>
 			</div>
-			<div id="date-row-1" class="order-date-row">
-				<!--
-				<div class="order-date-block"></div>
-				<div class="order-date-block"></div>
-				<div class="order-date-block"></div>
-				<div class="order-date-block">
-					4月1日
-					<div class="order-date-info">
-						<p>上午：<a>@20150401001</a></p>
-						<p>摄影师：<img src="<c:url value='/images/header/boss.png'/>"/>柳海飞</p>
-						<p>助理：<img src="<c:url value='/images/header/old_man.png'/>"/>李学华</p>
-						<p>模特：<img src="<c:url value='/images/header/nana.png'/>"/>娜娜</p>
-					</div>
-				</div>
-				<div class="order-date-block">4月2日</div>
-				<div class="order-date-block">4月3日</div>
-				<div class="order-date-block">4月4日</div>
-				<div class="clear"></div>
-				-->
-			</div>
+			<div id="date-row-1" class="order-date-row"></div>
 			<div id="date-row-2" class="order-date-row"></div>
 			<div id="date-row-3" class="order-date-row"></div>
 			<div id="date-row-4" class="order-date-row"></div>
@@ -310,12 +278,12 @@ function getDateColHtml(data) {
 	} else {
 		colHtml += "下午：";
 	}
-	colHtml += ("<a href='<c:url value='/orderDetail'/>'>#O9" + data.id + "</a></p>");
+	colHtml += ("<a href='<c:url value='/order/orderDetail/" + data.id + "'/>'>#O9" + data.id + "</a></p>");
 	if (data.photographer) {
-		colHtml += ("<p>摄影师：<img src='" + base64.getJpgHeader() + data.photographer.header + "'/>" + data.photographer.name + "</p>");
+		colHtml += ("<p>摄影师：<img src='" + data.photographer.header + "'/>" + data.photographer.name + "</p>");
 	}
 	if (data.assistant) {
-		colHtml += ("<p>助理：<img src='" + base64.getJpgHeader() + data.assistant.header + "'/>" + data.assistant.name + "</p>");
+		colHtml += ("<p>助理：<img src='" + data.assistant.header + "'/>" + data.assistant.name + "</p>");
 	}
 	colHtml += ("<p>模特：" + data.modelName + "</p>");
 	if (data.dresserName) {

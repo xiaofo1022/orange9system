@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.Statement;
+import com.xiaofo1022.orange9.util.Base64Util;
 
 @Repository
 public class CommonDao {
@@ -62,6 +64,9 @@ public class CommonDao {
 						Column column = field.getAnnotation(Column.class);
 						if (column != null) {
 							String columnName = column.value();
+							boolean isImage = column.isImage();
+							boolean isFormatDate = column.isFormatDate();
+							boolean isFormatDatetime = column.isFormatDatetime();
 							
 							try {
 								resultSet.findColumn(columnName);
@@ -76,9 +81,17 @@ public class CommonDao {
 							} else if (type == double.class) {
 								field.set(entity, resultSet.getDouble(columnName));
 							} else if (type == String.class) {
-								field.set(entity, resultSet.getString(columnName));
+								if (isFormatDate) {
+									field.set(entity, new SimpleDateFormat("yyyy-MM-dd").format(resultSet.getDate(columnName)));
+								} else if (isFormatDatetime) {
+									field.set(entity, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(resultSet.getTimestamp(columnName).getTime())));
+								} else if (isImage) {
+									field.set(entity, Base64Util.getJpgHeader() + resultSet.getString(columnName));
+								} else {
+									field.set(entity, resultSet.getString(columnName));
+								}
 							} else if (type == Date.class) {
-								field.set(entity, new Date(resultSet.getDate(columnName).getTime()));
+								field.set(entity, new Date(resultSet.getTimestamp(columnName).getTime()));
 							}
 						}
 						JoinTable joinTable = field.getAnnotation(JoinTable.class);
@@ -89,8 +102,10 @@ public class CommonDao {
 							jf.setAccessible(true);
 							Class<?> fieldType = field.getType();
 							Object fieldValue = jf.get(entity);
-							String joinSql = "SELECT * FROM " + tableName + " WHERE ID = ?";
-							field.set(entity, getFirst(fieldType, joinSql, fieldValue));
+							if (fieldValue != null) {
+								String joinSql = "SELECT * FROM " + tableName + " WHERE ID = ?";
+								field.set(entity, getFirst(fieldType, joinSql, fieldValue));
+							}
 						}
 					}
 				} catch (Exception e) {

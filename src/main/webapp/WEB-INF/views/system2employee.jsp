@@ -28,20 +28,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<nav class="st-menu st-effect-3">
-		<h2 class="icon icon-lab"></h2>
-		<ul>
-			<li><a class="icon icon-data" href="<c:url value='/orderSummary'/>">订单一览</a></li>
-			<li><a class="icon icon-study" href="#">拍摄中(5)</a></li>
-			<li><a class="icon icon-study" href="#">导图中(3)</a></li>
-			<li><a class="icon icon-photo" href="#">修皮肤及褶皱(10)</a></li>
-			<li><a class="icon icon-photo" href="#">修背景(4)</a></li>
-			<li><a class="icon icon-photo" href="#">截图液化(3)</a></li>
-			<li><a class="icon icon-location" href="#">等待审图(8)</a></li>
-			<li><a class="icon icon-location" href="#">完成(11)</a></li>
-			<li><a class="icon icon-location" href="#">员工管理</a></li>
-		</ul>
-	</nav>
+	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
 	<div id="st-trigger-effects">
 		<button class="btn btn-warning nav-btn" data-effect="st-effect-3">
@@ -286,7 +273,7 @@
 	
 	function getEmployeeHeader(data) {
 		return '<div class="employee-header">' 
-				+ '<img src="' + headerBase64.getJpgHeader() + data.header + '"/><p>' + data.name + '</p><p>' + data.role.nameCN + '</p>' 
+				+ '<img src="' + data.header + '"/><p>' + data.name + '</p><p>' + data.role.nameCN + '</p>' 
 				+ '<button class="btn btn-info btn-xs" onclick="showUpdateWindow(' + data.id + ')">编辑</button>' 
 				+ '<button class="btn btn-danger btn-xs" onclick="deleteUser(' + data.id + ')">删除</button>' 
 				+ '</div>';

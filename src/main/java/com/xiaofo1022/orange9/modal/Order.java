@@ -14,6 +14,8 @@ public class Order {
 	private Date updateDatetime;
 	@Column("SHOOT_DATE")
 	private Date shootDate;
+	@Column(value="SHOOT_DATE", isFormatDate=true)
+	private String shootDateLabel;
 	@Column("SHOOT_HALF")
 	private String shootHalf;
 	@Column("CLIENT_ID")
@@ -43,6 +45,10 @@ public class Order {
 	private User photographer;
 	@JoinTable(tableName="USER", joinField="assistantId")
 	private User assistant;
+	@JoinTable(tableName="ORDER_GOODS", joinField="goodsId")
+	private OrderGoods orderGoods;
+	@JoinTable(tableName="CLIENT", joinField="clientId")
+	private Client client;
 	
 	public int getId() {
 		return id;
@@ -157,5 +163,23 @@ public class Order {
 	}
 	public void setAssistant(User assistant) {
 		this.assistant = assistant;
+	}
+	public OrderGoods getOrderGoods() {
+		return orderGoods;
+	}
+	public void setOrderGoods(OrderGoods orderGoods) {
+		this.orderGoods = orderGoods;
+	}
+	public Client getClient() {
+		return client;
+	}
+	public void setClient(Client client) {
+		this.client = client;
+	}
+	public String getShootDateLabel() {
+		return shootDateLabel;
+	}
+	public void setShootDateLabel(String shootDateLabel) {
+		this.shootDateLabel = shootDateLabel;
 	}
 }
