@@ -32,6 +32,29 @@
 		</button>
 	</div>
 	
+	<div id="setTransferModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">要指定谁来导图呢？</h4>
+				</div>
+				<div class="modal-body">	
+					<div style="width:200px;">
+						<select id="transferSelect" class="form-control">
+							<c:forEach items="${userList}" var="user">
+								<option value="${user.id}">${user.name}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="btnSetTransfer" type="button" class="btn btn-primary" onclick="setTransfer()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class="order-block">
 		<div class="order-detail-block bd-blue">
 			订单详情：
@@ -87,7 +110,17 @@
 		</div>
 		<div class="order-detail-block bd-blue">
 			后期情况：
-			<span>导图：<span class="oc-label">未开始</span></span>
+			<span>导图：
+				<c:choose>
+					<c:when test="${orderTransfer != null}">
+						<img src="${orderTransfer.operator.header}"/>
+						<span class="oc-label">${orderTransfer.operator.name}</span>
+					</c:when>
+					<c:otherwise>
+						<span class="oc-label">未开始</span>
+					</c:otherwise>
+				</c:choose>
+			</span>
 			<span>修皮肤及褶皱：<span class="oc-label">未开始</span></span>
 			<span>修背景：<span class="oc-label">未开始</span></span>
 			<span>裁图液化：<span class="oc-label">未开始</span></span>
@@ -197,7 +230,24 @@
 	function updateOrderStatus() {
 		var orderId = $("#orderId").val();
 		var statusId = $("#orderStatus").val();
-		$.post("<c:url value='/order/updateOrderStatus/" + orderId + "/" + statusId + "'/>", null, function(data, status) {
+		if (statusId == 3) {
+			$("#setTransferModal").modal("show");
+		} else {
+			$.post("<c:url value='/order/updateOrderStatus/" + orderId + "/" + statusId + "'/>", null, function(data, status) {
+				if (data.status == "success") {
+					location.reload(true);
+				} else {
+					console.log(data.msg);
+				}
+			});
+		}
+	}
+	
+	function setTransfer() {
+		$("#setTransferModal").modal("hide");
+		var orderId = $("#orderId").val();
+		var userId = $("#transferSelect").val();
+		$.post("<c:url value='/order/setOrderTransfer/" + orderId + "/" + userId + "'/>", null, function(data, status) {
 			if (data.status == "success") {
 				location.reload(true);
 			} else {

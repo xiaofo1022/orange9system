@@ -26,6 +26,10 @@ public class UserDao {
 		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE ACCOUNT = ?", account);
 	}
 	
+	public List<User> getUserList() {
+		return commonDao.query(User.class, "SELECT * FROM USER WHERE ACTIVE = 1");
+	}
+	
 	public List<User> getUserList(int bossId) {
 		return commonDao.query(User.class, "SELECT * FROM USER WHERE BOSS_ID = ? AND ACTIVE = 1", bossId);
 	}

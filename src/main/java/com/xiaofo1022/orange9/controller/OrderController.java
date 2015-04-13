@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xiaofo1022.orange9.common.StatusConst;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderHistoryDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
+import com.xiaofo1022.orange9.dao.OrderTransferDao;
+import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderStatus;
 import com.xiaofo1022.orange9.modal.User;
@@ -29,6 +33,7 @@ import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
 @RequestMapping("/order")
+@Transactional
 public class OrderController {
 	@Autowired
 	private OrderDao orderDao;
@@ -36,6 +41,10 @@ public class OrderController {
 	private OrderStatusDao orderStatusDao;
 	@Autowired
 	private OrderHistoryDao orderHistoryDao;
+	@Autowired
+	private UserDao userDao;
+	@Autowired
+	private OrderTransferDao orderTransferDao;
 	
 	@RequestMapping(value = "/addOrder", method = RequestMethod.POST)
 	@ResponseBody
@@ -68,6 +77,8 @@ public class OrderController {
 			modelMap.addAttribute("timeCost", DatetimeUtil.getDatetimeDiff(orderDetail.getInsertDatetime(), new Date()));
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
+			modelMap.addAttribute("orderTransfer", orderTransferDao.getOrderTransfer(orderId));
+			modelMap.addAttribute("userList", userDao.getUserList());
 		}
 		return "system2orderdetail";
 	}
@@ -78,6 +89,11 @@ public class OrderController {
 			@PathVariable int orderId, 
 			@PathVariable int orderStatusId, 
 			HttpServletRequest request) {
+		updateOrderStatusAction(orderId, orderStatusId, request);
+		return new SuccessResponse("Update Order Status Success");
+	}
+	
+	private void updateOrderStatusAction(int orderId, int orderStatusId, HttpServletRequest request) {
 		Order order = orderDao.getOrderDetail(orderId);
 		OrderStatus orderStatus = orderStatusDao.getOrderStatus(orderStatusId);
 		User user = RequestUtil.getLoginUser(request);
@@ -87,6 +103,16 @@ public class OrderController {
 		if (order != null && orderStatus != null && order.getStatusId() < orderStatusId) {
 			orderDao.updateOrderStatus(order, orderStatus);
 		}
-		return new SuccessResponse("Update Order Status Success");
+	}
+	
+	@RequestMapping(value = "/setOrderTransfer/{orderId}/{userId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse setOrderTransfer(
+			@PathVariable int orderId, 
+			@PathVariable int userId, 
+			HttpServletRequest request) {
+		orderTransferDao.insertOrderTransfer(orderId, userId);
+		updateOrderStatusAction(orderId, StatusConst.TRANSFER_IMAGE, request);
+		return new SuccessResponse("Set Order Transfer Success");
 	}
 }
