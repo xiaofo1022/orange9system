@@ -1,6 +1,7 @@
 package com.xiaofo1022.orange9.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,9 @@ public class OrderTransferDao {
 	
 	public OrderTransferImage getOrderTransfer(int orderId) {
 		return commonDao.getFirst(OrderTransferImage.class, "SELECT * FROM ORDER_TRANSFER_IMAGE WHERE ORDER_ID = ?", orderId);
+	}
+	
+	public List<OrderTransferImage> getOrderTransferImageList() {
+		return commonDao.query(OrderTransferImage.class, "SELECT * FROM ORDER_TRANSFER_IMAGE WHERE IS_DONE = 0 ORDER BY INSERT_DATETIME DESC");
 	}
 }

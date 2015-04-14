@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
+import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.LoginDao;
+import com.xiaofo1022.orange9.dao.OrderTimeLimitDao;
 import com.xiaofo1022.orange9.modal.Login;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -23,6 +26,8 @@ import com.xiaofo1022.orange9.response.SuccessResponse;
 public class MainController {
 	@Autowired
 	private LoginDao loginDao;
+	@Autowired
+	private OrderTimeLimitDao orderTimeLimitDao;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String index() {
@@ -50,6 +55,12 @@ public class MainController {
 	@RequestMapping(value="/orderSummary", method=RequestMethod.GET)
 	public String system2ordersummary() {
 		return "system2ordersummary";
+	}
+	
+	@RequestMapping(value="/transferImage", method=RequestMethod.GET)
+	public String system2transferimage(ModelMap modelMap) {
+		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.TRANSFER_ID).getLimitMinutes());
+		return "system2transferimage";
 	}
 	
 	@RequestMapping(value="/order", method=RequestMethod.GET)
