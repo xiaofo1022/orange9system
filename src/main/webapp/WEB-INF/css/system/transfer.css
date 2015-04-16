@@ -5,3 +5,37 @@ p.transfer-label {
 p.transfer-label img {
 	width:40px;
 }
+
+div.upload-container {
+	max-height:200px;
+	overflow-y:auto;
+}
+
+div.upload-block {
+	width:100px;
+	border:1px solid #E3E3E3;
+	border-radius:4px;
+	padding:10px;
+	margin:10px;
+	float:left;
+}
+
+div.upload-block img {
+	width:100%;
+}
+
+div.upload-bar {
+	margin-bottom:5px;
+	height:5px;
+	border-radius:0;
+}
+
+span.upload-remove {
+	float:right;
+	margin-bottom:-15px;
+	color:#D9534F;
+}
+
+span.upload-remove:hover {
+	cursor:pointer;
+}
