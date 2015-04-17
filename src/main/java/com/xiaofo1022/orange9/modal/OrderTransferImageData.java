@@ -12,7 +12,9 @@ public class OrderTransferImageData {
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
 	private String imageData;
+	@Column("ORDER_ID")
 	private int orderId;
+	private String serverPath;
 	
 	public int getId() {
 		return id;
@@ -43,5 +45,11 @@ public class OrderTransferImageData {
 	}
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
+	}
+	public String getServerPath() {
+		return serverPath;
+	}
+	public void setServerPath(String serverPath) {
+		this.serverPath = serverPath;
 	}
 }

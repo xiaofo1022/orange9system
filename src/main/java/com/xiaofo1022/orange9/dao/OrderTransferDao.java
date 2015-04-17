@@ -33,13 +33,17 @@ public class OrderTransferDao {
 		return commonDao.query(OrderTransferImage.class, "SELECT * FROM ORDER_TRANSFER_IMAGE WHERE IS_DONE = 0 ORDER BY INSERT_DATETIME DESC");
 	}
 	
+	public List<OrderTransferImageData> getTransferImageDataListByOrder(int orderId) {
+		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? ORDER BY ID", orderId);
+	}
+	
 	public void insertOrderTransferImageData(OrderTransferImageData transferImageData) {
-		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (ORDER_TRANSFER_IMAGE_ID, INSERT_DATETIME) VALUES (?, ?)",
-				transferImageData.getOrderTransferImageId(), new Date());
+		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (ORDER_TRANSFER_IMAGE_ID, INSERT_DATETIME, ORDER_ID) VALUES (?, ?, ?)",
+				transferImageData.getOrderTransferImageId(), new Date(), transferImageData.getOrderId());
 		transferImageData.setId(id);
-		OrderTransferImage orderTransferImage = this.getOrderTransferById(transferImageData.getOrderTransferImageId());
-		if (orderTransferImage != null) {
-			transferImageData.setOrderId(orderTransferImage.getOrderId());
-		}
+	}
+	
+	public void setTransferImageIsDone(int tansferId, int isDone) {
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE SET IS_DONE = ?, UPDATE_DATETIME = ? WHERE ID = ?", isDone, new Date(), tansferId);
 	}
 }

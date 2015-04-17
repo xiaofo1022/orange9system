@@ -19,8 +19,8 @@ var Base64 = function(inputId, imageHiddenId) {
 				alert("上传的图片只能是jpg，png或者gif格式。");
 				return;
 			}
-			if (img.size > 1024 * 1024 * 1024) {
-				alert("上传的图片不能大于10MB。");
+			if (img.size > 1024 * 1024 * 256) {
+				alert("上传的图片不能大于2MB。");
 				return;
 			}
 			complete = false;

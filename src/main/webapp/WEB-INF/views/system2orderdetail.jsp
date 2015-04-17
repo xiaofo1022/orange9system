@@ -150,13 +150,9 @@
 				</li>
 			</ul>
 			<div id="blink1-block" class="detail-bottom-block">
-				<div class="pic-block"><img src="<c:url value='/images/post/1.jpg'/>"/><p class="chosen">(001) 客户已选</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/2.jpg'/>"/><p class="chosen">(002) 客户已选</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/3.jpg'/>"/><p class="chosen">(003) 客户已选</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/4.jpg'/>"/><p class="chosen">(004) 客户已选</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/5.jpg'/>"/><p class="chosen">(005) 客户已选</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/6.jpg'/>"/><p>(006)</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/7.jpg'/>"/><p>(007)</p></div>
+				<c:forEach items="${orderTransferImageDataList}" var="imageData">
+					<div class="pic-block"><img src="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>"/><p>(${imageData.id})</p></div>
+				</c:forEach>
 				<div class="clear"></div>
 			</div>
 			<div id="blink2-block" class="detail-bottom-block hidden">

@@ -78,6 +78,7 @@ public class OrderController {
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
 			modelMap.addAttribute("orderTransfer", orderTransferDao.getOrderTransfer(orderId));
+			modelMap.addAttribute("orderTransferImageDataList", orderTransferDao.getTransferImageDataListByOrder(orderId));
 			modelMap.addAttribute("userList", userDao.getUserList());
 		}
 		return "system2orderdetail";

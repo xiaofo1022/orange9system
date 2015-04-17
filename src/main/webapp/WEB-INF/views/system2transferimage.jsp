@@ -42,11 +42,12 @@
 					<div id="upload-container" class="upload-container"></div>
 					<div class="clear"></div>
 					<input id="orderTransferImageId" type="hidden"/>
+					<input id="orderId" type="hidden"/>
 				</div>
 				<div class="modal-footer">
 					<input class="btn btn-primary" style="float:left;" type="file" multiple="multiple" id="upload-image"/>
-					<button type="button" class="btn btn-success" style="float:right;" onclick="uploadImage()">开始上传</button>
-					<button type="button" class="btn btn-info" style="float:right;" onclick="emptyUploadContainer()">清空</button>
+					<button id="btn-upload" type="button" class="btn btn-success" style="float:right;" onclick="uploadImage()">开始上传</button>
+					<!-- <button type="button" class="btn btn-info" style="float:right;" onclick="emptyUploadContainer()">清空</button> -->
 				</div>
 			</div>
 		</div>
@@ -57,6 +58,7 @@
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/util/countDown.js'/>"></script>
+<script src="<c:url value='/js/util/transferUploader.js'/>"></script>
 <script>
 	var limitSecond = parseInt($("#limitMinutes").val()) * 60;
 	
@@ -90,23 +92,24 @@
 	function getTransferHeader(data) {
 		return '<p class="model-label transfer-label">'
 			+ '单号：<span>O9' + data.id + '</span><span id="time-label-' + data.id + '" class="ml10" style="color:#F0AD4E;">'
-			+ '剩余时间</span>：<span id="remain-time-' + data.id + '"></span></p>';
+			+ '剩余时间：</span><span id="remain-time-' + data.id + '"></span></p>';
 	}
 	
 	function getTransferInfo(data) {
 		return '<p class="model-label transfer-label">'
 			+ '导图人：<img src="' + data.operator.header + '"/><span class="ml10">' + data.operator.name + '</span>'
-			+ '<button class="btn btn-danger ml10">催一下</button><button class="btn btn-success ml10" onclick="openUploadImageWindow(' + data.id + ')">导图</button></p>';
+			+ '<button id="btn-transfer-' + data.id + '" class="btn btn-success ml10" onclick="openUploadImageWindow(' + data.id + ', ' + data.orderId + ')">导图</button></p>';
 	}
 	
 	function getTransferBar(data) {
-		return '<div class="progress" style="margin-bottom:0;">'
+		return '<div id="time-progress-bar-' + data.id + '" class="progress" style="margin-bottom:0;">'
 			+ '<div id="time-bar-' + data.id + '" class="progress-bar progress-bar-success" role="progressbar"'
 			+ 'aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div></div>';	
 	}
 	
-	function openUploadImageWindow(orderTransferId) {
+	function openUploadImageWindow(orderTransferId, orderId) {
 		$("#orderTransferImageId").val(orderTransferId);
+		$("#orderId").val(orderId);
 		$("#uploadImagesModal").modal("show");
 	}
 	
@@ -121,18 +124,27 @@
 		$("#upload-container").empty();
 	}
 	
+	/*
+	$("#uploadImagesModal").on("hide.bs.modal", function(event) {
+		event.preventDefault();
+		alert("En?");
+		return;
+	});
+	*/
+	
 	$("#uploadImagesModal").on("hidden.bs.modal", function() {
 		emptyUploadContainer();
+		$("#btn-upload").attr("disabled", false);
 	});
 	
 	function selectImage(event) {
 		if (this.files) {
 			for (var i in this.files) {
 				var file = this.files[i];
-				if (!(file.type && file.type.indexOf('image') == 0 && /\.(?:jpg)$/.test(file.name))) {
+				if (!(file.type && file.type.indexOf('image') == 0 && /\.(?:jpg|JPG)$/.test(file.name))) {
 					return;
 				}
-				if (file.size > 1024 * 1024 * 512) {
+				if (file.size > 1024 * 1024 * 1024) {
 					return;
 				}
 				if (typeof(file) == "object") {
@@ -176,31 +188,17 @@
 	function uploadImage() {
 		$("#uploadImagesModal").modal("hide");
 		var orderTransferImageId = $("#orderTransferImageId").val();
-		for (var key in fileMap) {
-			var fileData = fileMap[key];
-			var transferImageData = {
-				orderTransferImageId: orderTransferImageId,
-				imageData: fileData
-			};
-			$.ajax({  
-	            url: "<c:url value='/orderTransfer/uploadTransferImage'/>",  
-	            type: 'post',
-	            contentType : 'application/json',
-	            data: JSON.stringify(transferImageData),  
-	            success: function(data) {
-	            	delete fileMap[key];
-	            	if (data.status == "success") {
-	            		
-	            	} else {
-	            		
-	            	}
-	            },  
-	            error: function(data) {
-	            	delete fileMap[key];
-	                console.log(data);
-	            }  
-	        });
-		}
+		var orderId = $("#orderId").val();
+		$("#btn-upload").attr("disabled", true);
+		var transferButton = $("#btn-transfer-" + orderTransferImageId);
+		var timeLabelId = "time-label-" + orderTransferImageId;
+		var remainTimeId =  "remain-time-" + orderTransferImageId;
+		var timeBarId = "time-progress-bar-" + orderTransferImageId;
+		var uploadFileMap = fileMap;
+		var transferUploader = new TransferUploader(orderId, orderTransferImageId, transferButton, timeLabelId, remainTimeId, timeBarId, uploadFileMap);
+		transferUploader.setUploadUrl("<c:url value='/orderTransfer/uploadTransferImage'/>");
+		transferUploader.setUploadDoneUrl("<c:url value='/orderTransfer/setTransferImageIsDone'/>")
+		transferUploader.uploadImage();
 	}
 </script>
 </body>

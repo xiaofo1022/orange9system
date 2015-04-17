@@ -27,8 +27,8 @@ var CountDown = function(startTime, limitSecond, timeBarId, timeLabelId, remainT
 				}
 			}
 		} else {
-			if (timeLabel.text() == "剩余时间") {
-				timeLabel.text("已超时");
+			if (timeLabel.text() == "剩余时间：") {
+				timeLabel.text("已超时：");
 				remainTime.css("color", "#D9534F");
 			}
 		}
