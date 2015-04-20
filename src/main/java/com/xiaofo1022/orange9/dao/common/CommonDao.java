@@ -86,7 +86,12 @@ public class CommonDao {
 								} else if (isFormatDatetime) {
 									field.set(entity, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(resultSet.getTimestamp(columnName).getTime())));
 								} else if (isImage) {
-									field.set(entity, Base64Util.getJpgHeader() + resultSet.getString(columnName));
+									String imageSource = resultSet.getString(columnName);
+									if (imageSource == null || imageSource.equals("")) {
+										field.set(entity, "/orange9/images/header/gray_blank.jpg");
+									} else {
+										field.set(entity, Base64Util.getJpgHeader() + resultSet.getString(columnName));
+									}
 								} else {
 									field.set(entity, resultSet.getString(columnName));
 								}

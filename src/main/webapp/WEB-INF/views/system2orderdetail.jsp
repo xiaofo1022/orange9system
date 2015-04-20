@@ -153,7 +153,7 @@
 			<div id="blink1-block" class="detail-bottom-block">
 				<c:forEach items="${orderTransferImageDataList}" var="imageData">
 					<div class="pic-block photo-frame gallery">
-						<a href="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>">
+						<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>">
 							<img src="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>"/>
 						</a>
 						<p>(${imageData.id})</p>
@@ -257,6 +257,29 @@
 				console.log(data.msg);
 			}
 		});
+	}
+	
+	var selectedPictureIdList = [];
+	
+	function clientPictureSelected(event) {
+		var overlay = $(event.currentTarget);
+		var img = overlay.next();
+		var imgId = img.attr("id").replace("client-pic-", "");
+		if (overlay.hasClass("picture-selected")) {
+			overlay.removeClass("picture-selected");
+			removeSelectedPicture(imgId);
+		} else {
+			overlay.addClass("picture-selected");
+			selectedPictureIdList.push(imgId);
+		}
+	}
+	
+	function removeSelectedPicture(id) {
+		for (var i in selectedPictureIdList) {
+			if (selectedPictureIdList[i] == id) {
+				selectedPictureIdList.slice(i, 1);
+			}
+		}
 	}
 </script>
 </body>

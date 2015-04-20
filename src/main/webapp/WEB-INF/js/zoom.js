@@ -3,7 +3,7 @@
 
 	var zoom = $('#zoom').hide(),
 	    zoomContent = $('#zoom .content'),
-	    overlay = '<div class="overlay select-picture-overlay"></div>',
+	    overlay = '<div class="overlay select-picture-overlay" onclick="clientPictureSelected(event)"></div>',
 	    zoomedIn = false,
 	    openedImage = null,
 	    windowWidth = $(window).width(),
@@ -14,7 +14,8 @@
 			event.preventDefault();
 		}
 		var link = $(this),
-		    src = link.attr('href');
+		    src = link.attr('href')
+		    linkId = link.attr('id');
 		if (!src) {
 			return;
 		}
@@ -31,13 +32,14 @@
 		zoomContent.html(image).delay(500).addClass('loading');
 		zoomContent.prepend(overlay);
 		image.load(render).attr('src', src);
+		image.attr('id', linkId);
 		openedImage = link;
 		
 		function render() {
 			var image = $(this),
 			    borderWidth = parseInt(zoomContent.css('borderLeftWidth')),
-			    maxImageWidth = windowWidth - (borderWidth * 2),
-			    maxImageHeight = windowHeight - (borderWidth * 2),
+			    maxImageWidth = windowWidth - (borderWidth * 2) - 80,
+			    maxImageHeight = windowHeight - (borderWidth * 2) - 80,
 			    imageWidth = image.width(),
 			    imageHeight = image.height();
 			if (imageWidth == zoomContent.width() && imageWidth <= maxImageWidth && imageHeight == zoomContent.height() && imageHeight <= maxImageHeight) {
