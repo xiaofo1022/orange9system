@@ -12,6 +12,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/system/orderdetail.css'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/sidebar/component.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" />
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/zoom.css'/>"/>
 <script src="<c:url value='/js/jquery-1.11.2.min.js'/>"></script>
 <script src="<c:url value='/js/jquery-ui.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
@@ -151,7 +152,12 @@
 			</ul>
 			<div id="blink1-block" class="detail-bottom-block">
 				<c:forEach items="${orderTransferImageDataList}" var="imageData">
-					<div class="pic-block"><img src="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>"/><p>(${imageData.id})</p></div>
+					<div class="pic-block photo-frame gallery">
+						<a href="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>">
+							<img src="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+						</a>
+						<p>(${imageData.id})</p>
+					</div>
 				</c:forEach>
 				<div class="clear"></div>
 			</div>
@@ -214,6 +220,7 @@
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
+<script src="<c:url value='/js/zoom.js'/>"></script>
 <script>
 	function changeBottomNavView(nav) {
 		var navheader = $("#" + nav.id);

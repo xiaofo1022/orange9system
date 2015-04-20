@@ -47,7 +47,7 @@
 				<div class="modal-footer">
 					<input class="btn btn-primary" style="float:left;" type="file" multiple="multiple" id="upload-image"/>
 					<button id="btn-upload" type="button" class="btn btn-success" style="float:right;" onclick="uploadImage()">开始上传</button>
-					<!-- <button type="button" class="btn btn-info" style="float:right;" onclick="emptyUploadContainer()">清空</button> -->
+					<button id="btn-clear" type="button" class="btn btn-info" style="float:right;" onclick="emptyUploadContainer()">清空</button>
 				</div>
 			</div>
 		</div>
@@ -98,7 +98,8 @@
 	function getTransferInfo(data) {
 		return '<p class="model-label transfer-label">'
 			+ '导图人：<img src="' + data.operator.header + '"/><span class="ml10">' + data.operator.name + '</span>'
-			+ '<button id="btn-transfer-' + data.id + '" class="btn btn-success ml10" onclick="openUploadImageWindow(' + data.id + ', ' + data.orderId + ')">导图</button></p>';
+			+ '<button id="btn-transfer-' + data.id + '" class="btn btn-info ml10" onclick="openUploadImageWindow(' + data.id + ', ' + data.orderId + ')">导图</button>'
+			+ '<button id="btn-transfer-done-' + data.id + '" class="btn btn-success ml10" onclick="setTransferComplete(' + data.id + ', ' + data.orderId + ')">完成</button></p>';
 	}
 	
 	function getTransferBar(data) {
@@ -113,6 +114,22 @@
 		$("#uploadImagesModal").modal("show");
 	}
 	
+	function setTransferComplete(orderTransferId, orderId) {
+		var result = confirm("确定导图工作已完成吗？");
+		if (result) {
+			$.ajax({  
+	            url: "<c:url value='/orderTransfer/setTransferImageIsDone/" + orderId + "/" + orderTransferId + "'/>",  
+	            type: 'post',
+	            success: function(data) {
+	            	location.reload(true);
+	            },  
+	            error: function(data) {
+	                console.log(data);
+	            }  
+	        });
+		}
+	}
+	
 	var fileMap = {};
 	var fileCount = 0;
 	var uploadContainer = $("#upload-container");
@@ -122,19 +139,20 @@
 	function emptyUploadContainer() {
 		fileMap = {};
 		$("#upload-container").empty();
+		$("#btn-upload").text("开始上传");
 	}
 	
-	/*
 	$("#uploadImagesModal").on("hide.bs.modal", function(event) {
-		event.preventDefault();
-		alert("En?");
-		return;
+		if ($("#btn-upload").attr("disabled")) {
+			event.preventDefault();
+			return;
+		}
 	});
-	*/
 	
 	$("#uploadImagesModal").on("hidden.bs.modal", function() {
-		emptyUploadContainer();
-		$("#btn-upload").attr("disabled", false);
+		if (!$("#btn-upload").attr("disabled")) {
+			emptyUploadContainer();
+		}
 	});
 	
 	function selectImage(event) {
@@ -158,10 +176,6 @@
 						fileMap[event.target.fileIndex] = result.split(",")[1];
 					};
 					fileReader.onprogress = function(event) {
-						var fr = event.currentTarget;
-						fr.fileLoaded += event.loaded;
-						var loadPercent = Math.floor((fr.fileLoaded / fr.fileLoadedTotal) * 100);
-						$("#upload-bar-" + fr.fileIndex).css("width", loadPercent + "%");
 					};
 					fileReader.onloadstart = function(event) {
 						uploadContainer.html(uploadContainer.html() + getUploadBlock(event.currentTarget.fileIndex));
@@ -180,25 +194,24 @@
 	
 	function getUploadBlock(id) {
 		return '<div id="update-block-' + id + '" class="upload-block"><div class="progress upload-bar">'
-			+ '<div id="upload-bar-' + id + '" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div></div>'
+			+ '<div id="upload-bar-' + id + '" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%;"></div></div>'
 			+ '<span class="glyphicon glyphicon-remove upload-remove" onclick="removeSelectedImage(' + id + ')"></span>'
 			+ '<img id="upload-img-' + id + '" src="<c:url value="/images/loading.gif"/>"/></div>';
 	}
 	
 	function uploadImage() {
-		$("#uploadImagesModal").modal("hide");
-		var orderTransferImageId = $("#orderTransferImageId").val();
-		var orderId = $("#orderId").val();
-		$("#btn-upload").attr("disabled", true);
-		var transferButton = $("#btn-transfer-" + orderTransferImageId);
-		var timeLabelId = "time-label-" + orderTransferImageId;
-		var remainTimeId =  "remain-time-" + orderTransferImageId;
-		var timeBarId = "time-progress-bar-" + orderTransferImageId;
-		var uploadFileMap = fileMap;
-		var transferUploader = new TransferUploader(orderId, orderTransferImageId, transferButton, timeLabelId, remainTimeId, timeBarId, uploadFileMap);
-		transferUploader.setUploadUrl("<c:url value='/orderTransfer/uploadTransferImage'/>");
-		transferUploader.setUploadDoneUrl("<c:url value='/orderTransfer/setTransferImageIsDone'/>")
-		transferUploader.uploadImage();
+		if ($("#btn-upload").text() == "开始上传") {
+			var orderTransferImageId = $("#orderTransferImageId").val();
+			var orderId = $("#orderId").val();
+			var transferButton = $("#btn-upload");
+			var clearButton = $("#btn-clear");
+			var uploadFileMap = fileMap;
+			var transferUploader = new TransferUploader(orderId, orderTransferImageId, transferButton, clearButton, uploadFileMap);
+			transferUploader.setUploadUrl("<c:url value='/orderTransfer/uploadTransferImage'/>");
+			transferUploader.uploadImage();
+		} else {
+			$("#uploadImagesModal").modal("hide");
+		}
 	}
 </script>
 </body>

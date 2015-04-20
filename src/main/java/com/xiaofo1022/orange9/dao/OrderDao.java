@@ -43,4 +43,8 @@ public class OrderDao {
 		commonDao.update("UPDATE ORDERS SET STATUS_ID = ?, UPDATE_DATETIME = ? WHERE ID = ?", orderStatus.getId(), new Date(), order.getId());
 		orderHistoryDao.addOrderHistory(order, OrderStatusConst.STATUS_CHANGE + orderStatus.getName());
 	}
+	
+	public List<Order> getOrderListByStatus(int statusId) {
+		return commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE ACTIVE = 1 AND STATUS_ID = ? ORDER BY SHOOT_DATE, SHOOT_HALF", statusId);
+	}
 }

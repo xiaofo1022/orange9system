@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
+import com.xiaofo1022.orange9.common.StatusConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.LoginDao;
+import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderTimeLimitDao;
 import com.xiaofo1022.orange9.modal.Login;
 import com.xiaofo1022.orange9.modal.User;
@@ -28,6 +30,8 @@ public class MainController {
 	private LoginDao loginDao;
 	@Autowired
 	private OrderTimeLimitDao orderTimeLimitDao;
+	@Autowired
+	private OrderDao orderDao;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String index() {
@@ -61,6 +65,12 @@ public class MainController {
 	public String system2transferimage(ModelMap modelMap) {
 		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.TRANSFER_ID).getLimitMinutes());
 		return "system2transferimage";
+	}
+	
+	@RequestMapping(value="/clientWaiting", method=RequestMethod.GET)
+	public String system2clientwaiting(ModelMap map) {
+		map.addAttribute("orderList", orderDao.getOrderListByStatus(StatusConst.WAITING_FOR_CLIENT_CHOSE));
+		return "system2clientwaiting";
 	}
 	
 	@RequestMapping(value="/order", method=RequestMethod.GET)

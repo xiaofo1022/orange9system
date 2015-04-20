@@ -1,9 +1,9 @@
 (function($) {
-	$('body').append('<div id="zoom"><a class="close"></a><a href="#previous" class="previous"></a><a href="#next" class="next"></a><div class="content loading"></div></div>');
+	$('body').append('<div id="zoom" style="text-align:center;"><span style="color:white;">已选 (0 / 8) 张</span><a class="close"></a><a href="#previous" class="previous"></a><a href="#next" class="next"></a><div class="content loading"></div></div>');
 
 	var zoom = $('#zoom').hide(),
 	    zoomContent = $('#zoom .content'),
-	    overlay = '<div class="overlay"></div>',
+	    overlay = '<div class="overlay select-picture-overlay"></div>',
 	    zoomedIn = false,
 	    openedImage = null,
 	    windowWidth = $(window).width(),
@@ -73,16 +73,16 @@
 	
 	function openPrevious() {
 		var prev = openedImage.parent('div').prev();
-		if (prev.length == 0) {
-			prev = $('#img-container div:last-child');
+		if (prev.length == 0 || prev.hasClass("clear")) {
+			prev = $('#blink1-block div:last-child').prev();
 		}
 		prev.find('a').trigger('click');
 	}
 	
 	function openNext() {
 		var next = openedImage.parent('div').next();
-		if (next.length == 0) {
-			next = $('#img-container div:first-child');
+		if (next.length == 0 || next.hasClass("clear")) {
+			next = $('#blink1-block div:first-child');
 		}
 		next.children('a').trigger('click');
 	}
