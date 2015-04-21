@@ -1,9 +1,10 @@
 (function($) {
-	$('body').append('<div id="zoom" style="text-align:center;"><span style="color:white;">已选 (0 / 8) 张</span><a class="close"></a><a href="#previous" class="previous"></a><a href="#next" class="next"></a><div class="content loading"></div></div>');
+	$('body').append('<div id="zoom" style="text-align:center;"><span id="chosen-label" style="color:white;"></span><a class="close"></a><a href="#previous" class="previous"></a><a href="#next" class="next"></a><div class="content loading"></div><button class="btn btn-warning btn-sm" style="position:absolute;bottom:5px;left:50%;" onclick="submitSelectedPictures()">提交</button></div>');
 
 	var zoom = $('#zoom').hide(),
 	    zoomContent = $('#zoom .content'),
 	    overlay = '<div class="overlay select-picture-overlay" onclick="clientPictureSelected(event)"></div>',
+	    selectedOverlay = '<div class="overlay select-picture-overlay picture-selected" onclick="clientPictureSelected(event)"></div>',
 	    zoomedIn = false,
 	    openedImage = null,
 	    windowWidth = $(window).width(),
@@ -30,7 +31,11 @@
 			$('body').addClass('zoomed');
 		}
 		zoomContent.html(image).delay(500).addClass('loading');
-		zoomContent.prepend(overlay);
+		if (isPictureSelected(linkId)) {
+			zoomContent.prepend(selectedOverlay);
+		} else {
+			zoomContent.prepend(overlay);
+		}
 		image.load(render).attr('src', src);
 		image.attr('id', linkId);
 		openedImage = link;

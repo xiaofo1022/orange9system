@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.StatusConst;
+import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderHistoryDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
@@ -45,6 +46,8 @@ public class OrderController {
 	private UserDao userDao;
 	@Autowired
 	private OrderTransferDao orderTransferDao;
+	@Autowired
+	private OrderConvertDao orderConvertDao;
 	
 	@RequestMapping(value = "/addOrder", method = RequestMethod.POST)
 	@ResponseBody
@@ -77,7 +80,7 @@ public class OrderController {
 			modelMap.addAttribute("timeCost", DatetimeUtil.getDatetimeDiff(orderDetail.getInsertDatetime(), new Date()));
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
-			modelMap.addAttribute("orderTransfer", orderTransferDao.getOrderTransfer(orderId));
+			modelMap.addAttribute("orderConvert", orderConvertDao.getOrderConvert(orderId));
 			modelMap.addAttribute("orderTransferImageDataList", orderTransferDao.getTransferImageDataListByOrder(orderId));
 			modelMap.addAttribute("userList", userDao.getUserList());
 		}
@@ -101,7 +104,7 @@ public class OrderController {
 		if (user != null) {
 			order.setUserId(user.getId());
 		}
-		if (order != null && orderStatus != null && order.getStatusId() < orderStatusId) {
+		if (order != null && orderStatus != null) {
 			orderDao.updateOrderStatus(order, orderStatus);
 		}
 	}

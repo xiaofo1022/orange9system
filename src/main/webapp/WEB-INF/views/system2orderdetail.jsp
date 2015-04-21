@@ -33,7 +33,7 @@
 		</button>
 	</div>
 	
-	<div id="setTransferModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
+	<div id="setConvertModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -42,7 +42,7 @@
 				</div>
 				<div class="modal-body">	
 					<div style="width:200px;">
-						<select id="transferSelect" class="form-control">
+						<select id="convertorSelect" class="form-control">
 							<c:forEach items="${userList}" var="user">
 								<option value="${user.id}">${user.name}</option>
 							</c:forEach>
@@ -50,7 +50,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button id="btnSetTransfer" type="button" class="btn btn-primary" onclick="setTransfer()">确定</button>
+					<button id="btnSetTransfer" type="button" class="btn btn-primary" onclick="setConvert()">确定</button>
 				</div>
 			</div>
 		</div>
@@ -98,6 +98,7 @@
 		</div>
 		<div class="order-detail-block bd-blue">
 			拍摄信息：
+			<input type="hidden" id="photographerId" value="${orderDetail.photographer.id}"/>
 			<span>摄影师：<img src="${orderDetail.photographer.header}"/><span class="oc-label">${orderDetail.photographer.name}</span></span>
 			<c:if test="${orderDetail.assistant != null}">
 				<span>助理：<img src="${orderDetail.assistant.header}"/><span class="oc-label">${orderDetail.assistant.name}</span></span>
@@ -113,9 +114,15 @@
 			后期情况：
 			<span>导图：
 				<c:choose>
-					<c:when test="${orderTransfer != null}">
-						<img src="${orderTransfer.operator.header}"/>
-						<span class="oc-label">${orderTransfer.operator.name}</span>
+					<c:when test="${orderDetail.orderStatus.name.equals('导图')}">
+						<c:choose>
+							<c:when test="${orderConvert == null}">
+								<button class="btn btn-info" onclick="showSetConvertWindow()">指定</button>
+							</c:when>
+							<c:otherwise>
+								<img src="${orderConvert.operator.header}"/><span class="oc-label">${orderConvert.operator.name}</span>
+							</c:otherwise>
+						</c:choose>
 					</c:when>
 					<c:otherwise>
 						<span class="oc-label">未开始</span>
@@ -156,7 +163,14 @@
 						<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>">
 							<img src="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>"/>
 						</a>
-						<p>(${imageData.id})</p>
+						<c:choose>
+							<c:when test="${imageData.isSelected == 1}">
+								<p id="client-pic-label-${imageData.id}">(${imageData.id})<span class='orange-color'>已选</span></p>
+							</c:when>
+							<c:otherwise>
+								<p id="client-pic-label-${imageData.id}">(${imageData.id})</p>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</c:forEach>
 				<div class="clear"></div>
@@ -222,6 +236,10 @@
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/zoom.js'/>"></script>
 <script>
+	function showSetConvertWindow() {
+		$("#setConvertModal").modal("show");
+	}
+
 	function changeBottomNavView(nav) {
 		var navheader = $("#" + nav.id);
 		$(".detail-bottom-block").addClass("hidden");
@@ -233,52 +251,121 @@
 	function updateOrderStatus() {
 		var orderId = $("#orderId").val();
 		var statusId = $("#orderStatus").val();
-		if (statusId == 3) {
-			$("#setTransferModal").modal("show");
+		if (statusId == 2 || statusId == 3) {
+			setTransfer();
 		} else {
 			$.post("<c:url value='/order/updateOrderStatus/" + orderId + "/" + statusId + "'/>", null, function(data, status) {
 				if (data.status == "success") {
 					location.reload(true);
 				} else {
-					console.log(data.msg);
+					console.log(data);
 				}
 			});
 		}
 	}
 	
 	function setTransfer() {
-		$("#setTransferModal").modal("hide");
 		var orderId = $("#orderId").val();
-		var userId = $("#transferSelect").val();
+		var userId = $("#photographerId").val();
 		$.post("<c:url value='/order/setOrderTransfer/" + orderId + "/" + userId + "'/>", null, function(data, status) {
 			if (data.status == "success") {
 				location.reload(true);
 			} else {
-				console.log(data.msg);
+				console.log(data);
+			}
+		});
+	}
+	
+	function setConvert() {
+		var orderId = $("#orderId").val();
+		var userId = $("#convertorSelect").val();
+		$.post("<c:url value='/orderConvert/setOrderConvertor/" + orderId + "/" + userId + "'/>", null, function(data, status) {
+			if (data.status == "success") {
+				location.reload(true);
+			} else {
+				console.log(data);
 			}
 		});
 	}
 	
 	var selectedPictureIdList = [];
+	var CHOSEN_MAX = 4;
+	var isConfirmOverSelect = false;
+	var selectedLabel = "<span class='orange-color'>已选</span>";
+	
+	setChosenLabel();
 	
 	function clientPictureSelected(event) {
 		var overlay = $(event.currentTarget);
 		var img = overlay.next();
 		var imgId = img.attr("id").replace("client-pic-", "");
+		var clientLabel = $("#client-pic-label-" + imgId);
 		if (overlay.hasClass("picture-selected")) {
 			overlay.removeClass("picture-selected");
 			removeSelectedPicture(imgId);
+			clientLabel.html("(" + imgId + ")");
 		} else {
-			overlay.addClass("picture-selected");
-			selectedPictureIdList.push(imgId);
+			if (selectedPictureIdList.length == CHOSEN_MAX) {
+				if (!isConfirmOverSelect) {
+					var result = confirm("您选定的张数已超过上限，继续选择每张将收取10元的额外费用，是否继续选择？");
+					isConfirmOverSelect = result;
+				}
+				if (isConfirmOverSelect) {
+					overlay.addClass("picture-selected");
+					selectedPictureIdList.push(imgId);
+					CHOSEN_MAX++;
+				}
+			} else {
+				overlay.addClass("picture-selected");
+				selectedPictureIdList.push(imgId);
+			}
+			clientLabel.html(clientLabel.text() + selectedLabel);
 		}
+		setChosenLabel();
+	}
+	
+	function setChosenLabel() {
+		$("#chosen-label").text("已选 (" + selectedPictureIdList.length + " / " + CHOSEN_MAX + ") 张");
+	}
+	
+	function isPictureSelected(linkId) {
+		var id = linkId.replace("client-pic-", "");
+		for (var i in selectedPictureIdList) {
+			if (selectedPictureIdList[i] == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	function removeSelectedPicture(id) {
 		for (var i in selectedPictureIdList) {
 			if (selectedPictureIdList[i] == id) {
-				selectedPictureIdList.slice(i, 1);
+				selectedPictureIdList.splice(i, 1);
 			}
+		}
+	}
+	
+	function submitSelectedPictures() {
+		if (selectedPictureIdList.length == 0) {
+			alert("您还未选定照片");
+			return;
+		}
+		var result = confirm("您已选定" + selectedPictureIdList.length + "张照片，是否确定提交？");
+		if (result) {
+			$('#zoom .close').click();
+			$.ajax({  
+	            url: "<c:url value='/orderTransfer/setTransferImageSelected/" + $("#orderId").val() + "'/>",  
+	            type: 'post',
+	            contentType: 'application/json',
+	            data: JSON.stringify(selectedPictureIdList),  
+	            success: function(data) {
+	            	location.reload(true);
+	            },  
+	            error: function(data) {
+	            	console.log(data);
+	            }
+			});
 		}
 	}
 </script>

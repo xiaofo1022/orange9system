@@ -76,4 +76,24 @@ public class OrderTransferController {
 		}
 		return new SuccessResponse("Set Transfer Image Is Done Success");
 	}
+	
+	@RequestMapping(value = "/setTransferImageSelected/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse setTransferImageSelected(@RequestBody List<Integer> transferImgIdList, BindingResult bindingResult, @PathVariable int orderId, HttpServletRequest request) {
+		if (transferImgIdList != null) {
+			for (Integer id : transferImgIdList) {
+				orderTransferDao.setTransferImageSelected(id);
+			}
+		}
+		Order order = orderDao.getOrderDetail(orderId);
+		if (order != null) {
+			User user = RequestUtil.getLoginUser(request);
+			if (user != null) {
+				order.setUserId(user.getId());
+			}
+			OrderStatus orderStatus = orderStatusDao.getOrderStatus(StatusConst.CONVERT_IMAGE);
+			orderDao.updateOrderStatus(order, orderStatus);
+		}
+		return new SuccessResponse("Set Transfer Image Selected Success");
+	}
 }

@@ -5,8 +5,9 @@
 	<ul>
 		<li><a class="icon icon-data" href="<c:url value='/orderSummary'/>">订单一览</a></li>
 		<li><a class="icon icon-study nav-sidebar" href="#">拍摄中</a></li>
-		<li><a class="icon icon-study nav-sidebar" href="<c:url value='/transferImage'/>">导图</a></li>
+		<li><a class="icon icon-study nav-sidebar" href="<c:url value='/transferImage'/>">上传原片</a></li>
 		<li><a class="icon icon-photo nav-sidebar" href="<c:url value='/clientWaiting'/>">等待客户选片</a></li>
+		<li><a class="icon icon-photo nav-sidebar" href="<c:url value='/convertImage'/>">导图</a></li>
 		<li><a class="icon icon-photo nav-sidebar" href="#">修皮肤及褶皱</a></li>
 		<li><a class="icon icon-photo nav-sidebar" href="#">修背景</a></li>
 		<li><a class="icon icon-photo nav-sidebar" href="#">裁图液化</a></li>

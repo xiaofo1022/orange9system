@@ -14,6 +14,11 @@ public class OrderTransferImageData {
 	private String imageData;
 	@Column("ORDER_ID")
 	private int orderId;
+	@Column("FILE_NAME")
+	private String fileName;
+	@Column("IS_SELECTED")
+	private int isSelected;
+	
 	private String serverPath;
 	
 	public int getId() {
@@ -51,5 +56,17 @@ public class OrderTransferImageData {
 	}
 	public void setServerPath(String serverPath) {
 		this.serverPath = serverPath;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public int getIsSelected() {
+		return isSelected;
+	}
+	public void setIsSelected(int isSelected) {
+		this.isSelected = isSelected;
 	}
 }

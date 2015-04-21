@@ -27,7 +27,7 @@
 }
 #zoom .content .overlay {
 	position: absolute;
-	border: 1px solid rgba(255, 255, 255, .08);
+	/*border: 1px solid rgba(255, 255, 255, .08);*/
 	top: -1px;
 	left: -1px;
 	width: 100%;
@@ -86,7 +86,7 @@
 
 #zoom .select-picture-overlay:hover {
 	cursor:pointer;
-	border:3px solid #F0AD4E;
+	/*border:3px solid #F0AD4E;*/
 }
 
 #zoom .picture-selected {

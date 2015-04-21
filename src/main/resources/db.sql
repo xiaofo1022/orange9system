@@ -124,13 +124,14 @@ COLLATE=utf8_general_ci;
 INSERT INTO orange9.order_status (ID,NAME) VALUES 
 (1,'拍摄中')
 ,(2,'拍摄完成')
-,(3,'导图')
+,(3,'上传原片')
 ,(4,'等待客户选片')
-,(5,'修皮肤及褶皱')
-,(6,'修背景')
-,(7,'裁图液化')
-,(8,'审图')
-,(9,'完成')
+,(5,'导图')
+,(6,'修皮肤及褶皱')
+,(7,'修背景')
+,(8,'裁图液化')
+,(9,'审图')
+,(10,'完成')
 ;
 
 CREATE TABLE orange9.order_transfer_image (
@@ -154,6 +155,7 @@ ENGINE=InnoDB;
 
 INSERT INTO orange9.order_time_limit (ID,NAME,LIMIT_MINUTES) VALUES 
 (1,'TRANSFER_IMAGE',30)
+,(2,'CONVERT_IMAGE',300)
 ;
 
 CREATE TABLE orange9.order_transfer_image_data (
@@ -161,7 +163,22 @@ CREATE TABLE orange9.order_transfer_image_data (
 	ORDER_TRANSFER_IMAGE_ID INT,
 	INSERT_DATETIME DATETIME,
 	ORDER_ID INT,
+	FILE_NAME VARCHAR(100),
+	IS_SELECTED INT DEFAULT 0,
 	CONSTRAINT order_transfer_image_data_PK PRIMARY KEY (ID)
+)
+ENGINE=InnoDB
+DEFAULT CHARSET=utf8
+COLLATE=utf8_general_ci;
+
+CREATE TABLE orange9.order_convert_image (
+	ID INT NOT NULL AUTO_INCREMENT,
+	ORDER_ID INT,
+	INSERT_DATETIME DATETIME,
+	UPDATE_DATETIME DATETIME,
+	OPERATOR_ID INT,
+	IS_DONE INT DEFAULT 0,
+	CONSTRAINT order_convert_image_PK PRIMARY KEY (ID)
 )
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8

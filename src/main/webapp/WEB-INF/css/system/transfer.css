@@ -24,6 +24,10 @@ div.upload-block img {
 	width:100%;
 }
 
+div.upload-block p {
+	margin:0;
+}
+
 div.upload-bar {
 	margin-bottom:5px;
 	height:5px;

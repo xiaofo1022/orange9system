@@ -38,12 +38,33 @@ public class OrderTransferDao {
 	}
 	
 	public void insertOrderTransferImageData(OrderTransferImageData transferImageData) {
-		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (ORDER_TRANSFER_IMAGE_ID, INSERT_DATETIME, ORDER_ID) VALUES (?, ?, ?)",
-				transferImageData.getOrderTransferImageId(), new Date(), transferImageData.getOrderId());
+		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (ORDER_TRANSFER_IMAGE_ID, INSERT_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?)",
+				transferImageData.getOrderTransferImageId(), new Date(), transferImageData.getOrderId(), transferImageData.getFileName());
 		transferImageData.setId(id);
 	}
 	
 	public void setTransferImageIsDone(int tansferId, int isDone) {
 		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE SET IS_DONE = ?, UPDATE_DATETIME = ? WHERE ID = ?", isDone, new Date(), tansferId);
+	}
+	
+	public void setTransferImageSelected(int tansferImgId) {
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET IS_SELECTED = 1 WHERE ID = ?", tansferImgId);
+	}
+	
+	public String getTransferImageNames(int orderId) {
+		List<OrderTransferImageData> transferImageDataList = this.getTransferImageDataListByOrder(orderId);
+		if (transferImageDataList != null && transferImageDataList.size() > 0) {
+			StringBuilder builder = new StringBuilder();
+			for (int i = 0; i < transferImageDataList.size(); i++) {
+				OrderTransferImageData transferImageData = transferImageDataList.get(i);
+				String fileName = transferImageData.getFileName();
+				builder.append(fileName == null ? "" : fileName);
+				if (i < transferImageDataList.size() - 1) {
+					builder.append(" OR ");
+				}
+			}
+			return builder.toString();
+		}
+		return "";
 	}
 }

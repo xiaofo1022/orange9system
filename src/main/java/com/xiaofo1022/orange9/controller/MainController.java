@@ -16,8 +16,10 @@ import com.xiaofo1022.orange9.common.Message;
 import com.xiaofo1022.orange9.common.StatusConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.LoginDao;
+import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderTimeLimitDao;
+import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.Login;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -32,6 +34,10 @@ public class MainController {
 	private OrderTimeLimitDao orderTimeLimitDao;
 	@Autowired
 	private OrderDao orderDao;
+	@Autowired
+	private OrderConvertDao orderConvertDao;
+	@Autowired
+	private UserDao userDao;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String index() {
@@ -65,6 +71,14 @@ public class MainController {
 	public String system2transferimage(ModelMap modelMap) {
 		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.TRANSFER_ID).getLimitMinutes());
 		return "system2transferimage";
+	}
+	
+	@RequestMapping(value="/convertImage", method=RequestMethod.GET)
+	public String system2convertimage(ModelMap modelMap) {
+		modelMap.addAttribute("orderConvertList", orderConvertDao.getOrderConvertList());
+		modelMap.addAttribute("userList", userDao.getUserList());
+		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.CONVERT_ID).getLimitMinutes());
+		return "system2convertimage";
 	}
 	
 	@RequestMapping(value="/clientWaiting", method=RequestMethod.GET)

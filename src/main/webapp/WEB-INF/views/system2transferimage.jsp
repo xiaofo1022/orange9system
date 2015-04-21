@@ -91,14 +91,14 @@
 	
 	function getTransferHeader(data) {
 		return '<p class="model-label transfer-label">'
-			+ '单号：<span>O9' + data.id + '</span><span id="time-label-' + data.id + '" class="ml10" style="color:#F0AD4E;">'
+			+ '单号：<a href="<c:url value="/order/orderDetail/' + data.orderId + '"/>" target="_blank">O9' + data.orderId + '</a><span id="time-label-' + data.id + '" class="ml10" style="color:#F0AD4E;">'
 			+ '剩余时间：</span><span id="remain-time-' + data.id + '"></span></p>';
 	}
 	
 	function getTransferInfo(data) {
 		return '<p class="model-label transfer-label">'
-			+ '导图人：<img src="' + data.operator.header + '"/><span class="ml10">' + data.operator.name + '</span>'
-			+ '<button id="btn-transfer-' + data.id + '" class="btn btn-info ml10" onclick="openUploadImageWindow(' + data.id + ', ' + data.orderId + ')">导图</button>'
+			+ '摄影师：<img src="' + data.operator.header + '"/><span class="ml10">' + data.operator.name + '</span>'
+			+ '<button id="btn-transfer-' + data.id + '" class="btn btn-info ml10" onclick="openUploadImageWindow(' + data.id + ', ' + data.orderId + ')">上传</button>'
 			+ '<button id="btn-transfer-done-' + data.id + '" class="btn btn-success ml10" onclick="setTransferComplete(' + data.id + ', ' + data.orderId + ')">完成</button></p>';
 	}
 	
@@ -115,7 +115,7 @@
 	}
 	
 	function setTransferComplete(orderTransferId, orderId) {
-		var result = confirm("确定导图工作已完成吗？");
+		var result = confirm("确定原片已上传完成吗？");
 		if (result) {
 			$.ajax({  
 	            url: "<c:url value='/orderTransfer/setTransferImageIsDone/" + orderId + "/" + orderTransferId + "'/>",  
@@ -160,25 +160,33 @@
 			for (var i in this.files) {
 				var file = this.files[i];
 				if (!(file.type && file.type.indexOf('image') == 0 && /\.(?:jpg|JPG)$/.test(file.name))) {
-					return;
+					continue;
 				}
 				if (file.size > 1024 * 1024 * 1024) {
-					return;
+					continue;
 				}
 				if (typeof(file) == "object") {
 					var fileReader = new FileReader();
 					fileReader.fileIndex = fileCount;
 					fileReader.fileLoaded = 0;
+					fileReader.fileName = file.name.split(".")[0];
 					fileReader.fileLoadedTotal = file.size;
 					fileReader.onload = function(event) {
 						var result = event.target.result;
 						$("#upload-img-" + event.currentTarget.fileIndex).attr("src", result);
-						fileMap[event.target.fileIndex] = result.split(",")[1];
+						var fileData = result.split(",")[1];
+						var fileName = event.currentTarget.fileName;
+						fileMap[event.target.fileIndex] = {fileName:fileName, fileData:fileData};
 					};
 					fileReader.onprogress = function(event) {
 					};
 					fileReader.onloadstart = function(event) {
-						uploadContainer.html(uploadContainer.html() + getUploadBlock(event.currentTarget.fileIndex));
+						var fileIndex = event.currentTarget.fileIndex;
+						var fileName = event.currentTarget.fileName;
+						if (fileName.length > 12) {
+							fileName = fileName.substring(0, 8) + "...";
+						}
+						uploadContainer.html(uploadContainer.html() + getUploadBlock(fileIndex, fileName));
 					};
 					fileReader.readAsDataURL(file);
 					fileCount++;
@@ -192,11 +200,12 @@
 		delete fileMap[id];
 	}
 	
-	function getUploadBlock(id) {
+	function getUploadBlock(id, fileName) {
 		return '<div id="update-block-' + id + '" class="upload-block"><div class="progress upload-bar">'
 			+ '<div id="upload-bar-' + id + '" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%;"></div></div>'
 			+ '<span class="glyphicon glyphicon-remove upload-remove" onclick="removeSelectedImage(' + id + ')"></span>'
-			+ '<img id="upload-img-' + id + '" src="<c:url value="/images/loading.gif"/>"/></div>';
+			+ '<img id="upload-img-' + id + '" src="<c:url value="/images/loading.gif"/>"/>'
+			+ '<p>' + fileName + '</p></div>';
 	}
 	
 	function uploadImage() {

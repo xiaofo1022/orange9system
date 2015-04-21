@@ -23,11 +23,12 @@ TransferUploader.prototype = {
 			this.transferButton.text(transferTip);
 			var ins = this;
 			for (var key in this.uploadFileMap) {
-				var fileData = this.uploadFileMap[key];
+				var file = this.uploadFileMap[key];
 				var transferImageData = {
 					orderTransferImageId: this.orderTransferImageId,
 					orderId: this.orderId,
-					imageData: fileData
+					imageData: file.fileData,
+					fileName: file.fileName
 				};
 				$.ajax({  
 		            url: this.url,  
