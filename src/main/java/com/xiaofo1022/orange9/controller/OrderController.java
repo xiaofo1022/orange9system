@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xiaofo1022.orange9.common.StatusConst;
+import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderHistoryDao;
+import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderTransferDao;
 import com.xiaofo1022.orange9.dao.UserDao;
@@ -37,17 +38,19 @@ import com.xiaofo1022.orange9.util.RequestUtil;
 @Transactional
 public class OrderController {
 	@Autowired
+	private UserDao userDao;
+	@Autowired
 	private OrderDao orderDao;
 	@Autowired
 	private OrderStatusDao orderStatusDao;
 	@Autowired
 	private OrderHistoryDao orderHistoryDao;
 	@Autowired
-	private UserDao userDao;
-	@Autowired
 	private OrderTransferDao orderTransferDao;
 	@Autowired
 	private OrderConvertDao orderConvertDao;
+	@Autowired
+	private OrderPostProductionDao orderPostProductionDao;
 	
 	@RequestMapping(value = "/addOrder", method = RequestMethod.POST)
 	@ResponseBody
@@ -81,6 +84,7 @@ public class OrderController {
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
 			modelMap.addAttribute("orderConvert", orderConvertDao.getOrderConvert(orderId));
+			modelMap.addAttribute("orderFixSkinList", orderPostProductionDao.getFixSkinGroupListByOrder(orderId));
 			modelMap.addAttribute("orderTransferImageDataList", orderTransferDao.getTransferImageDataListByOrder(orderId));
 			modelMap.addAttribute("userList", userDao.getUserList());
 		}
@@ -116,7 +120,7 @@ public class OrderController {
 			@PathVariable int userId, 
 			HttpServletRequest request) {
 		orderTransferDao.insertOrderTransfer(orderId, userId);
-		updateOrderStatusAction(orderId, StatusConst.TRANSFER_IMAGE, request);
+		updateOrderStatusAction(orderId, OrderStatusConst.TRANSFER_IMAGE, request);
 		return new SuccessResponse("Set Order Transfer Success");
 	}
 }

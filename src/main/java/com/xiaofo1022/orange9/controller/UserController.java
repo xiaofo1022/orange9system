@@ -46,7 +46,7 @@ public class UserController {
 	public List<User> getUserList(HttpServletRequest request) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
-			return userDao.getUserList(loginUser.getId());
+			return userDao.getUserList();
 		}
 		return null;
 	}

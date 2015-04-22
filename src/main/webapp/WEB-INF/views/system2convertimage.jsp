@@ -49,7 +49,7 @@
 				<c:choose>
 					<c:when test="${orderConvert.operatorId != 0}">
 						<img src="${orderConvert.operator.header}"/><span class="ml10">${orderConvert.operator.name}</span>
-						<button id="btn-convert-done-${orderConvert.id}" class="btn btn-success ml10">完成</button>
+						<button id="btn-convert-done-${orderConvert.id}" class="btn btn-success ml10" onclick="confirmConvertComplete(${orderConvert.orderId}, ${orderConvert.id})">完成</button>
 					</c:when>
 					<c:otherwise>
 						<button class="btn btn-info" onclick="showSetConvertWindow(${orderConvert.orderId})">指定</button>
@@ -123,6 +123,19 @@
 			new CountDown(startTime, limitSecond, "time-bar-" + id, "time-label-" + id, "remain-time-" + id);
 		}
 	});
+	
+	function confirmConvertComplete(orderId, convertId) {
+		var result = confirm("是否确认导图完成？");
+		if (result) {
+			$.post("<c:url value='/orderConvert/setOrderConvertDone/" + orderId + "/" + convertId + "'/>", null, function(data, status) {
+				if (data.status == "success") {
+					location.reload(true);
+				} else {
+					console.log(data);
+				}
+			});
+		}
+	}
 </script>
 </body>
 </html>

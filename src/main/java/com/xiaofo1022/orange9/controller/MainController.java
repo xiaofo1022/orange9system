@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
-import com.xiaofo1022.orange9.common.StatusConst;
+import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.LoginDao;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
+import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderTimeLimitDao;
 import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.Login;
@@ -36,6 +37,8 @@ public class MainController {
 	private OrderDao orderDao;
 	@Autowired
 	private OrderConvertDao orderConvertDao;
+	@Autowired
+	private OrderPostProductionDao orderPostProductionDao;
 	@Autowired
 	private UserDao userDao;
 	
@@ -81,9 +84,15 @@ public class MainController {
 		return "system2convertimage";
 	}
 	
+	@RequestMapping(value="/fixSkin", method=RequestMethod.GET)
+	public String system2fixskin(ModelMap modelMap) {
+		modelMap.addAttribute("fixSkinList", orderPostProductionDao.getFixSkinList());
+		return "system2fixskin";
+	}
+	
 	@RequestMapping(value="/clientWaiting", method=RequestMethod.GET)
 	public String system2clientwaiting(ModelMap map) {
-		map.addAttribute("orderList", orderDao.getOrderListByStatus(StatusConst.WAITING_FOR_CLIENT_CHOSE));
+		map.addAttribute("orderList", orderDao.getOrderListByStatus(OrderStatusConst.WAITING_FOR_CLIENT_CHOSE));
 		return "system2clientwaiting";
 	}
 	

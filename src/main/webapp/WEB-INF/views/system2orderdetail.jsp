@@ -125,19 +125,31 @@
 						</c:choose>
 					</c:when>
 					<c:otherwise>
+						<c:choose>
+							<c:when test="${orderConvert == null}">
+								<span class="oc-label">未开始</span>
+							</c:when>
+							<c:otherwise>
+								<img src="${orderConvert.operator.header}"/><span class="oc-label">${orderConvert.operator.name}</span>
+							</c:otherwise>
+						</c:choose>
+					</c:otherwise>
+				</c:choose>
+			</span>
+			<span>修皮肤及褶皱：
+				<c:choose>
+					<c:when test="${orderFixSkinList != null && orderFixSkinList.size() > 0}">
+						<c:forEach items="${orderFixSkinList}" var="orderFixSkin">
+							<img src="${orderFixSkin.operator.header}"/><span class="oc-label">${orderFixSkin.operator.name}</span>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
 						<span class="oc-label">未开始</span>
 					</c:otherwise>
 				</c:choose>
 			</span>
-			<span>修皮肤及褶皱：<span class="oc-label">未开始</span></span>
 			<span>修背景：<span class="oc-label">未开始</span></span>
 			<span>裁图液化：<span class="oc-label">未开始</span></span>
-			<!-- 
-			<span>导图：<img src="<c:url value='/images/header/old_man.png'/>"/><span class="oc-label">李学华</span></span>
-			<span>修皮肤及褶皱：<img src="<c:url value='/images/header/shenyulin.png'/>"/><span class="oc-label">沈玉琳</span></span>
-			<span>修背景：<img src="<c:url value='/images/header/zhanglidong.png'/>"/><span class="oc-label">张立东</span></span>
-			<span>裁图液化：<img src="<c:url value='/images/header/awei.png'/>"/><span class="oc-label">常威</span></span>
-			-->
 		</div>
 		<div class="order-detail-block bd-blue">
 			<ul class="nav nav-tabs nav-justified">

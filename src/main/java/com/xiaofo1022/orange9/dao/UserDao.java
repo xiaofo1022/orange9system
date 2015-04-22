@@ -34,6 +34,10 @@ public class UserDao {
 		return commonDao.query(User.class, "SELECT * FROM USER WHERE BOSS_ID = ? AND ACTIVE = 1", bossId);
 	}
 	
+	public List<User> getUserListByRoleId(int roleId) {
+		return commonDao.query(User.class, "SELECT * FROM USER WHERE ROLE_ID = ? AND ACTIVE = 1", roleId);
+	}
+	
 	public void updateUser(User user) {
 		commonDao.update("UPDATE USER SET UPDATE_DATETIME = ?, NAME = ?, ROLE_ID = ?, PHONE = ?, SALARY = ?, PERFORMANCE_PAY = ? WHERE ID = ?",
 			new Date(), user.getName(), user.getRoleId(), user.getPhone(), user.getSalary(), user.getPerformancePay(), user.getId());

@@ -11,6 +11,8 @@ public class OrderTransferImageData {
 	private int orderTransferImageId;
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
+	@Column("UPDATE_DATETIME")
+	private Date updateDatetime;
 	private String imageData;
 	@Column("ORDER_ID")
 	private int orderId;
@@ -68,5 +70,11 @@ public class OrderTransferImageData {
 	}
 	public void setIsSelected(int isSelected) {
 		this.isSelected = isSelected;
+	}
+	public Date getUpdateDatetime() {
+		return updateDatetime;
+	}
+	public void setUpdateDatetime(Date updateDatetime) {
+		this.updateDatetime = updateDatetime;
 	}
 }

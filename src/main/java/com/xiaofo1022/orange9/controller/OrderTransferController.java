@@ -14,15 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.OrderStatusConst;
-import com.xiaofo1022.orange9.common.StatusConst;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderTransferDao;
-import com.xiaofo1022.orange9.modal.Order;
-import com.xiaofo1022.orange9.modal.OrderStatus;
 import com.xiaofo1022.orange9.modal.OrderTransferImage;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
-import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
 import com.xiaofo1022.orange9.thread.SaveTransferImageThread;
@@ -65,15 +61,7 @@ public class OrderTransferController {
 	@ResponseBody
 	public CommonResponse setTransferImageIsDone(@PathVariable int orderId, @PathVariable int tansferId, HttpServletRequest request) {
 		orderTransferDao.setTransferImageIsDone(tansferId, OrderStatusConst.ORDER_TRANSFER_IMAGE_DONE);
-		Order order = orderDao.getOrderDetail(orderId);
-		if (order != null) {
-			User user = RequestUtil.getLoginUser(request);
-			if (user != null) {
-				order.setUserId(user.getId());
-			}
-			OrderStatus orderStatus = orderStatusDao.getOrderStatus(StatusConst.WAITING_FOR_CLIENT_CHOSE);
-			orderDao.updateOrderStatus(order, orderStatus);
-		}
+		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.WAITING_FOR_CLIENT_CHOSE);
 		return new SuccessResponse("Set Transfer Image Is Done Success");
 	}
 	
@@ -85,15 +73,7 @@ public class OrderTransferController {
 				orderTransferDao.setTransferImageSelected(id);
 			}
 		}
-		Order order = orderDao.getOrderDetail(orderId);
-		if (order != null) {
-			User user = RequestUtil.getLoginUser(request);
-			if (user != null) {
-				order.setUserId(user.getId());
-			}
-			OrderStatus orderStatus = orderStatusDao.getOrderStatus(StatusConst.CONVERT_IMAGE);
-			orderDao.updateOrderStatus(order, orderStatus);
-		}
+		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
 		return new SuccessResponse("Set Transfer Image Selected Success");
 	}
 }

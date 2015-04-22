@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.xiaofo1022.orange9.common.StatusConst;
+import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderConvertImage;
@@ -31,7 +31,7 @@ public class OrderConvertDao {
 	
 	public List<OrderConvertImage> getOrderConvertList() {
 		List<OrderConvertImage> resultList = null;
-		List<Order> orderList = commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE STATUS_ID = ?", StatusConst.CONVERT_IMAGE);
+		List<Order> orderList = commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE STATUS_ID = ?", OrderStatusConst.CONVERT_IMAGE);
 		if (orderList != null && orderList.size() > 0) {
 			resultList = new ArrayList<OrderConvertImage>(orderList.size());
 			for (Order order : orderList) {
@@ -46,5 +46,9 @@ public class OrderConvertDao {
 			}
 		}
 		return resultList;
+	}
+	
+	public void setOrderConvertDone(int orderId, int convertId) {
+		commonDao.update("UPDATE ORDER_CONVERT_IMAGE SET IS_DONE = 1 AND UPDATE_DATETIME = ? WHERE ID = ?", new Date(), convertId);
 	}
 }

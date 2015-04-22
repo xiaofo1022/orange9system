@@ -37,9 +37,14 @@ public class OrderTransferDao {
 		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? ORDER BY ID", orderId);
 	}
 	
+	public List<OrderTransferImageData> getSelectedTransferImageDataList(int orderId) {
+		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1 ORDER BY ID", orderId);
+	}
+	
 	public void insertOrderTransferImageData(OrderTransferImageData transferImageData) {
-		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (ORDER_TRANSFER_IMAGE_ID, INSERT_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?)",
-				transferImageData.getOrderTransferImageId(), new Date(), transferImageData.getOrderId(), transferImageData.getFileName());
+		Date now = new Date();
+		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (ORDER_TRANSFER_IMAGE_ID, INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?, ?)",
+			transferImageData.getOrderTransferImageId(), now, now, transferImageData.getOrderId(), transferImageData.getFileName());
 		transferImageData.setId(id);
 	}
 	
@@ -48,11 +53,14 @@ public class OrderTransferDao {
 	}
 	
 	public void setTransferImageSelected(int tansferImgId) {
-		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET IS_SELECTED = 1 WHERE ID = ?", tansferImgId);
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET IS_SELECTED = 1, UPDATE_DATETIME = ? WHERE ID = ?", new Date(), tansferImgId);
 	}
 	
 	public String getTransferImageNames(int orderId) {
-		List<OrderTransferImageData> transferImageDataList = this.getTransferImageDataListByOrder(orderId);
+		return getConnectImageName(this.getSelectedTransferImageDataList(orderId));
+	}
+	
+	public String getConnectImageName(List<OrderTransferImageData> transferImageDataList) {
 		if (transferImageDataList != null && transferImageDataList.size() > 0) {
 			StringBuilder builder = new StringBuilder();
 			for (int i = 0; i < transferImageDataList.size(); i++) {
@@ -66,5 +74,10 @@ public class OrderTransferDao {
 			return builder.toString();
 		}
 		return "";
+	}
+	
+	public void setImageDataFixSkin(int imageId, int fixSkinId) {
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET FIX_SKIN_ID = ?, UPDATE_DATETIME = ? WHERE ID = ?",
+			fixSkinId, new Date(), imageId);
 	}
 }

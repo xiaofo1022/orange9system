@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -96,7 +97,10 @@ public class CommonDao {
 									field.set(entity, resultSet.getString(columnName));
 								}
 							} else if (type == Date.class) {
-								field.set(entity, new Date(resultSet.getTimestamp(columnName).getTime()));
+								Timestamp timestamp = resultSet.getTimestamp(columnName);
+								if (timestamp != null) {
+									field.set(entity, new Date(timestamp.getTime()));
+								}
 							}
 						}
 						JoinTable joinTable = field.getAnnotation(JoinTable.class);
