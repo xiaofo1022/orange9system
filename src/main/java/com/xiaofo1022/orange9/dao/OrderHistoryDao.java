@@ -17,9 +17,10 @@ public class OrderHistoryDao {
 	@Autowired
 	private OrderDao orderDao;
 	
-	public void addOrderHistory(int orderId, String info) {
+	public void addOrderHistory(int orderId, int userId, String info) {
 		Order order = orderDao.getOrderDetail(orderId);
 		if (order != null) {
+			order.setUserId(userId);
 			this.addOrderHistory(order, info);
 		}
 	}

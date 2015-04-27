@@ -13,4 +13,5 @@ public class OrderStatusConst {
 	public static final int WAITING_FOR_CLIENT_CHOSE = 4;
 	public static final int CONVERT_IMAGE = 5;
 	public static final int POST_PRODUCTION = 6;
+	public static final int WAIT_FOR_VERIFY = 7;
 }

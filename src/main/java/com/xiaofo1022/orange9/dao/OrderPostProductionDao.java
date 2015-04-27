@@ -145,4 +145,11 @@ public class OrderPostProductionDao {
 			}
 		}
 	}
+	
+	public void insertOrderFixedImageData(OrderTransferImageData transferImageData) {
+		Date now = new Date();
+		int id = commonDao.insert("INSERT INTO ORDER_FIXED_IMAGE_DATA (INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?)",
+			now, now, transferImageData.getOrderId(), transferImageData.getFileName());
+		transferImageData.setId(id);
+	}
 }

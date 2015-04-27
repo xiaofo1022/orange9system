@@ -47,15 +47,30 @@
 			<p class="model-label transfer-label">
 				设计师：
 				<img src="${postProduction.operator.header}"/><span class="ml10">${postProduction.operator.name}</span>
+				<button id="btn-fix-upload-${postProduction.id}" class="btn btn-info ml10" onclick="openUploadImageWindow(${postProduction.orderId})">上传</button>
 				<button id="btn-fix-done-${postProduction.id}" class="btn btn-success ml10" onclick="setFixSkinDone(${postProduction.orderId}, ${postProduction.operator.id})">完成</button>
 			</p>
 		</div>
 	</c:forEach>
+	
+	<jsp:include page="system2uploadimage.jsp"/>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
+<script src="<c:url value='/js/util/transferUploader.js'/>"></script>
 <script>
+	init();
+
+	function openUploadImageWindow(orderId) {
+		$("#orderId").val(orderId);
+		$("#uploadImagesModal").modal("show");
+	}
+	
+	function init() {
+		$("#upload-url").val("<c:url value='/orderPostProduction/uploadFixedImage'/>");
+	}
+
 	function setFixSkinDone(orderId, userId) {
 		var result = confirm("是否确定裁图液化已完成？");
 		if (result) {

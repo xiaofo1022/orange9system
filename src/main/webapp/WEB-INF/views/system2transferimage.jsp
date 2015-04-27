@@ -31,9 +31,7 @@
 	
 	<div id="transferContainer"></div>
 	
-	<jsp:include page="system2uploadimage.jsp">
-		<jsp:param value="<c:url value='/orderTransfer/uploadTransferImage'/>" name="uploadUrl"/>
-	</jsp:include>
+	<jsp:include page="system2uploadimage.jsp"/>
 </div>
 </div>
 <input type="hidden" id="limitMinutes" value="${limitMinutes}"/>

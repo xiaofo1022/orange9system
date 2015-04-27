@@ -90,18 +90,6 @@
 								<input type="text" id="account" name="account" maxlength="50" class="form-control"/>
 							</div>
 						</div>
-						<div id="fg-password" class="form-group">
-							<label class="col-sm-2 control-label">密码</label>
-							<div class="col-sm-4">
-								<input type="password" id="password" name="password" maxlength="50" class="form-control"/>
-							</div>
-						</div>
-						<div id="fg-confirmPassword" class="form-group">
-							<label class="col-sm-2 control-label">确认密码</label>
-							<div class="col-sm-4">
-								<input type="password" id="confirmPassword" name="confirmPassword" class="form-control"  maxlength="50"/>
-							</div>
-						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">基本工资</label>
 							<div class="col-sm-4">
@@ -114,6 +102,7 @@
 								<input type="number" id="performancePay" name="performancePay" value="0" min="0" max="10000" step="10" class="form-control"/>
 							</div>
 						</div>
+						<input type="hidden" name="password" value="666666"/>
 					</sf:form>
 				</div>
 				<div class="modal-footer">
@@ -190,7 +179,7 @@
 	
 	getUserList();
 	
-	var updateHiddenList = ["header", "account", "password", "confirmPassword"];
+	var updateHiddenList = ["header", "account"];
 	var userMap = {};
 	
 	function getUserList() {
@@ -245,7 +234,6 @@
 		name: { required: true },
 		phone: { required: true, number: true },
 		account: { required: true },
-		password: { required: true },
 		salary: { digits: true },
 		performancePay: { digits: true }
 	};
@@ -322,10 +310,6 @@
 	}
 	
 	function submit() {
-		if (!$("#password").is(":hidden") && $("#password").val() != $("#confirmPassword").val()) {
-			alert("密码输入不一致");
-			return;
-		}
 		$("#addEmployeeForm").submit();
 	}
 	

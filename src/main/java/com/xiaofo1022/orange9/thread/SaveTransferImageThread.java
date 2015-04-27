@@ -13,9 +13,14 @@ import sun.misc.BASE64Decoder;
 
 public class SaveTransferImageThread implements Runnable {
 	private OrderTransferImageData transferImageData;
+	private boolean isFixedImage = false;
 	
 	public SaveTransferImageThread(OrderTransferImageData transferImageData) {
 		this.transferImageData = transferImageData;
+	}
+	
+	public void setIsFixedImage(boolean isFixedImage) {
+		this.isFixedImage = isFixedImage;
 	}
 	
 	public void run() {
@@ -24,7 +29,12 @@ public class SaveTransferImageThread implements Runnable {
 	
 	private void saveHeaderImageToDisk(OrderTransferImageData transferImageData) {
 		try {
-			String baseDir = transferImageData.getServerPath() + "\\WEB-INF\\pictures\\original\\";
+			String baseDir = transferImageData.getServerPath(); 
+			if (isFixedImage) {
+				baseDir += "\\WEB-INF\\pictures\\fixed\\";
+			} else {
+				baseDir += "\\WEB-INF\\pictures\\original\\";
+			}
 			String dir = baseDir + transferImageData.getOrderId();
 			File fileDir = new File(dir);
 			if (!fileDir.exists() && !fileDir.isDirectory()) {
