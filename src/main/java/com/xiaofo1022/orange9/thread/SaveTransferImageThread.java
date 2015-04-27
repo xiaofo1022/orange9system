@@ -24,7 +24,7 @@ public class SaveTransferImageThread implements Runnable {
 	
 	private void saveHeaderImageToDisk(OrderTransferImageData transferImageData) {
 		try {
-			String baseDir = transferImageData.getServerPath() + "\\WEB-INF\\pictures\\";
+			String baseDir = transferImageData.getServerPath() + "\\WEB-INF\\pictures\\original\\";
 			String dir = baseDir + transferImageData.getOrderId();
 			File fileDir = new File(dir);
 			if (!fileDir.exists() && !fileDir.isDirectory()) {

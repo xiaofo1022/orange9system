@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
@@ -84,7 +85,9 @@ public class OrderController {
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
 			modelMap.addAttribute("orderConvert", orderConvertDao.getOrderConvert(orderId));
-			modelMap.addAttribute("orderFixSkinList", orderPostProductionDao.getFixSkinGroupListByOrder(orderId));
+			modelMap.addAttribute("orderFixSkinList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_FIX_SKIN, orderId));
+			modelMap.addAttribute("orderFixBackgroundList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId));
+			modelMap.addAttribute("orderCutLiquifyList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId));
 			modelMap.addAttribute("orderTransferImageDataList", orderTransferDao.getTransferImageDataListByOrder(orderId));
 			modelMap.addAttribute("userList", userDao.getUserList());
 		}

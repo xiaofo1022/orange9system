@@ -14,6 +14,15 @@ import com.xiaofo1022.orange9.modal.OrderHistory;
 public class OrderHistoryDao {
 	@Autowired
 	private CommonDao commonDao;
+	@Autowired
+	private OrderDao orderDao;
+	
+	public void addOrderHistory(int orderId, String info) {
+		Order order = orderDao.getOrderDetail(orderId);
+		if (order != null) {
+			this.addOrderHistory(order, info);
+		}
+	}
 	
 	public void addOrderHistory(Order order, String info) {
 		Date now = new Date();

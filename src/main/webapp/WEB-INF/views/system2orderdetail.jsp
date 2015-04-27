@@ -148,8 +148,30 @@
 					</c:otherwise>
 				</c:choose>
 			</span>
-			<span>修背景：<span class="oc-label">未开始</span></span>
-			<span>裁图液化：<span class="oc-label">未开始</span></span>
+			<span>修背景：
+				<c:choose>
+					<c:when test="${orderFixBackgroundList != null && orderFixBackgroundList.size() > 0}">
+						<c:forEach items="${orderFixBackgroundList}" var="orderFixBackground">
+							<img src="${orderFixBackground.operator.header}"/><span class="oc-label">${orderFixBackground.operator.name}</span>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<span class="oc-label">未开始</span>
+					</c:otherwise>
+				</c:choose>
+			</span>
+			<span>裁图液化：
+				<c:choose>
+					<c:when test="${orderCutLiquifyList != null && orderCutLiquifyList.size() > 0}">
+						<c:forEach items="${orderCutLiquifyList}" var="orderCutLiquify">
+							<img src="${orderCutLiquify.operator.header}"/><span class="oc-label">${orderCutLiquify.operator.name}</span>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<span class="oc-label">未开始</span>
+					</c:otherwise>
+				</c:choose>
+			</span>
 		</div>
 		<div class="order-detail-block bd-blue">
 			<ul class="nav nav-tabs nav-justified">
@@ -172,8 +194,8 @@
 			<div id="blink1-block" class="detail-bottom-block">
 				<c:forEach items="${orderTransferImageDataList}" var="imageData">
 					<div class="pic-block photo-frame gallery">
-						<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>">
-							<img src="<c:url value='/pictures/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+						<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>">
+							<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
 						</a>
 						<c:choose>
 							<c:when test="${imageData.isSelected == 1}">

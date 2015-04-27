@@ -29,25 +29,25 @@
 		</button>
 	</div>
 	
-	<c:forEach items="${fixSkinList}" var="fixSkin">
-		<input type="hidden" id="${fixSkin.id}" class="fix-start-time" value="${fixSkin.insertTime}"/>
+	<c:forEach items="${postProductionList}" var="postProduction">
+		<input type="hidden" id="${postProduction.id}" class="fix-start-time" value="${postProduction.insertTime}"/>
 		<div class="order-block">
 			<p class="model-label transfer-label">
-				单号：<a href="<c:url value='/order/orderDetail/${fixSkin.orderId}'/>" target="_blank">O9${fixSkin.orderId}</a>
+				单号：<a href="<c:url value='/order/orderDetail/${postProduction.orderId}'/>" target="_blank">O9${postProduction.orderId}</a>
 			</p>
 			<p class="model-label transfer-label">
-				图片：<span style="color:#428BCA;">${fixSkin.fileNames}</span>
+				图片：<span style="color:#428BCA;">${postProduction.fileNames}</span>
 			</p>
 			<p class="model-label transfer-label">
 				共计：
-				<span style="color:#428BCA;">${fixSkin.imageCount} </span>张
+				<span style="color:#428BCA;">${postProduction.imageCount} </span>张
 				<span class="oc-label">用时：</span>
-				${fixSkin.timeCost}
+				${postProduction.timeCost}
 			</p>
 			<p class="model-label transfer-label">
 				设计师：
-				<img src="${fixSkin.operator.header}"/><span class="ml10">${fixSkin.operator.name}</span>
-				<button id="btn-fix-done-${fixSkin.id}" class="btn btn-success ml10" onclick="setFixSkinDone(${fixSkin.orderId}, ${fixSkin.operator.id})">完成</button>
+				<img src="${postProduction.operator.header}"/><span class="ml10">${postProduction.operator.name}</span>
+				<button id="btn-fix-done-${postProduction.id}" class="btn btn-success ml10" onclick="setFixSkinDone(${postProduction.orderId}, ${postProduction.operator.id})">完成</button>
 			</p>
 		</div>
 	</c:forEach>
@@ -57,9 +57,9 @@
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script>
 	function setFixSkinDone(orderId, userId) {
-		var result = confirm("是否确定修皮肤已完成？");
+		var result = confirm("是否确定修背景已完成？");
 		if (result) {
-			$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + orderId + "/" + userId + "'/>", null, function(data, status) {
+			$.post("<c:url value='/orderPostProduction/setFixBackgroundDone/" + orderId + "/" + userId + "'/>", null, function(data, status) {
 				if (data.status == "success") {
 					location.reload(true);
 				}

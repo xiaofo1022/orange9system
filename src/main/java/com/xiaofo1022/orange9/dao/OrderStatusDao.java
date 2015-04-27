@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.Order;
@@ -38,8 +39,12 @@ public class OrderStatusDao {
 			OrderStatusCount orderStatusCount = this.getOrderStatusCount(orderStatus.getId());
 			statusCountMap.put(orderStatus.getName(), orderStatusCount == null ? 0 : orderStatusCount.getStatusCount());
 		}
-		OrderStatusCount fixSkinCount = orderPostProductionDao.getOrderFixSkinCount();
+		OrderStatusCount fixSkinCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_SKIN);
 		statusCountMap.put(OrderStatusConst.FIX_SKIN, fixSkinCount == null ? 0 : fixSkinCount.getStatusCount());
+		OrderStatusCount fixBackgroundCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_BACKGROUND);
+		statusCountMap.put(OrderStatusConst.FIX_BACKGROUND, fixBackgroundCount == null ? 0 : fixBackgroundCount.getStatusCount());
+		OrderStatusCount cutLiquifyCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_CUT_LIQUIFY);
+		statusCountMap.put(OrderStatusConst.CUT_LIQUIFY, cutLiquifyCount == null ? 0 : cutLiquifyCount.getStatusCount());
 		return statusCountMap;
 	}
 	

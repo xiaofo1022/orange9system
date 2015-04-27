@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
+import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.LoginDao;
@@ -86,8 +87,20 @@ public class MainController {
 	
 	@RequestMapping(value="/fixSkin", method=RequestMethod.GET)
 	public String system2fixskin(ModelMap modelMap) {
-		modelMap.addAttribute("fixSkinList", orderPostProductionDao.getFixSkinList());
+		modelMap.addAttribute("fixSkinList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_SKIN));
 		return "system2fixskin";
+	}
+	
+	@RequestMapping(value="/fixBackground", method=RequestMethod.GET)
+	public String system2fixbackground(ModelMap modelMap) {
+		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_BACKGROUND));
+		return "system2fixbackground";
+	}
+	
+	@RequestMapping(value="/cutLiquify", method=RequestMethod.GET)
+	public String system2cutliquify(ModelMap modelMap) {
+		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY));
+		return "system2cutliquify";
 	}
 	
 	@RequestMapping(value="/clientWaiting", method=RequestMethod.GET)
