@@ -10,6 +10,7 @@ import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.Count;
+import com.xiaofo1022.orange9.modal.OrderFixedImageData;
 import com.xiaofo1022.orange9.modal.OrderPostProduction;
 import com.xiaofo1022.orange9.modal.OrderStatusCount;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
@@ -151,5 +152,9 @@ public class OrderPostProductionDao {
 		int id = commonDao.insert("INSERT INTO ORDER_FIXED_IMAGE_DATA (INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?)",
 			now, now, transferImageData.getOrderId(), transferImageData.getFileName());
 		transferImageData.setId(id);
+	}
+	
+	public List<OrderFixedImageData> getOrderFixedImageDataList(int orderId) {
+		return commonDao.query(OrderFixedImageData.class, "SELECT * FROM ORDER_FIXED_IMAGE_DATA WHERE ORDER_ID = ? ORDER BY ID", orderId);
 	}
 }

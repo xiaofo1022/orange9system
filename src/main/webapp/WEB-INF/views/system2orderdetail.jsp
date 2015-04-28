@@ -210,12 +210,19 @@
 				<div class="clear"></div>
 			</div>
 			<div id="blink2-block" class="detail-bottom-block hidden">
-				<div class="pic-block"><img src="<c:url value='/images/post/8.jpg'/>"/><p>(008)</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/9.jpg'/>"/><p>(009)</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/10.jpg'/>"/><p>(010)</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/11.jpg'/>"/><p>(011)</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/12.jpg'/>"/><p>(012)</p></div>
-				<div class="pic-block"><img src="<c:url value='/images/post/13.jpg'/>"/><p>(006)</p></div>
+				<c:forEach items="${orderFixedImageDataList}" var="imageData">
+					<div class="pic-block photo-frame">
+						<img src="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+						<c:choose>
+							<c:when test="${imageData.isVerified == 1}">
+								<p id="fixed-pic-label-${imageData.id}">(${imageData.fileName})<span class='orange-color'>审核通过</span></p>
+							</c:when>
+							<c:otherwise>
+								<p id="fixed-pic-label-${imageData.id}">(${imageData.fileName})</p>
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</c:forEach>
 				<div class="clear"></div>
 			</div>
 			<div id="blink3-block" class="detail-bottom-block hidden">

@@ -89,6 +89,7 @@ public class OrderController {
 			modelMap.addAttribute("orderFixBackgroundList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId));
 			modelMap.addAttribute("orderCutLiquifyList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId));
 			modelMap.addAttribute("orderTransferImageDataList", orderTransferDao.getTransferImageDataListByOrder(orderId));
+			modelMap.addAttribute("orderFixedImageDataList", orderPostProductionDao.getOrderFixedImageDataList(orderId));
 			modelMap.addAttribute("userList", userDao.getUserList());
 		}
 		return "system2orderdetail";
