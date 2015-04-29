@@ -62,15 +62,15 @@
 <script>
 	init();
 
+	function init() {
+		$("#upload-url").val("<c:url value='/orderPostProduction/uploadFixedImage'/>");
+	}
+
 	function openUploadImageWindow(orderId) {
 		$("#orderId").val(orderId);
 		$("#uploadImagesModal").modal("show");
 	}
 	
-	function init() {
-		$("#upload-url").val("<c:url value='/orderPostProduction/uploadFixedImage'/>");
-	}
-
 	function setFixSkinDone(orderId, userId) {
 		var result = confirm("是否确定裁图液化已完成？");
 		if (result) {

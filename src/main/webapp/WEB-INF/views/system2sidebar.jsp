@@ -11,7 +11,7 @@
 		<li><a class="icon icon-photo nav-sidebar" href="<c:url value='/fixSkin'/>">修皮肤及褶皱</a></li>
 		<li><a class="icon icon-photo nav-sidebar" href="<c:url value='/fixBackground'/>">修背景</a></li>
 		<li><a class="icon icon-photo nav-sidebar" href="<c:url value='/cutLiquify'/>">裁图液化</a></li>
-		<li><a class="icon icon-location nav-sidebar" href="#">等待审核</a></li>
+		<li><a class="icon icon-location nav-sidebar" href="<c:url value='/verifyImage'/>">等待审核</a></li>
 		<li><a class="icon icon-location nav-sidebar" href="#">完成</a></li>
 		<li><a class="icon icon-location nav-sidebar" href="<c:url value='/employee'/>">员工管理</a></li>
 	</ul>

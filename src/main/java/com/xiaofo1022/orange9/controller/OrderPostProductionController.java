@@ -76,4 +76,18 @@ public class OrderPostProductionController {
 		thread.start();
 		return new SuccessResponse("Upload Fixed Image Data Success");
 	}
+	
+	@RequestMapping(value = "/reuploadFixedImage/{imageId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse reuploadFixedImage(@PathVariable int imageId, @RequestBody OrderTransferImageData transferImageData, BindingResult bindingResult, HttpServletRequest request) {
+		transferImageData.setId(imageId);
+		postProductionDao.reverifyFixedImageData(transferImageData);
+		String serverPath = request.getSession().getServletContext().getRealPath("/");
+		transferImageData.setServerPath(serverPath);
+		SaveTransferImageThread imageThread = new SaveTransferImageThread(transferImageData);
+		imageThread.setIsFixedImage(true);
+		Thread thread = new Thread(imageThread);
+		thread.start();
+		return new SuccessResponse("Reupload Fixed Image Data Success");
+	}
 }

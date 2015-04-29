@@ -45,7 +45,7 @@ public class OrderConvertController {
 			@PathVariable int orderId, 
 			@PathVariable int convertId, 
 			HttpServletRequest request) {
-		orderConvertDao.setOrderConvertDone(orderId, convertId);
+		orderConvertDao.setOrderConvertDone(convertId);
 		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.POST_PRODUCTION);
 		orderPostProductionDao.allotImage(orderId);
 		return new SuccessResponse("Set Order Convert Done Success");

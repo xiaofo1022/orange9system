@@ -10,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/system.css'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/system/order.css'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/system/orderdetail.css'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/system/transfer.css'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/sidebar/component.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/zoom.css'/>"/>
@@ -51,6 +52,29 @@
 				</div>
 				<div class="modal-footer">
 					<button id="btnSetTransfer" type="button" class="btn btn-primary" onclick="setConvert()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="setVerifyModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">要指定谁来审图呢？</h4>
+				</div>
+				<div class="modal-body">	
+					<div style="width:200px;">
+						<select id="verifySelect" class="form-control">
+							<c:forEach items="${userList}" var="user">
+								<option value="${user.id}">${user.name}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="btnSetTransfer" type="button" class="btn btn-primary" onclick="setVerifier()">确定</button>
 				</div>
 			</div>
 		</div>
@@ -172,6 +196,31 @@
 					</c:otherwise>
 				</c:choose>
 			</span>
+			<br/>
+			<span class="p-newrow">审图：
+				<c:choose>
+					<c:when test="${orderDetail.orderStatus.name.equals('等待审核')}">
+						<c:choose>
+							<c:when test="${orderVerifier == null}">
+								<button class="btn btn-info" onclick="showSetVerifierWindow()">指定</button>
+							</c:when>
+							<c:otherwise>
+								<img src="${orderVerifier.operator.header}"/><span class="oc-label">${orderVerifier.operator.name}</span>
+							</c:otherwise>
+						</c:choose>
+					</c:when>
+					<c:otherwise>
+						<c:choose>
+							<c:when test="${orderVerifier == null}">
+								<span class="oc-label">未开始</span>
+							</c:when>
+							<c:otherwise>
+								<img src="${orderVerifier.operator.header}"/><span class="oc-label">${orderVerifier.operator.name}</span>
+							</c:otherwise>
+						</c:choose>
+					</c:otherwise>
+				</c:choose>
+			</span>
 		</div>
 		<div class="order-detail-block bd-blue">
 			<ul class="nav nav-tabs nav-justified">
@@ -215,7 +264,12 @@
 						<img src="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>"/>
 						<c:choose>
 							<c:when test="${imageData.isVerified == 1}">
-								<p id="fixed-pic-label-${imageData.id}">(${imageData.fileName})<span class='orange-color'>审核通过</span></p>
+								<p id="fixed-pic-label-${imageData.id}" class='success-color'>(${imageData.fileName})<span>审核通过</span></p>
+							</c:when>
+							<c:when test="${imageData.isVerified == 0 && imageData.reason != null}">
+								<p id="fixed-pic-label-${imageData.id}" class='danger-color'>(${imageData.fileName})</p>
+								<p class='danger-color'>未通过：${imageData.reason}</p>
+								<p><button class="btn btn-danger btn-sm" onclick="openUploadImageWindow(${imageData.id})">重新上传</button></p>
 							</c:when>
 							<c:otherwise>
 								<p id="fixed-pic-label-${imageData.id}">(${imageData.fileName})</p>
@@ -271,16 +325,37 @@
 			</div>
 		</div>
 	</div>
+	
+	<jsp:include page="system2uploadimage.jsp"/>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/zoom.js'/>"></script>
+<script src="<c:url value='/js/util/transferUploader.js'/>"></script>
 <script>
+	init();
+
+	function init() {
+		$("#upload-image").removeAttr("multiple");
+		$("#uploadImagesModal").on('hidden.bs.modal', function (e) {
+			location.reload(true);
+		});
+	}
+
+	function openUploadImageWindow(imageId) {
+		$("#upload-url").val("<c:url value='/orderPostProduction/reuploadFixedImage/" + imageId + "'/>");
+		$("#uploadImagesModal").modal("show");
+	}
+	
 	function showSetConvertWindow() {
 		$("#setConvertModal").modal("show");
 	}
 
+	function showSetVerifierWindow() {
+		$("#setVerifyModal").modal("show");
+	}
+	
 	function changeBottomNavView(nav) {
 		var navheader = $("#" + nav.id);
 		$(".detail-bottom-block").addClass("hidden");
@@ -309,6 +384,18 @@
 		var orderId = $("#orderId").val();
 		var userId = $("#photographerId").val();
 		$.post("<c:url value='/order/setOrderTransfer/" + orderId + "/" + userId + "'/>", null, function(data, status) {
+			if (data.status == "success") {
+				location.reload(true);
+			} else {
+				console.log(data);
+			}
+		});
+	}
+	
+	function setVerifier() {
+		var orderId = $("#orderId").val();
+		var userId = $("#verifySelect").val();
+		$.post("<c:url value='/orderVerify/setOrderVerifier/" + orderId + "/" + userId + "'/>", null, function(data, status) {
 			if (data.status == "success") {
 				location.reload(true);
 			} else {

@@ -25,6 +25,7 @@ import com.xiaofo1022.orange9.dao.OrderHistoryDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderTransferDao;
+import com.xiaofo1022.orange9.dao.OrderVerifyDao;
 import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderStatus;
@@ -52,6 +53,8 @@ public class OrderController {
 	private OrderConvertDao orderConvertDao;
 	@Autowired
 	private OrderPostProductionDao orderPostProductionDao;
+	@Autowired
+	private OrderVerifyDao orderVerifyDao;
 	
 	@RequestMapping(value = "/addOrder", method = RequestMethod.POST)
 	@ResponseBody
@@ -90,6 +93,7 @@ public class OrderController {
 			modelMap.addAttribute("orderCutLiquifyList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId));
 			modelMap.addAttribute("orderTransferImageDataList", orderTransferDao.getTransferImageDataListByOrder(orderId));
 			modelMap.addAttribute("orderFixedImageDataList", orderPostProductionDao.getOrderFixedImageDataList(orderId));
+			modelMap.addAttribute("orderVerifier", orderVerifyDao.getOrderVerifyImage(orderId));
 			modelMap.addAttribute("userList", userDao.getUserList());
 		}
 		return "system2orderdetail";

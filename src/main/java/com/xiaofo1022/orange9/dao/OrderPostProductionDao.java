@@ -157,4 +157,21 @@ public class OrderPostProductionDao {
 	public List<OrderFixedImageData> getOrderFixedImageDataList(int orderId) {
 		return commonDao.query(OrderFixedImageData.class, "SELECT * FROM ORDER_FIXED_IMAGE_DATA WHERE ORDER_ID = ? ORDER BY ID", orderId);
 	}
+	
+	public OrderFixedImageData getVerifyImageData(int orderId) {
+		return commonDao.getFirst(OrderFixedImageData.class, "SELECT * FROM ORDER_FIXED_IMAGE_DATA WHERE ORDER_ID = ? AND IS_VERIFIED = 0 AND REASON IS NULL ORDER BY ID", orderId);
+	}
+	
+	public void reverifyFixedImageData(OrderTransferImageData transferImageData) {
+		commonDao.update("UPDATE ORDER_FIXED_IMAGE_DATA SET IS_VERIFIED = 0, REASON = NULL, UPDATE_DATETIME = ? WHERE ID = ?",
+				new Date(), transferImageData.getId());
+	}
+	
+	public Count getVerifiedImageCount(int orderId) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_FIXED_IMAGE_DATA WHERE IS_VERIFIED = 1 AND ORDER_ID = ?", orderId);
+	}
+	
+	public Count getAllOriginalImageCount(int orderId) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1", orderId);
+	}
 }

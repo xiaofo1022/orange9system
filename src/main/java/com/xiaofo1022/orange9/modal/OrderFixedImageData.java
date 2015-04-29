@@ -19,6 +19,7 @@ public class OrderFixedImageData {
 	private int isVerified;
 	@Column("REASON")
 	private String reason;
+	private boolean isAllVerified;
 	
 	public int getId() {
 		return id;
@@ -61,5 +62,11 @@ public class OrderFixedImageData {
 	}
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+	public boolean isAllVerified() {
+		return isAllVerified;
+	}
+	public void setAllVerified(boolean isAllVerified) {
+		this.isAllVerified = isAllVerified;
 	}
 }

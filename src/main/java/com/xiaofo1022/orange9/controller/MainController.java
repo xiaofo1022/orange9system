@@ -1,5 +1,8 @@
 package com.xiaofo1022.orange9.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -21,8 +24,12 @@ import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderTimeLimitDao;
+import com.xiaofo1022.orange9.dao.OrderVerifyDao;
 import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.Login;
+import com.xiaofo1022.orange9.modal.Order;
+import com.xiaofo1022.orange9.modal.OrderFixedImageData;
+import com.xiaofo1022.orange9.modal.OrderVerifyImage;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
@@ -40,6 +47,8 @@ public class MainController {
 	private OrderConvertDao orderConvertDao;
 	@Autowired
 	private OrderPostProductionDao orderPostProductionDao;
+	@Autowired
+	private OrderVerifyDao orderVerifyDao;
 	@Autowired
 	private UserDao userDao;
 	
@@ -101,6 +110,45 @@ public class MainController {
 	public String system2cutliquify(ModelMap modelMap) {
 		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY));
 		return "system2cutliquify";
+	}
+	
+	@RequestMapping(value="/verifyImage", method=RequestMethod.GET)
+	public String system2verifyimage(ModelMap modelMap) {
+		List<Order> orderList = orderDao.getOrderListByStatus(OrderStatusConst.WAIT_FOR_VERIFY);
+		List<OrderVerifyImage> orderVerifyList = new ArrayList<OrderVerifyImage>(orderList.size());
+		if (orderList != null && orderList.size() > 0) {
+			for (Order order : orderList) {
+				OrderVerifyImage verifyImage = orderVerifyDao.getOrderVerifyImage(order.getId());
+				if (verifyImage == null) {
+					verifyImage = new OrderVerifyImage();
+					verifyImage.setOrderId(order.getId());
+				}
+				List<OrderFixedImageData> fixedImageDataList = orderPostProductionDao.getOrderFixedImageDataList(order.getId());
+				if (fixedImageDataList != null && fixedImageDataList.size() > 0) {
+					verifyImage.setFixedImageDataList(fixedImageDataList);
+					int verifyCount = 0;
+					int verifiedCount = 0;
+					int deniedCount = 0;
+					for (OrderFixedImageData fixedImageData : fixedImageDataList) {
+						if (fixedImageData.getIsVerified() == 1) {
+							verifiedCount++;
+						} else {
+							if (fixedImageData.getReason() == null) {
+								verifyCount++;
+							} else {
+								deniedCount++;
+							}
+						}
+					}
+					verifyImage.setDeniedCount(deniedCount);
+					verifyImage.setVerifyCount(verifyCount);
+					verifyImage.setVerifiedCount(verifiedCount);
+				}
+				orderVerifyList.add(verifyImage);
+			}
+		}
+		modelMap.addAttribute("orderVerifyList", orderVerifyList);
+		return "system2verifyimage";
 	}
 	
 	@RequestMapping(value="/clientWaiting", method=RequestMethod.GET)

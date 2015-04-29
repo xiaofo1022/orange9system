@@ -48,7 +48,7 @@ public class OrderConvertDao {
 		return resultList;
 	}
 	
-	public void setOrderConvertDone(int orderId, int convertId) {
+	public void setOrderConvertDone(int convertId) {
 		commonDao.update("UPDATE ORDER_CONVERT_IMAGE SET IS_DONE = 1 AND UPDATE_DATETIME = ? WHERE ID = ?", new Date(), convertId);
 	}
 }

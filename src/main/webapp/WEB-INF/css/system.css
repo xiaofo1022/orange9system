@@ -26,6 +26,18 @@ div.hidden {
 	color: #428BCA;
 }
 
+.success-color {
+	color: #5CB85C;
+}
+
+.danger-color {
+	color: #D9534F;
+}
+
+.info-color {
+	color: #31B0D5;
+}
+
 .clear {
 	clear: both;
 }
