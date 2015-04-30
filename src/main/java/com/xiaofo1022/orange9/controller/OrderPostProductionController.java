@@ -1,8 +1,11 @@
 package com.xiaofo1022.orange9.controller;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,12 +22,14 @@ import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.OrderHistoryDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
+import com.xiaofo1022.orange9.modal.OrderFixedImageData;
 import com.xiaofo1022.orange9.modal.OrderPostProduction;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
 import com.xiaofo1022.orange9.thread.SaveTransferImageThread;
 import com.xiaofo1022.orange9.util.RequestUtil;
+import com.xiaofo1022.orange9.util.ZipUtil;
 
 @Controller
 @RequestMapping("/orderPostProduction")
@@ -89,5 +94,19 @@ public class OrderPostProductionController {
 		Thread thread = new Thread(imageThread);
 		thread.start();
 		return new SuccessResponse("Reupload Fixed Image Data Success");
+	}
+	
+	@RequestMapping(value = "/getFixedImageZipPackage/{orderId}", method = RequestMethod.GET)
+	public void getFixedImageZipPackage(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
+		List<OrderFixedImageData> imageList = postProductionDao.getOrderFixedImageDataList(orderId);
+		if (imageList != null && imageList.size() > 0) {
+			String serverPath = request.getSession().getServletContext().getRealPath("/");
+			String fixedPath = serverPath + "\\WEB-INF\\pictures\\fixed\\";
+			List<File> fileList = new ArrayList<File>(imageList.size());
+			for (OrderFixedImageData imageData : imageList) {
+				fileList.add(new File(fixedPath + "\\" + imageData.getOrderId() + "\\" + imageData.getId() + ".jpg"));
+			}
+			ZipUtil.downloadZipFile(fileList, response);
+		}
 	}
 }

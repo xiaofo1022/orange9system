@@ -259,6 +259,11 @@
 				<div class="clear"></div>
 			</div>
 			<div id="blink2-block" class="detail-bottom-block hidden">
+				<c:if test="${orderDetail.orderStatus.name.equals('完成')}">
+					<div>
+						<a href="<c:url value='/orderPostProduction/getFixedImageZipPackage/${orderDetail.id}'/>" target="_blank">打包下载</a>
+					</div>
+				</c:if>
 				<c:forEach items="${orderFixedImageDataList}" var="imageData">
 					<div class="pic-block photo-frame">
 						<img src="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>"/>

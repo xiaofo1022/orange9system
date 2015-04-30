@@ -36,4 +36,8 @@ public class OrderVerifyDao {
 	public void setImageDenied(int fixedImageId, String reason) {
 		commonDao.update("UPDATE ORDER_FIXED_IMAGE_DATA SET REASON = ?, UPDATE_DATETIME = ? WHERE ID = ?", reason, new Date(), fixedImageId);
 	}
+	
+	public void setVerifyDone(int orderId) {
+		commonDao.update("UPDATE ORDER_VERIFY_IMAGE SET IS_DONE = 1, UPDATE_DATETIME = ? WHERE ORDER_ID = ?", new Date(), orderId);
+	}
 }

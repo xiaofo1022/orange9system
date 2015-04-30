@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
+import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
 import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.Denial;
 import com.xiaofo1022.orange9.modal.OrderFixedImageData;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
+import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
 @RequestMapping("/orderVerify")
@@ -28,6 +31,8 @@ public class OrderVerifyController {
 	private OrderVerifyDao orderVerifyDao;
 	@Autowired
 	private OrderPostProductionDao orderPostProductionDao;
+	@Autowired
+	private OrderStatusDao orderStatusDao;
 	
 	@RequestMapping(value = "/setOrderVerifier/{orderId}/{userId}", method = RequestMethod.POST)
 	@ResponseBody
@@ -41,11 +46,13 @@ public class OrderVerifyController {
 	
 	@RequestMapping(value = "/getVerifyImageData/{orderId}", method = RequestMethod.GET)
 	@ResponseBody
-	public OrderFixedImageData getVerifyImageData(@PathVariable int orderId) {
+	public OrderFixedImageData getVerifyImageData(@PathVariable int orderId, HttpServletRequest request) {
 		OrderFixedImageData fixedImageData = orderPostProductionDao.getVerifyImageData(orderId);
 		Count fixedCount = orderPostProductionDao.getVerifiedImageCount(orderId);
 		Count originalCount = orderPostProductionDao.getAllOriginalImageCount(orderId);
 		if (originalCount.getCnt() != 0 && fixedCount.getCnt() >= originalCount.getCnt()) {
+			orderVerifyDao.setVerifyDone(orderId);
+			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.COMPLETE);
 			fixedImageData = new OrderFixedImageData();
 			fixedImageData.setAllVerified(true);
 		}
