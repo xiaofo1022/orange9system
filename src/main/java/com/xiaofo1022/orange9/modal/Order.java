@@ -1,6 +1,7 @@
 package com.xiaofo1022.orange9.modal;
 
 import java.util.Date;
+import java.util.List;
 
 import com.xiaofo1022.orange9.dao.common.Column;
 import com.xiaofo1022.orange9.dao.common.JoinTable;
@@ -45,10 +46,11 @@ public class Order {
 	private User photographer;
 	@JoinTable(tableName="USER", joinField="assistantId")
 	private User assistant;
-	@JoinTable(tableName="ORDER_GOODS", joinField="goodsId")
+	@JoinTable(tableName="ORDER_SHOOT_GOODS", joinField="goodsId")
 	private OrderGoods orderGoods;
 	@JoinTable(tableName="CLIENT", joinField="clientId")
 	private Client client;
+	private List<OrderGoods> orderGoodsList;
 	
 	public int getId() {
 		return id;
@@ -181,5 +183,11 @@ public class Order {
 	}
 	public void setShootDateLabel(String shootDateLabel) {
 		this.shootDateLabel = shootDateLabel;
+	}
+	public List<OrderGoods> getOrderGoodsList() {
+		return orderGoodsList;
+	}
+	public void setOrderGoodsList(List<OrderGoods> orderGoodsList) {
+		this.orderGoodsList = orderGoodsList;
 	}
 }

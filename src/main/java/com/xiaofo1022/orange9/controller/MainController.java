@@ -22,6 +22,7 @@ import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.LoginDao;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
+import com.xiaofo1022.orange9.dao.OrderGoodsDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderTimeLimitDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
@@ -40,6 +41,8 @@ public class MainController {
 	@Autowired
 	private LoginDao loginDao;
 	@Autowired
+	private UserDao userDao;
+	@Autowired
 	private OrderTimeLimitDao orderTimeLimitDao;
 	@Autowired
 	private OrderDao orderDao;
@@ -50,7 +53,7 @@ public class MainController {
 	@Autowired
 	private OrderVerifyDao orderVerifyDao;
 	@Autowired
-	private UserDao userDao;
+	private OrderGoodsDao orderGoodsDao;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String index() {
@@ -78,6 +81,16 @@ public class MainController {
 	@RequestMapping(value="/orderSummary", method=RequestMethod.GET)
 	public String system2ordersummary() {
 		return "system2ordersummary";
+	}
+	
+	@RequestMapping(value="/orderGoods", method=RequestMethod.GET)
+	public String system2ordergoods(ModelMap modelMap) {
+		List<Order> orderList = orderDao.getOrderList();
+		for (Order order : orderList) {
+			order.setOrderGoodsList(orderGoodsDao.getOrderGoodsList(order.getId()));
+		}
+		modelMap.addAttribute("orderList", orderList);
+		return "system2ordergoods";
 	}
 	
 	@RequestMapping(value="/transferImage", method=RequestMethod.GET)
@@ -147,6 +160,7 @@ public class MainController {
 				orderVerifyList.add(verifyImage);
 			}
 		}
+		modelMap.addAttribute("userList", userDao.getUserList());
 		modelMap.addAttribute("orderVerifyList", orderVerifyList);
 		return "system2verifyimage";
 	}
@@ -155,25 +169,5 @@ public class MainController {
 	public String system2clientwaiting(ModelMap map) {
 		map.addAttribute("orderList", orderDao.getOrderListByStatus(OrderStatusConst.WAITING_FOR_CLIENT_CHOSE));
 		return "system2clientwaiting";
-	}
-	
-	@RequestMapping(value="/order", method=RequestMethod.GET)
-	public String order() {
-		return "system2order";
-	}
-	
-	@RequestMapping(value="/orderDetail", method=RequestMethod.GET)
-	public String orderDetail() {
-		return "system2orderdetail";
-	}
-	
-	@RequestMapping(value="/post", method=RequestMethod.GET)
-	public String post() {
-		return "system2post";
-	}
-	
-	@RequestMapping(value="/model", method=RequestMethod.GET)
-	public String model() {
-		return "system2model";
 	}
 }

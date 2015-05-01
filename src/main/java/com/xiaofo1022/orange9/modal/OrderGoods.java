@@ -11,6 +11,8 @@ public class OrderGoods {
 	private int orderId;
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
+	@Column(value="INSERT_DATETIME", isFormatDatetime=true)
+	private String insertDatetimeLabel;
 	@Column("UPDATE_DATETIME")
 	private Date updateDatetime;
 	@Column("RECEIVE_EXPRESS_NO")
@@ -35,8 +37,12 @@ public class OrderGoods {
 	private int hatCount;
 	@Column("OTHER_COUNT")
 	private int otherCount;
+	@SuppressWarnings("unused")
+	private int allCount;
 	@Column("REMARK")
 	private String remark;
+	private String expressNo;
+	private String expressCompany;
 	
 	public int getId() {
 		return id;
@@ -133,5 +139,29 @@ public class OrderGoods {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public String getExpressNo() {
+		return expressNo;
+	}
+	public void setExpressNo(String expressNo) {
+		this.expressNo = expressNo;
+	}
+	public String getExpressCompany() {
+		return expressCompany;
+	}
+	public void setExpressCompany(String expressCompany) {
+		this.expressCompany = expressCompany;
+	}
+	public String getInsertDatetimeLabel() {
+		return insertDatetimeLabel;
+	}
+	public void setInsertDatetimeLabel(String insertDatetimeLabel) {
+		this.insertDatetimeLabel = insertDatetimeLabel;
+	}
+	public int getAllCount() {
+		return this.coatCount + this.pantsCount + this.jumpsuitsCount + this.hatCount + this.bagCount + this.shoesCount + this.otherCount;
+	}
+	public void setAllCount(int allCount) {
+		this.allCount = allCount;
 	}
 }

@@ -18,6 +18,9 @@
 <script src="<c:url value='/js/jquery-ui.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <script src="<c:url value='/js/notification/modernizr.custom.js'/>"></script>
+<script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
+<script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
+<script src="<c:url value='/js/validation/validator.js'/>"></script>
 </head>
 <body>
 <div id="st-container" class="st-container">
@@ -80,6 +83,61 @@
 		</div>
 	</div>
 	
+	<div id="orderGoodsModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header orange-model-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">货品信息</h4>
+				</div>
+				<div class="modal-body">
+					<sf:form id="orderGoodsForm" modelAttribute="orderGoods" class="form-horizontal" method="post">
+						<input type="hidden" id="goodsOrderId" name="orderId"/>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">上装</label>
+							<div class="col-sm-2">
+								<input type="number" id="coatCount" name="coatCount" value="0" min="0" max="9999" step="1" class="form-control"/>
+							</div>
+							<label class="col-sm-2 control-label">下装</label>
+							<div class="col-sm-2">
+								<input type="number" id="pantsCount" name="pantsCount" value="0" min="0" max="9999" step="1" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">连体衣</label>
+							<div class="col-sm-2">
+								<input type="number" id="jumpsuitsCount" name="jumpsuitsCount" value="0" min="0" max="9999" step="1" class="form-control"/>
+							</div>
+							<label class="col-sm-2 control-label">鞋子</label>
+							<div class="col-sm-2">
+								<input type="number" id="shoesCount" name="shoesCount" value="0" min="0" max="9999" step="1" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">包包</label>
+							<div class="col-sm-2">
+								<input type="number" id="bagCount" name="bagCount" value="0" min="0" max="9999" step="1" class="form-control"/>
+							</div>
+							<label class="col-sm-2 control-label">帽子</label>
+							<div class="col-sm-2">
+								<input type="number" id="hatCount" name="hatCount" value="0" min="0" max="9999" step="1" class="form-control"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">其他</label>
+							<div class="col-sm-2">
+								<input type="number" id="otherCount" name="otherCount" value="0" min="0" max="9999" step="1" class="form-control"/>
+							</div>
+						</div>
+					</sf:form>
+				</div>
+				<div class="modal-footer">
+					<button id="btnConfirmGoods" type="button" class="btn btn-primary" onclick="submitGoods()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class="order-block">
 		<div class="order-detail-block bd-blue">
 			订单详情：
@@ -107,18 +165,55 @@
 			<span>店铺：<a href="http://${orderDetail.client.clientShopLink}" target="_blank">${orderDetail.client.clientShopName}</a></span>
 			<span>电话：<span class="oc-label">${orderDetail.client.clientPhone}</span></span>
 			<span>邮箱：<span class="oc-label">${orderDetail.client.clientEmail}</span></span>
-			<br/>
-			<span class="p-newrow">备注：<span class="oc-label">${orderDetail.client.clientRemark}</span></span>
+			<c:if test="${orderDetail.client.clientRemark != null && !orderDetail.client.clientRemark.equals('')}">
+				<br/>
+				<span class="p-newrow">备注：<span class="oc-label">${orderDetail.client.clientRemark}</span></span>
+			</c:if>
 		</div>
 		<div class="order-detail-block bd-blue">
 			货品信息：
-			<span class="oc-label">暂无信息</span>
-			<!--
-			<span><span class="oc-label">10</span>件上装</span>
-			<span><span class="oc-label">20</span>件下装</span>
-			<span><span class="oc-label">15</span>件连体衣</span>
-			<span><span class="oc-label">4</span>双鞋子</span>
-			-->
+			<c:choose>
+				<c:when test="${orderDetail.orderGoods == null}">
+					<input type="hidden" id="allOrderGoodsCount" value="0"/>
+					<button class="btn btn-info" onclick="showAddOrderGoodsWindow(${orderDetail.id})">添加</button>
+				</c:when>
+				<c:otherwise>
+					<input type="hidden" id="allOrderGoodsCount" value="${orderDetail.orderGoods.allCount}"/>
+					<c:if test="${orderDetail.orderGoods.coatCount > 0}">
+						<span><span class="oc-label">${orderDetail.orderGoods.coatCount}</span>件上装</span>
+					</c:if>
+					<c:if test="${orderDetail.orderGoods.pantsCount > 0}">
+						<span><span class="oc-label">${orderDetail.orderGoods.pantsCount}</span>件下装</span>
+					</c:if>
+					<c:if test="${orderDetail.orderGoods.jumpsuitsCount > 0}">
+						<span><span class="oc-label">${orderDetail.orderGoods.jumpsuitsCount}</span>件连体衣</span>
+					</c:if>
+					<c:if test="${orderDetail.orderGoods.shoesCount > 0}">
+						<span><span class="oc-label">${orderDetail.orderGoods.shoesCount}</span>双鞋子</span>
+					</c:if>
+					<c:if test="${orderDetail.orderGoods.hatCount > 0}">
+						<span><span class="oc-label">${orderDetail.orderGoods.hatCount}</span>顶帽子</span>
+					</c:if>
+					<c:if test="${orderDetail.orderGoods.bagCount > 0}">
+						<span><span class="oc-label">${orderDetail.orderGoods.bagCount}</span>件包包</span>
+					</c:if>
+					<c:if test="${orderDetail.orderGoods.otherCount > 0}">
+						<span><span class="oc-label">${orderDetail.orderGoods.otherCount}</span>件其他</span>
+					</c:if>
+					<button class="btn btn-info"
+						onclick="showUpdateOrderGoodsWindow(
+							${orderDetail.id}, 
+							${orderDetail.orderGoods.coatCount}, 
+							${orderDetail.orderGoods.pantsCount}, 
+							${orderDetail.orderGoods.jumpsuitsCount}, 
+							${orderDetail.orderGoods.shoesCount},
+							${orderDetail.orderGoods.hatCount},
+							${orderDetail.orderGoods.bagCount},
+							${orderDetail.orderGoods.otherCount})">
+						修改
+					</button>
+				</c:otherwise>
+			</c:choose>
 		</div>
 		<div class="order-detail-block bd-blue">
 			拍摄信息：
@@ -236,9 +331,6 @@
 				<li role="presentation" class="detail-bottom-nav">
 					<a id="blink4" onclick="changeBottomNavView(this)">订单历史状态</a>
 				</li>
-				<li role="presentation" class="detail-bottom-nav">
-					<a id="blink5" onclick="changeBottomNavView(this)">团队留言</a>
-				</li>
 			</ul>
 			<div id="blink1-block" class="detail-bottom-block">
 				<c:forEach items="${orderTransferImageDataList}" var="imageData">
@@ -310,23 +402,6 @@
 						<span class="oc-label">${orderHistory.user.name}</span>
 					</p>
 				</c:forEach>
-			</div>
-			<div id="blink5-block" class="detail-bottom-block hidden">
-				<p>
-					<span class="oc-label">2015-4-12 10:22</span>李学华：
-					<br/>
-					好的，我们尽快完成。
-				</p>
-				<p>
-					<span class="oc-label">2015-4-11 13:31</span>李学华：
-					<br/>
-					不要再催啦，我要累死了。。。
-				</p>
-				<p>
-					<span class="oc-label">2015-4-10 15:30</span>柳海飞
-					<br/>
-					订单添加了，大家加快进度！
-				</p>
 			</div>
 		</div>
 	</div>
@@ -422,7 +497,7 @@
 	}
 	
 	var selectedPictureIdList = [];
-	var CHOSEN_MAX = 4;
+	var CHOSEN_MAX = parseInt($("#allOrderGoodsCount").val()) * 8;
 	var isConfirmOverSelect = false;
 	var selectedLabel = "<span class='orange-color'>已选</span>";
 	
@@ -499,6 +574,53 @@
 	            	console.log(data);
 	            }
 			});
+		}
+	}
+	
+	var confirmGoodsRules = {
+		coatCount: { digits: true },
+		pantsCount: { digits: true },
+		jumpsuitsCount: { digits: true },
+		shoesCount: { digits: true },
+		bagCount: { digits: true },
+		hatCount: { digits: true },
+		otherCount: { digits: true }
+	};
+	
+	var goodsValidator = new Validator("orderGoodsForm", "btnConfirmGoods", confirmGoodsRules, "<c:url value='/orderGoods/updateShootGoods'/>", submitGoodsCallback);
+	
+	$("#orderGoodsModal").on("hidden.bs.modal", function(e) {
+		document.getElementById("orderGoodsForm").reset();
+	});
+	
+	function showUpdateOrderGoodsWindow(orderId, coatCount, pantsCount, jumpsuitsCount, shoesCount, hatCount, bagCount, otherCount) {
+		goodsValidator.url = "<c:url value='/orderGoods/updateShootGoods'/>";
+		$("#goodsOrderId").val(orderId);
+		$("#coatCount").val(coatCount);
+		$("#pantsCount").val(pantsCount);
+		$("#jumpsuitsCount").val(jumpsuitsCount);
+		$("#shoesCount").val(shoesCount);
+		$("#hatCount").val(hatCount);
+		$("#bagCount").val(bagCount);
+		$("#otherCount").val(otherCount);
+		$("#orderGoodsModal").modal("show");
+	}
+	
+	function showAddOrderGoodsWindow(orderId) {
+		goodsValidator.url = "<c:url value='/orderGoods/addShootGoods'/>";
+		$("#goodsOrderId").val(orderId);
+		$("#orderGoodsModal").modal("show");
+	}
+	
+	function submitGoods() {
+		$("#orderGoodsForm").submit();
+	}
+	
+	function submitGoodsCallback(response) {
+		if (response.status == "success") {
+			location.reload(true);
+		} else {
+			alert(response.msg);
 		}
 	}
 </script>

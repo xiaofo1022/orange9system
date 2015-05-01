@@ -137,6 +137,12 @@ div.tbr {
 	left:10px;
 }
 
+.btn-receive-goods {
+	position:absolute;
+	top:100px;
+	left:10px;
+}
+
 p.model-label {
 	font-size: 18px;
 	font-weight: bold;

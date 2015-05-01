@@ -84,12 +84,6 @@
 								<input type="tel" maxlength="11" id="phone" name="phone" class="form-control"/>
 							</div>
 						</div>
-						<div id="fg-account" class="form-group">
-							<label class="col-sm-2 control-label">账号</label>
-							<div class="col-sm-4">
-								<input type="text" id="account" name="account" maxlength="50" class="form-control"/>
-							</div>
-						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">基本工资</label>
 							<div class="col-sm-4">
@@ -179,7 +173,7 @@
 	
 	getUserList();
 	
-	var updateHiddenList = ["header", "account"];
+	var updateHiddenList = ["header"];
 	var userMap = {};
 	
 	function getUserList() {
@@ -232,8 +226,7 @@
 	
 	var addEmployeeRules = {
 		name: { required: true },
-		phone: { required: true, number: true },
-		account: { required: true },
+		phone: { required: true, digits: true },
 		salary: { digits: true },
 		performancePay: { digits: true }
 	};
