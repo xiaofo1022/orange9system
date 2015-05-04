@@ -73,6 +73,12 @@ public class OrderController {
 		return orderDao.getOrderList();
 	}
 	
+	@RequestMapping(value = "/getOrderListByDate/{startDate}/{endDate}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Order> getOrderListByDate(@PathVariable String startDate, @PathVariable String endDate) {
+		return orderDao.getOrderListByDate(startDate, endDate);
+	}
+	
 	@RequestMapping(value = "/getOrderStatusCountMap", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Integer> getOrderStatusCountMap() {

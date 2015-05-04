@@ -447,8 +447,15 @@
 	function updateOrderStatus() {
 		var orderId = $("#orderId").val();
 		var statusId = $("#orderStatus").val();
-		if (statusId == 2 || statusId == 3) {
-			setTransfer();
+		var userId = $("#photographerId").val();
+		if (statusId == 2) {
+			$.post("<c:url value='/order/setOrderTransfer/" + orderId + "/" + userId + "'/>", null, function(data, status) {
+				if (data.status == "success") {
+					location.reload(true);
+				} else {
+					console.log(data);
+				}
+			});
 		} else {
 			$.post("<c:url value='/order/updateOrderStatus/" + orderId + "/" + statusId + "'/>", null, function(data, status) {
 				if (data.status == "success") {
@@ -458,18 +465,6 @@
 				}
 			});
 		}
-	}
-	
-	function setTransfer() {
-		var orderId = $("#orderId").val();
-		var userId = $("#photographerId").val();
-		$.post("<c:url value='/order/setOrderTransfer/" + orderId + "/" + userId + "'/>", null, function(data, status) {
-			if (data.status == "success") {
-				location.reload(true);
-			} else {
-				console.log(data);
-			}
-		});
 	}
 	
 	function setVerifier() {

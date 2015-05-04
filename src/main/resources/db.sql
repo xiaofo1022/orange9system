@@ -122,13 +122,12 @@ COLLATE=utf8_general_ci;
 
 INSERT INTO orange9.order_status (ID,NAME) VALUES 
 (1,'拍摄中')
-,(2,'拍摄完成')
-,(3,'上传原片')
-,(4,'等待客户选片')
-,(5,'导图')
-,(6,'后期中')
-,(7,'等待审核')
-,(8,'完成')
+,(2,'上传原片')
+,(3,'等待客户选片')
+,(4,'导图')
+,(5,'后期中')
+,(6,'等待审核')
+,(7,'完成')
 ;
 
 CREATE TABLE orange9.order_transfer_image (
@@ -153,6 +152,7 @@ ENGINE=InnoDB;
 INSERT INTO orange9.order_time_limit (ID,NAME,LIMIT_MINUTES) VALUES 
 (1,'TRANSFER_IMAGE',30)
 ,(2,'CONVERT_IMAGE',300)
+,(3,'SHOOT',480)
 ;
 
 CREATE TABLE orange9.order_transfer_image_data (

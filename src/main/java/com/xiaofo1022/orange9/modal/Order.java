@@ -1,5 +1,6 @@
 package com.xiaofo1022.orange9.modal;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +52,8 @@ public class Order {
 	@JoinTable(tableName="CLIENT", joinField="clientId")
 	private Client client;
 	private List<OrderGoods> orderGoodsList;
+	@SuppressWarnings("unused")
+	private long shootTime;
 	
 	public int getId() {
 		return id;
@@ -189,5 +192,25 @@ public class Order {
 	}
 	public void setOrderGoodsList(List<OrderGoods> orderGoodsList) {
 		this.orderGoodsList = orderGoodsList;
+	}
+	public long getShootTime() {
+		if (this.shootDate != null) {
+			Date shootDatetime = new Date(shootDate.getTime());
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(shootDatetime);
+			if (this.shootHalf != null) {
+				if (this.shootHalf.equals("AM")) {
+					calendar.set(Calendar.HOUR_OF_DAY, 9);
+				} else {
+					calendar.set(Calendar.HOUR_OF_DAY, 14);
+				}
+			}
+			return calendar.getTimeInMillis();
+		} else {
+			return 0;
+		}
+	}
+	public void setInsertTime(long shootTime) {
+		this.shootTime = shootTime;
 	}
 }

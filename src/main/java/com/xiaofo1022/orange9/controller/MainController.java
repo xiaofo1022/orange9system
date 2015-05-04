@@ -79,7 +79,11 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/orderSummary", method=RequestMethod.GET)
-	public String system2ordersummary() {
+	public String system2ordersummary(ModelMap modelMap) {
+		modelMap.addAttribute("modelNameList", orderDao.getModelNameList());
+		modelMap.addAttribute("dresserNameList", orderDao.getDresserNameList());
+		modelMap.addAttribute("stylistNameList", orderDao.getStylistNameList());
+		modelMap.addAttribute("brokerList", orderDao.getBrokerList());
 		return "system2ordersummary";
 	}
 	
@@ -91,6 +95,13 @@ public class MainController {
 		}
 		modelMap.addAttribute("orderList", orderList);
 		return "system2ordergoods";
+	}
+	
+	@RequestMapping(value="/shooting", method=RequestMethod.GET)
+	public String system2shoot(ModelMap modelMap) {
+		modelMap.addAttribute("orderShootList", orderDao.getOrderListByStatus(OrderStatusConst.SHOOTING));
+		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.SHOOT_ID).getLimitMinutes());
+		return "system2shoot";
 	}
 	
 	@RequestMapping(value="/transferImage", method=RequestMethod.GET)

@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
+import com.xiaofo1022.orange9.modal.Broker;
+import com.xiaofo1022.orange9.modal.Name;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderStatus;
 
@@ -34,6 +36,10 @@ public class OrderDao {
 		return commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE ACTIVE = 1 ORDER BY SHOOT_DATE, SHOOT_HALF");
 	}
 	
+	public List<Order> getOrderListByDate(String startDate, String endDate) {
+		return commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE ACTIVE = 1 AND SHOOT_DATE BETWEEN '" + startDate + " 00:00:00' AND '" + endDate + " 00:00:00' ORDER BY SHOOT_DATE, SHOOT_HALF");
+	}
+	
 	public Order getOrderDetail(int orderId) {
 		return commonDao.getFirst(Order.class, "SELECT * FROM ORDERS WHERE ID = ? AND ACTIVE = 1", orderId);
 	}
@@ -45,5 +51,21 @@ public class OrderDao {
 	
 	public List<Order> getOrderListByStatus(int statusId) {
 		return commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE ACTIVE = 1 AND STATUS_ID = ? ORDER BY SHOOT_DATE, SHOOT_HALF", statusId);
+	}
+	
+	public List<Name> getModelNameList() {
+		return commonDao.query(Name.class, "SELECT DISTINCT(MODEL_NAME) AS NAME FROM ORDERS ORDER BY NAME");
+	}
+	
+	public List<Name> getDresserNameList() {
+		return commonDao.query(Name.class, "SELECT DISTINCT(DRESSER_NAME) AS NAME FROM ORDERS ORDER BY NAME");
+	}
+	
+	public List<Name> getStylistNameList() {
+		return commonDao.query(Name.class, "SELECT DISTINCT(STYLIST_NAME) AS NAME FROM ORDERS ORDER BY NAME");
+	}
+	
+	public List<Broker> getBrokerList() {
+		return commonDao.query(Broker.class, "SELECT DISTINCT(BROKER_NAME) AS NAME, BROKER_PHONE AS PHONE FROM ORDERS ORDER BY NAME");
 	}
 }

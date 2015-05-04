@@ -68,31 +68,81 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">模特</label>
 							<div class="col-sm-4">
-								<input type="text" maxlength="10" id="modelName" name="modelName" class="form-control"/>
+								<div class="input-group">
+									<input type="text" maxlength="10" id="modelName" name="modelName" class="form-control"/>
+									<div class="input-group-btn">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+										<ul class="dropdown-menu" role="menu">
+											<c:forEach items="${modelNameList}" var="modelName">
+												<li><a onclick="setControl('modelName', '${modelName.name}')">${modelName.name}</a></li>
+											</c:forEach>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">搭配师</label>
 							<div class="col-sm-4">
-								<input type="text" maxlength="10" id="stylistName" name="stylistName" class="form-control"/>
+								<div class="input-group">
+									<input type="text" maxlength="10" id="stylistName" name="stylistName" class="form-control"/>
+									<div class="input-group-btn">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+										<ul class="dropdown-menu" role="menu">
+											<c:forEach items="${stylistNameList}" var="stylistName">
+												<li><a onclick="setControl('stylistName', '${stylistName.name}')">${stylistName.name}</a></li>
+											</c:forEach>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">化妆师</label>
 							<div class="col-sm-4">
-								<input type="text" maxlength="10" id="dresserName" name="dresserName" class="form-control"/>
+								<div class="input-group">
+									<input type="text" maxlength="10" id="dresserName" name="dresserName" class="form-control"/>
+									<div class="input-group-btn">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+										<ul class="dropdown-menu" role="menu">
+											<c:forEach items="${dresserNameList}" var="dresserName">
+												<li><a onclick="setControl('dresserName', '${dresserName.name}')">${dresserName.name}</a></li>
+											</c:forEach>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">经纪人</label>
 							<div class="col-sm-4">
-								<input type="text" maxlength="10" id="brokerName" name="brokerName" class="form-control"/>
+								<div class="input-group">
+									<input type="text" maxlength="10" id="brokerName" name="brokerName" class="form-control"/>
+									<div class="input-group-btn">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+										<ul class="dropdown-menu" role="menu">
+											<c:forEach items="${brokerList}" var="broker">
+												<li><a onclick="setBroker('brokerName', '${broker.name}', 'brokerPhone', '${broker.phone}')">${broker.name}</a></li>
+											</c:forEach>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">联系方式</label>
 							<div class="col-sm-4">
-								<input type="text" maxlength="11" id="brokerPhone" name="brokerPhone" class="form-control"/>
+								<div class="input-group">
+									<input type="text" maxlength="11" id="brokerPhone" name="brokerPhone" class="form-control"/>
+									<div class="input-group-btn">
+										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+										<ul class="dropdown-menu" role="menu">
+											<c:forEach items="${brokerList}" var="broker">
+												<li><a onclick="setControl('brokerPhone', '${broker.phone}')">${broker.phone}</a></li>
+											</c:forEach>
+										</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="form-group">
@@ -173,9 +223,9 @@
 	
 	<div class="order-summary-block">
 		<p class="summary-label">
-			<a>上个月</a>
-			<span>四月订单一览</span>
-			<a>下个月</a>
+			<a onclick="queryPreMonth()">上个月</a>
+			<span id="month-title"></span>
+			<a onclick="queryNextMonth()">下个月</a>
 		</p>
 		<div>
 			<div class="order-date-row date-header">
@@ -207,6 +257,9 @@
 <script src="<c:url value='/js/util/dateUtil.js'/>"></script>
 <script>
 $('#shootDate').datepicker();
+
+var now = new Date();
+var selectedQueryDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
 
 getClientList();
 getUserList();
@@ -249,8 +302,25 @@ function getClientList() {
 	});
 }
 
+function queryPreMonth() {
+	selectedQueryDate = DateUtil.minusMonth(selectedQueryDate);
+	getOrderList();
+}
+
+function queryNextMonth() {
+	selectedQueryDate = DateUtil.plusMonth(selectedQueryDate);
+	getOrderList();
+}
+
 function getOrderList() {
-	$.get("<c:url value='/order/getOrderList'/>", function(list, status) {
+	var queryYear = selectedQueryDate.getFullYear();
+	var queryMonth = selectedQueryDate.getMonth();
+	var startDate = new Date(queryYear, queryMonth, 1);
+	var endDate = new Date(queryYear, queryMonth, DateUtil.getLastDayOfMonth(queryYear, queryMonth));
+	var queryStartDate = DateUtil.getDisplayDateString(startDate);
+	var queryEndDate = DateUtil.getDisplayDateString(endDate);
+	$("#month-title").text(selectedQueryDate.getFullYear() + "年" + (selectedQueryDate.getMonth() + 1) + "月订单一览");
+	$.get("<c:url value='/order/getOrderListByDate/" + queryStartDate + "/" + queryEndDate + "'/>", function(list, status) {
 		if (list) {
 			createDateRect();
 			for (var i in list) {
@@ -279,6 +349,7 @@ function getDateColHtml(data) {
 		colHtml += "下午：";
 	}
 	colHtml += ("<a href='<c:url value='/order/orderDetail/" + data.id + "'/>'>#O9" + data.id + "</a></p>");
+	colHtml += ("<p>状态：<span style='color:#5CB85C;'>[" + data.orderStatus.name + "]</span></p>");
 	if (data.photographer) {
 		colHtml += ("<p>摄影师：<img src='" + data.photographer.header + "'/>" + data.photographer.name + "</p>");
 	}
@@ -346,11 +417,10 @@ function addClientCallback(response) {
 createDateRect();
 
 function createDateRect() {
-	var now = new Date();
-	var startDate = now;
+	var startDate = new Date(selectedQueryDate.getFullYear(), selectedQueryDate.getMonth(), 1);
 	var rowIndex = 1;
 	var startDay = 1;
-	var lastDay = DateUtil.getLastDayOfMonth(now.getFullYear(), now.getMonth() + 1);
+	var lastDay = DateUtil.getLastDayOfMonth(startDate.getFullYear(), startDate.getMonth() + 1);
 	for (var i = 0; i < 5; i++) {
 		var rowBlock = $("#date-row-" + (i + 1));
 		rowBlock.html("");
@@ -371,6 +441,15 @@ function createDateRect() {
 		rowBlock.html(rowHtml);
 		rowIndex++;
 	}
+}
+
+function setControl(id, value) {
+	$("#" + id).val(value);
+}
+
+function setBroker(nameId, name, phoneId, phone) {
+	$("#" + nameId).val(name);
+	$("#" + phoneId).val(phone);
 }
 </script>
 </body>

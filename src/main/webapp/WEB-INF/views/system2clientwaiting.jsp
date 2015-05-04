@@ -29,21 +29,26 @@
 		</button>
 	</div>
 	
-	<div class="order-block">
-		<c:forEach items="${orderList}" var="order">
-			<div class="order-detail-block bd-blue">
-				<span>单号：<a href="<c:url value='/order/orderDetail/${order.id}'/>" target="_blank">#O9${order.id}</a></span>
+	
+	<c:forEach items="${orderList}" var="order">
+		<div class="order-block">
+			<p class="model-label transfer-label">
+				单号：<a href="<c:url value='/order/orderDetail/${order.id}'/>" target="_blank">#O9${order.id}</a>
 				<button class="btn btn-warning btn-sm">提醒一下</button>
-				<br/>
-				<span>名称：<span class="oc-label">${order.client.clientName}</span></span>
-				<span>店铺：<a href="http://${order.client.clientShopLink}" target="_blank">${order.client.clientShopName}</a></span>
-				<span>电话：<span class="oc-label">${order.client.clientPhone}</span></span>
-				<span>邮箱：<span class="oc-label">${order.client.clientEmail}</span></span>
-				<br/>
-				<span>备注：<span class="oc-label">${order.client.clientRemark}</span></span>
-			</div>
-		</c:forEach>
-	</div>
+			</p>
+			<p class="model-label transfer-label">
+				名称：<span class="oc-label">${order.client.clientName}</span>
+				店铺：<a href="http://${order.client.clientShopLink}" target="_blank">${order.client.clientShopName}</a>
+				电话：<span class="oc-label">${order.client.clientPhone}</span>
+				邮箱：<span class="oc-label">${order.client.clientEmail}</span>
+			</p>
+			<c:if test="${order.client.clientRemark != null && !order.client.clientRemark.equals('')}">
+				<p class="model-label transfer-label">
+					备注：<span class="oc-label">${order.client.clientRemark}</span>
+				</p>
+			</c:if>
+		</div>
+	</c:forEach>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
