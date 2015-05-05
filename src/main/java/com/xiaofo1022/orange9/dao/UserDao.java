@@ -26,6 +26,10 @@ public class UserDao {
 		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE ACCOUNT = ?", account);
 	}
 	
+	public User getUserByPhone(String phone) {
+		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE PHONE = ?", phone);
+	}
+	
 	public List<User> getUserList() {
 		return commonDao.query(User.class, "SELECT * FROM USER WHERE ACTIVE = 1");
 	}

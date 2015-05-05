@@ -7,9 +7,13 @@
 			to : svgshape.getAttribute( 'data-path-to' )
 		};
 	
-	showMessage();
+	var clockInDatetime = $("#clockInDatetime").val();
+	
+	if (clockInDatetime != null && clockInDatetime != "") {
+		showMessage(clockInDatetime);
+	}
 		
-	function showMessage() {
+	function showMessage(clockInDatetime) {
 		setTimeout( function() {
 
 			path.animate( { 'path' : pathConfig.to }, 300, mina.easeinout );
@@ -17,7 +21,7 @@
 			// create the notification
 			var notification = new NotificationFx({
 				wrapper : svgshape,
-				message : '<p style="font-size:16px;margin-top:30px;"> 亲，您于早上8点30分打卡成功了哟！努力开始今天的工作吧，加油！</p>',
+				message : '<p style="font-size:16px;margin-top:30px;"> 亲，您于' + clockInDatetime + '打卡成功了哟！努力开始今天的工作吧，加油！</p>',
 				layout : 'other',
 				effect : 'cornerexpand',
 				type : 'notice', // notice, warning or error

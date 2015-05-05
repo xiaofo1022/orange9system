@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
+import com.xiaofo1022.orange9.dao.ClockInDao;
 import com.xiaofo1022.orange9.dao.UserDao;
+import com.xiaofo1022.orange9.modal.ClockIn;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
+import com.xiaofo1022.orange9.util.DatetimeUtil;
 import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
@@ -26,12 +29,14 @@ import com.xiaofo1022.orange9.util.RequestUtil;
 public class UserController {
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private ClockInDao clockInDao;
 	
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse addUser(@ModelAttribute("employee") User user, BindingResult result, HttpServletRequest request) {
-		if (userDao.getUserByAccount(user.getAccount()) != null) {
-			return new FailureResponse(Message.EXIST_USER_ACCOUNT);
+		if (userDao.getUserByPhone(user.getPhone()) != null) {
+			return new FailureResponse(Message.EXIST_USER_PHONE);
 		}
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
@@ -47,6 +52,28 @@ public class UserController {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
 			return userDao.getUserList();
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = "/getUserDetailList", method = RequestMethod.GET)
+	@ResponseBody
+	public List<User> getUserDetailList(HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			List<User> userList = userDao.getUserList();
+			String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate();
+			for (User user : userList) {
+				List<ClockIn> clockInList = clockInDao.getMonthClockInList(user.getId(), queryMonth[0], queryMonth[1]);
+				if (clockInList != null && clockInList.size() > 0) {
+					for (ClockIn clockIn : clockInList) {
+						if (clockIn != null) {
+							user.addClockIn(clockIn);
+						}
+					}
+				}
+			}
+			return userList;
 		}
 		return null;
 	}

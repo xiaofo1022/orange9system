@@ -19,6 +19,7 @@ import com.xiaofo1022.orange9.common.Message;
 import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
+import com.xiaofo1022.orange9.dao.ClockInDao;
 import com.xiaofo1022.orange9.dao.LoginDao;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
@@ -27,6 +28,7 @@ import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderTimeLimitDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
 import com.xiaofo1022.orange9.dao.UserDao;
+import com.xiaofo1022.orange9.modal.ClockIn;
 import com.xiaofo1022.orange9.modal.Login;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderFixedImageData;
@@ -35,6 +37,7 @@ import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
+import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller("mainController")
 public class MainController {
@@ -42,6 +45,8 @@ public class MainController {
 	private LoginDao loginDao;
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private ClockInDao clockInDao;
 	@Autowired
 	private OrderTimeLimitDao orderTimeLimitDao;
 	@Autowired
@@ -79,7 +84,14 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/orderSummary", method=RequestMethod.GET)
-	public String system2ordersummary(ModelMap modelMap) {
+	public String system2ordersummary(HttpServletRequest request, ModelMap modelMap) {
+		User user = RequestUtil.getLoginUser(request);
+		if (user != null) {
+			ClockIn clockIn = clockInDao.clockIn(user.getId());
+			if (clockIn != null) {
+				modelMap.addAttribute("clockIn", clockIn);
+			}
+		}
 		modelMap.addAttribute("modelNameList", orderDao.getModelNameList());
 		modelMap.addAttribute("dresserNameList", orderDao.getDresserNameList());
 		modelMap.addAttribute("stylistNameList", orderDao.getStylistNameList());

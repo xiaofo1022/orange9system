@@ -10,12 +10,15 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/system.css'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/system/order.css'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/system/summary.css'/>"/>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/notification/ns-default.css'/>" />
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/notification/ns-style-other.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/sidebar/component.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" />
 <script src="<c:url value='/js/jquery-1.11.2.min.js'/>"></script>
 <script src="<c:url value='/js/jquery-ui.js'/>"></script>
-<script src="<c:url value='/js/bootstrap.min.js'/>"></script>
+<script src="<c:url value='/js/svg/snap.svg-min.js'/>"></script>
 <script src="<c:url value='/js/notification/modernizr.custom.js'/>"></script>
+<script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 </head>
 <body>
 <div id="st-container" class="st-container">
@@ -30,6 +33,12 @@
 		<button class="btn btn-warning nav-btn" data-effect="st-effect-3">
 			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 		</button>
+	</div>
+	
+	<div class="notification-shape shape-box" id="notification-shape" data-path-to="m 0,0 500,0 0,500 -500,0 z">
+		<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 500 500" preserveAspectRatio="none">
+			<path d="m 0,0 500,0 0,500 0,-500 z"/>
+		</svg>
 	</div>
 	
 	<button class="btn btn-warning btn-add-employee" data-toggle="modal" data-target="#addOrder">添加订单</button>
@@ -246,9 +255,20 @@
 		</div>
 		<div class="clear"></div>
 	</div>
+	<c:choose>
+		<c:when test="${clockIn != null}">
+			<input type="hidden" id="clockInDatetime" value="${clockIn.clockDatetimeLabel}"/>
+		</c:when>
+		<c:otherwise>
+			<input type="hidden" id="clockInDatetime" value=""/>
+		</c:otherwise>
+	</c:choose>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
+<script src="<c:url value='/js/notification/notificationFx.js'/>"></script>
+<script src="<c:url value='/js/notification/corner-expand.js'/>"></script>
+<script src="<c:url value='/js/notification/thumbslider.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
 <script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
@@ -256,201 +276,201 @@
 <script src="<c:url value='/js/util/base64.js'/>"></script>
 <script src="<c:url value='/js/util/dateUtil.js'/>"></script>
 <script>
-$('#shootDate').datepicker();
-
-var now = new Date();
-var selectedQueryDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
-
-getClientList();
-getUserList();
-getOrderList();
-
-var addOrderRules = {
-	shootDate: { required: true },
-	clientId: { required: true },
-	modelName: { required: true },
-	brokerName: { required: true },
-	brokerPhone: { required: true, number: true },
-	photographerId: { required: true }
-};
-
-var addClientRules = {
-	clientName: { required: true },
-	clientPhone: { required: true, number: true }
-};
-
-var orderValidator = new Validator("addOrderForm", "btnAddOrder", addOrderRules, "<c:url value='/order/addOrder'/>", addOrderCallback);
-var clientValidator = new Validator("addClientForm", "btnAddClient", addClientRules, "<c:url value='/client/addClient'/>", addClientCallback);
-
-function addOrder() {
-	$("#addOrderForm").submit();
-}
-
-function addClient() {
-	$("#addClientForm").submit();
-}
-
-function getClientList() {
-	$.get("<c:url value='/client/getClientList'/>", function(list, status) {
-		var clientSelect = $("#clientId");
-		var html = "";
-		for (var i in list) {
-			var data = list[i];
-			html += ("<option value=" + data.id + ">" + data.clientName + "</option>");
-		}
-		clientSelect.html(html);
-	});
-}
-
-function queryPreMonth() {
-	selectedQueryDate = DateUtil.minusMonth(selectedQueryDate);
+	$('#shootDate').datepicker();
+	
+	var now = new Date();
+	var selectedQueryDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
+	
+	getClientList();
+	getUserList();
 	getOrderList();
-}
-
-function queryNextMonth() {
-	selectedQueryDate = DateUtil.plusMonth(selectedQueryDate);
-	getOrderList();
-}
-
-function getOrderList() {
-	var queryYear = selectedQueryDate.getFullYear();
-	var queryMonth = selectedQueryDate.getMonth();
-	var startDate = new Date(queryYear, queryMonth, 1);
-	var endDate = new Date(queryYear, queryMonth, DateUtil.getLastDayOfMonth(queryYear, queryMonth));
-	var queryStartDate = DateUtil.getDisplayDateString(startDate);
-	var queryEndDate = DateUtil.getDisplayDateString(endDate);
-	$("#month-title").text(selectedQueryDate.getFullYear() + "年" + (selectedQueryDate.getMonth() + 1) + "月订单一览");
-	$.get("<c:url value='/order/getOrderListByDate/" + queryStartDate + "/" + queryEndDate + "'/>", function(list, status) {
-		if (list) {
-			createDateRect();
+	
+	var addOrderRules = {
+		shootDate: { required: true },
+		clientId: { required: true },
+		modelName: { required: true },
+		brokerName: { required: true },
+		brokerPhone: { required: true, number: true },
+		photographerId: { required: true }
+	};
+	
+	var addClientRules = {
+		clientName: { required: true },
+		clientPhone: { required: true, number: true }
+	};
+	
+	var orderValidator = new Validator("addOrderForm", "btnAddOrder", addOrderRules, "<c:url value='/order/addOrder'/>", addOrderCallback);
+	var clientValidator = new Validator("addClientForm", "btnAddClient", addClientRules, "<c:url value='/client/addClient'/>", addClientCallback);
+	
+	function addOrder() {
+		$("#addOrderForm").submit();
+	}
+	
+	function addClient() {
+		$("#addClientForm").submit();
+	}
+	
+	function getClientList() {
+		$.get("<c:url value='/client/getClientList'/>", function(list, status) {
+			var clientSelect = $("#clientId");
+			var html = "";
 			for (var i in list) {
 				var data = list[i];
-				var shootDate = new Date();
-				shootDate.setTime(data.shootDate);
-				var dateCol = $("#order-date-" + shootDate.getDate());
-				var dateHtml = dateCol.html();
-				dateHtml += '<div class="order-date-info">';
-				dateHtml += getDateColHtml(data);
-				dateHtml += '</div>';
-				dateCol.html(dateHtml);
+				html += ("<option value=" + data.id + ">" + data.clientName + "</option>");
 			}
-		}
-	});
-}
-
-var base64 = new Base64();
-
-function getDateColHtml(data) {
-	var colHtml = "";
-	colHtml += "<p>";
-	if (data.shootHalf == "AM") {
-		colHtml += "上午：";
-	} else {
-		colHtml += "下午：";
+			clientSelect.html(html);
+		});
 	}
-	colHtml += ("<a href='<c:url value='/order/orderDetail/" + data.id + "'/>'>#O9" + data.id + "</a></p>");
-	colHtml += ("<p>状态：<span style='color:#5CB85C;'>[" + data.orderStatus.name + "]</span></p>");
-	if (data.photographer) {
-		colHtml += ("<p>摄影师：<img src='" + data.photographer.header + "'/>" + data.photographer.name + "</p>");
-	}
-	if (data.assistant) {
-		colHtml += ("<p>助理：<img src='" + data.assistant.header + "'/>" + data.assistant.name + "</p>");
-	}
-	colHtml += ("<p>模特：" + data.modelName + "</p>");
-	if (data.dresserName) {
-		colHtml += ("<p>化妆师：" + data.dresserName + "</p>");
-	}
-	if (data.stylistName) {
-		colHtml += ("<p>搭配师：" + data.stylistName + "</p>");
-	}
-	return colHtml;
-}
-
-function getUserList() {
-	$.get("<c:url value='/user/getUserList'/>", function(list, status) {
-		if (list) {
-			$("#photographerId").html("");
-			$("#assistantId").html("");
-			var photographerHtml = "";
-			var assistantHtml = "";
-			for (var i in list) {
-				var data = list[i];
-				var option = "<option value='" + data.id + "'>" + data.name + "</option>";
-				if (data.roleId == 2) {
-					photographerHtml += option;
-				} else if (data.roleId == 4) {
-					assistantHtml += option;
-				}
-			}
-			$("#photographerId").html(photographerHtml);
-			$("#assistantId").html(assistantHtml);
-		}
-	});
-}
-
-$('#addClient').on('hidden.bs.modal', function (e) {
-	document.getElementById("addClientForm").reset();
-});
-
-$('#addOrder').on('hidden.bs.modal', function (e) {
-	document.getElementById("addOrderForm").reset();
-});
-
-function addOrderCallback(response) {
-	if (response.status == "success") {
-		$("#addOrder").modal("hide");
+	
+	function queryPreMonth() {
+		selectedQueryDate = DateUtil.minusMonth(selectedQueryDate);
 		getOrderList();
-	} else {
-		alert(response.msg);
 	}
-}
-
-function addClientCallback(response) {
-	if (response.status == "success") {
-		$("#addClient").modal("hide");
-		getClientList();
-	} else {
-		alert(response.msg);
+	
+	function queryNextMonth() {
+		selectedQueryDate = DateUtil.plusMonth(selectedQueryDate);
+		getOrderList();
 	}
-}
-
-createDateRect();
-
-function createDateRect() {
-	var startDate = new Date(selectedQueryDate.getFullYear(), selectedQueryDate.getMonth(), 1);
-	var rowIndex = 1;
-	var startDay = 1;
-	var lastDay = DateUtil.getLastDayOfMonth(startDate.getFullYear(), startDate.getMonth() + 1);
-	for (var i = 0; i < 5; i++) {
-		var rowBlock = $("#date-row-" + (i + 1));
-		rowBlock.html("");
-		var rowHtml = "";
-		for (var j = 0; j < 7; j++) {
-			startDate.setDate(startDay);
-			var weekDay = startDate.getDay();
-			if (weekDay == j) {
-				if (startDay != lastDay) {
-					startDay++;
+	
+	function getOrderList() {
+		var queryYear = selectedQueryDate.getFullYear();
+		var queryMonth = selectedQueryDate.getMonth();
+		var startDate = new Date(queryYear, queryMonth, 1);
+		var endDate = new Date(queryYear, queryMonth, DateUtil.getLastDayOfMonth(queryYear, queryMonth));
+		var queryStartDate = DateUtil.getDisplayDateString(startDate);
+		var queryEndDate = DateUtil.getDisplayDateString(endDate);
+		$("#month-title").text(selectedQueryDate.getFullYear() + "年" + (selectedQueryDate.getMonth() + 1) + "月订单一览");
+		$.get("<c:url value='/order/getOrderListByDate/" + queryStartDate + "/" + queryEndDate + "'/>", function(list, status) {
+			if (list) {
+				createDateRect();
+				for (var i in list) {
+					var data = list[i];
+					var shootDate = new Date();
+					shootDate.setTime(data.shootDate);
+					var dateCol = $("#order-date-" + shootDate.getDate());
+					var dateHtml = dateCol.html();
+					dateHtml += '<div class="order-date-info">';
+					dateHtml += getDateColHtml(data);
+					dateHtml += '</div>';
+					dateCol.html(dateHtml);
 				}
-				rowHtml += ('<div id="order-date-' + startDate.getDate() + '" class="order-date-block">' + DateUtil.getDateLabel(startDate) + '</div>');
-			} else {
-				rowHtml += ('<div class="order-date-block"></div>');
 			}
-		}
-		rowHtml += ('<div class="clear"></div>');
-		rowBlock.html(rowHtml);
-		rowIndex++;
+		});
 	}
-}
-
-function setControl(id, value) {
-	$("#" + id).val(value);
-}
-
-function setBroker(nameId, name, phoneId, phone) {
-	$("#" + nameId).val(name);
-	$("#" + phoneId).val(phone);
-}
+	
+	var base64 = new Base64();
+	
+	function getDateColHtml(data) {
+		var colHtml = "";
+		colHtml += "<p>";
+		if (data.shootHalf == "AM") {
+			colHtml += "上午：";
+		} else {
+			colHtml += "下午：";
+		}
+		colHtml += ("<a href='<c:url value='/order/orderDetail/" + data.id + "'/>'>#O9" + data.id + "</a></p>");
+		colHtml += ("<p>状态：<span style='color:#5CB85C;'>[" + data.orderStatus.name + "]</span></p>");
+		if (data.photographer) {
+			colHtml += ("<p>摄影师：<img src='" + data.photographer.header + "'/>" + data.photographer.name + "</p>");
+		}
+		if (data.assistant) {
+			colHtml += ("<p>助理：<img src='" + data.assistant.header + "'/>" + data.assistant.name + "</p>");
+		}
+		colHtml += ("<p>模特：" + data.modelName + "</p>");
+		if (data.dresserName) {
+			colHtml += ("<p>化妆师：" + data.dresserName + "</p>");
+		}
+		if (data.stylistName) {
+			colHtml += ("<p>搭配师：" + data.stylistName + "</p>");
+		}
+		return colHtml;
+	}
+	
+	function getUserList() {
+		$.get("<c:url value='/user/getUserList'/>", function(list, status) {
+			if (list) {
+				$("#photographerId").html("");
+				$("#assistantId").html("");
+				var photographerHtml = "";
+				var assistantHtml = "";
+				for (var i in list) {
+					var data = list[i];
+					var option = "<option value='" + data.id + "'>" + data.name + "</option>";
+					if (data.roleId == 2) {
+						photographerHtml += option;
+					} else if (data.roleId == 4) {
+						assistantHtml += option;
+					}
+				}
+				$("#photographerId").html(photographerHtml);
+				$("#assistantId").html(assistantHtml);
+			}
+		});
+	}
+	
+	$('#addClient').on('hidden.bs.modal', function (e) {
+		document.getElementById("addClientForm").reset();
+	});
+	
+	$('#addOrder').on('hidden.bs.modal', function (e) {
+		document.getElementById("addOrderForm").reset();
+	});
+	
+	function addOrderCallback(response) {
+		if (response.status == "success") {
+			$("#addOrder").modal("hide");
+			getOrderList();
+		} else {
+			alert(response.msg);
+		}
+	}
+	
+	function addClientCallback(response) {
+		if (response.status == "success") {
+			$("#addClient").modal("hide");
+			getClientList();
+		} else {
+			alert(response.msg);
+		}
+	}
+	
+	createDateRect();
+	
+	function createDateRect() {
+		var startDate = new Date(selectedQueryDate.getFullYear(), selectedQueryDate.getMonth(), 1);
+		var rowIndex = 1;
+		var startDay = 1;
+		var lastDay = DateUtil.getLastDayOfMonth(startDate.getFullYear(), startDate.getMonth() + 1);
+		for (var i = 0; i < 5; i++) {
+			var rowBlock = $("#date-row-" + (i + 1));
+			rowBlock.html("");
+			var rowHtml = "";
+			for (var j = 0; j < 7; j++) {
+				startDate.setDate(startDay);
+				var weekDay = startDate.getDay();
+				if (weekDay == j) {
+					if (startDay != lastDay) {
+						startDay++;
+					}
+					rowHtml += ('<div id="order-date-' + startDate.getDate() + '" class="order-date-block">' + DateUtil.getDateLabel(startDate) + '</div>');
+				} else {
+					rowHtml += ('<div class="order-date-block"></div>');
+				}
+			}
+			rowHtml += ('<div class="clear"></div>');
+			rowBlock.html(rowHtml);
+			rowIndex++;
+		}
+	}
+	
+	function setControl(id, value) {
+		$("#" + id).val(value);
+	}
+	
+	function setBroker(nameId, name, phoneId, phone) {
+		$("#" + nameId).val(name);
+		$("#" + phoneId).val(phone);
+	}
 </script>
 </body>
 </html>

@@ -26,6 +26,9 @@ public class CommonDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	public static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	public static SimpleDateFormat datetimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
 	public int insert(final String sql, final Object... args) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
@@ -83,9 +86,9 @@ public class CommonDao {
 								field.set(entity, resultSet.getDouble(columnName));
 							} else if (type == String.class) {
 								if (isFormatDate) {
-									field.set(entity, new SimpleDateFormat("yyyy-MM-dd").format(resultSet.getDate(columnName)));
+									field.set(entity, dateFormatter.format(resultSet.getDate(columnName)));
 								} else if (isFormatDatetime) {
-									field.set(entity, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(resultSet.getTimestamp(columnName).getTime())));
+									field.set(entity, datetimeFormatter.format(new Date(resultSet.getTimestamp(columnName).getTime())));
 								} else if (isImage) {
 									String imageSource = resultSet.getString(columnName);
 									if (imageSource == null || imageSource.equals("")) {

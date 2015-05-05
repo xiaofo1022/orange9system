@@ -1,7 +1,12 @@
 package com.xiaofo1022.orange9.modal;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import com.xiaofo1022.orange9.dao.common.Column;
 import com.xiaofo1022.orange9.dao.common.JoinTable;
+import com.xiaofo1022.orange9.util.DatetimeUtil;
 
 public class User {
 	@Column("ID")
@@ -26,6 +31,10 @@ public class User {
 	private int bossId;
 	@JoinTable(tableName="ROLE", joinField="roleId")
 	private Role role;
+	private ClockIn clockIn;
+	private List<ClockIn> normalClockInList = new ArrayList<ClockIn>();
+	private List<ClockIn> delayClockInList = new ArrayList<ClockIn>();
+	private List<ClockIn> leaveClockInList = new ArrayList<ClockIn>();
 	
 	public int getId() {
 		return id;
@@ -92,5 +101,41 @@ public class User {
 	}
 	public void setRole(Role role) {
 		this.role = role;
+	}
+	public ClockIn getClockIn() {
+		return clockIn;
+	}
+	public void setClockIn(ClockIn clockIn) {
+		this.clockIn = clockIn;
+	}
+	public void addClockIn(ClockIn clockIn) {
+		if (clockIn.getRemark() != null) {
+			this.leaveClockInList.add(clockIn);
+		} else {
+			Date standardClock = DatetimeUtil.getStandardClockDate(clockIn.getClockDatetime());
+			if (standardClock.getTime() - clockIn.getClockDatetime().getTime() > 0) {
+				this.normalClockInList.add(clockIn);
+			} else {
+				this.delayClockInList.add(clockIn);
+			}
+		}
+	}
+	public List<ClockIn> getNormalClockInList() {
+		return normalClockInList;
+	}
+	public void setNormalClockInList(List<ClockIn> normalClockInList) {
+		this.normalClockInList = normalClockInList;
+	}
+	public List<ClockIn> getDelayClockInList() {
+		return delayClockInList;
+	}
+	public void setDelayClockInList(List<ClockIn> delayClockInList) {
+		this.delayClockInList = delayClockInList;
+	}
+	public List<ClockIn> getLeaveClockInList() {
+		return leaveClockInList;
+	}
+	public void setLeaveClockInList(List<ClockIn> leaveClockInList) {
+		this.leaveClockInList = leaveClockInList;
 	}
 }

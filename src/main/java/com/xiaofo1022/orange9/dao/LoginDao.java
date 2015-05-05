@@ -13,6 +13,6 @@ public class LoginDao {
 	private CommonDao commonDao;
 	
 	public User getUser(Login login) {
-		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE ACCOUNT = ? AND PASSWORD = ?", login.getUsername(), login.getPassword());
+		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE (ACCOUNT = ? OR PHONE = ?) AND PASSWORD = ?", login.getUsername(), login.getUsername(), login.getPassword());
 	}
 }

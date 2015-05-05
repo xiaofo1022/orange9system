@@ -8,8 +8,6 @@
 <title>Orange 9 System</title>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap-system.css'/>"/>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/system.css'/>"/>
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/notification/ns-default.css'/>" />
-<link rel="stylesheet" type="text/css" href="<c:url value='/css/notification/ns-style-other.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/sidebar/component.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/progress/style.css'/>" />
@@ -17,8 +15,6 @@
 <script src="<c:url value='/js/jquery-1.11.2.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <script src="<c:url value='/js/jquery-ui.js'/>"></script>
-<script src="<c:url value='/js/svg/snap.svg-min.js'/>"></script>
-<script src="<c:url value='/js/notification/modernizr.custom.js'/>"></script>
 <script src="<c:url value='/js/progress/jquery.velocity.min.js'/>"></script>
 <script src="<c:url value='/js/progress/number-pb.js'/>"></script>
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
@@ -38,11 +34,6 @@
 	
 	<div style="text-align:center;">
 		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
-	<div class="notification-shape shape-box" id="notification-shape" data-path-to="m 0,0 500,0 0,500 -500,0 z">
-		<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 500 500" preserveAspectRatio="none">
-			<path d="m 0,0 500,0 0,500 0,-500 z"/>
-		</svg>
 	</div>
 	
 	<button class="btn btn-warning btn-add-employee" onclick="showAddWindow()">添加员工</button>
@@ -159,9 +150,6 @@
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
-<script src="<c:url value='/js/notification/notificationFx.js'/>"></script>
-<script src="<c:url value='/js/notification/corner-expand.js'/>"></script>
-<script src="<c:url value='/js/notification/thumbslider.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/progress/processer.js'/>"></script>
 <script src="<c:url value='/js/chart/echarts.js'/>"></script>
@@ -177,7 +165,7 @@
 	var userMap = {};
 	
 	function getUserList() {
-		$.get("<c:url value='/user/getUserList'/>", function(list, status) {
+		$.get("<c:url value='/user/getUserDetailList'/>", function(list, status) {
 			if (list) {
 				userMap = {};
 				$("#employeeContainer").html("");
@@ -269,10 +257,19 @@
 	
 	function getEmployeeClock(data) {
 		return '<div class="employee-clock">本月考勤：'
-		+ '<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="2015-4-1: 8:23<br/>2015-4-2: 8:20<br/>2015-4-3: 8:19">正常3天</button>'
-		+ '<button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="2015-4-4: 8:46<br/>2015-4-5: 8:31">迟到2天</button>'
-		+ '<button type="button" class="btn btn-info" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="">请假0天</button>'
+		+ '<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus">正常' + data.normalClockInList.length + '天</button>'
+		+ '<button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="' + getDelayClockContent(data.delayClockInList) + '">迟到' + data.delayClockInList.length + '天</button>'
+		+ '<button type="button" class="btn btn-info" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="">请假' + data.leaveClockInList.length + '天</button>'
 		+ '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#cardStatistics">考勤统计</button></div>';
+	}
+	
+	function getDelayClockContent(clockList) {
+		var result = "";
+		for (var index in clockList) {
+			var clock = clockList[index];
+			result += (clock.clockDatetimeLabel + "<br/>");
+		}
+		return result;
 	}
 	
 	function getEmployeePerformance(data) {

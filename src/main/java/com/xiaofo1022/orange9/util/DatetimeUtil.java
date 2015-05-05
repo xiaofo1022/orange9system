@@ -1,5 +1,7 @@
 package com.xiaofo1022.orange9.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DatetimeUtil {
@@ -22,6 +24,54 @@ public class DatetimeUtil {
 		if (second > 0) {
 			result += (second + "秒");
 		}
+		return result;
+	}
+	
+	public static int getLastDayOfMonth(int year, int month) {
+		switch (month) {
+			case 2:
+				if (isLeapYear(year)) {
+					return 29;
+				} else {
+					return 28;
+				}
+			case 1:
+			case 3:
+			case 5:
+			case 7:
+			case 8:
+			case 10:
+			case 12:
+				return 31;
+			default:
+				return 30;
+		}
+	}
+	
+	public static boolean isLeapYear(int year) {
+		return !!((year & 3) == 0 && (year % 100 == 0 || (year % 400 == 0 && year > 0)));
+	}
+	
+	public static Date getStandardClockDate(Date clockDate) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(clockDate);
+		calendar.set(Calendar.HOUR_OF_DAY, 8);
+		calendar.set(Calendar.MINUTE, 30);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
+	
+	public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
+	public static String[] getMonthStartAndEndDate() {
+		String[] result = new String[2];
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.set(Calendar.DATE, 1);
+		result[0] = dateFormat.format(calendar.getTime());
+		calendar.set(Calendar.DATE, getLastDayOfMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1));
+		result[1] = dateFormat.format(calendar.getTime());
 		return result;
 	}
 }
