@@ -64,10 +64,10 @@ public class DatetimeUtil {
 	
 	public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
-	public static String[] getMonthStartAndEndDate() {
+	public static String[] getMonthStartAndEndDate(Date date) {
 		String[] result = new String[2];
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
+		calendar.setTime(date);
 		calendar.set(Calendar.DATE, 1);
 		result[0] = dateFormat.format(calendar.getTime());
 		calendar.set(Calendar.DATE, getLastDayOfMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1));

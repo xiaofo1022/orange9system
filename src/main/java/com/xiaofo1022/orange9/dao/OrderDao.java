@@ -13,6 +13,7 @@ import com.xiaofo1022.orange9.modal.Broker;
 import com.xiaofo1022.orange9.modal.Name;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderStatus;
+import com.xiaofo1022.orange9.util.DatetimeUtil;
 
 @Repository
 @Transactional
@@ -67,5 +68,13 @@ public class OrderDao {
 	
 	public List<Broker> getBrokerList() {
 		return commonDao.query(Broker.class, "SELECT DISTINCT(BROKER_NAME) AS NAME, BROKER_PHONE AS PHONE FROM ORDERS ORDER BY NAME");
+	}
+	
+	public String getOrderTimeCost(Order order) {
+		if (order.getStatusId() == OrderStatusConst.COMPLETE) {
+			return DatetimeUtil.getDatetimeDiff(order.getInsertDatetime(), order.getUpdateDatetime());
+		} else {
+			return DatetimeUtil.getDatetimeDiff(order.getInsertDatetime(), new Date());
+		}
 	}
 }

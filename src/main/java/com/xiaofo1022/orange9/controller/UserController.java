@@ -1,5 +1,6 @@
 package com.xiaofo1022.orange9.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,14 +10,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
+import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.dao.ClockInDao;
+import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
+import com.xiaofo1022.orange9.dao.PerformanceDao;
 import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.ClockIn;
+import com.xiaofo1022.orange9.modal.Count;
+import com.xiaofo1022.orange9.modal.Performance;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
@@ -31,6 +38,10 @@ public class UserController {
 	private UserDao userDao;
 	@Autowired
 	private ClockInDao clockInDao;
+	@Autowired
+	private OrderPostProductionDao orderPostProductionDao;
+	@Autowired
+	private PerformanceDao performanceDao;
 	
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 	@ResponseBody
@@ -62,20 +73,49 @@ public class UserController {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
 			List<User> userList = userDao.getUserList();
-			String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate();
+			String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate(new Date());
 			for (User user : userList) {
-				List<ClockIn> clockInList = clockInDao.getMonthClockInList(user.getId(), queryMonth[0], queryMonth[1]);
-				if (clockInList != null && clockInList.size() > 0) {
-					for (ClockIn clockIn : clockInList) {
-						if (clockIn != null) {
-							user.addClockIn(clockIn);
-						}
-					}
-				}
+				this.createUserClockIn(user, queryMonth[0], queryMonth[1]);
+				this.createUserPerformance(user);
 			}
 			return userList;
 		}
 		return null;
+	}
+	
+	private void createUserPerformance(User user) {
+		List<Performance> performanceList = performanceDao.getPerformanceList();
+		Count fixSkinCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN);
+		Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN);
+		Count fixBackgroundCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND);
+		Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND);
+		Count cutLiquifyCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY);
+		Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY);
+		user.setMonthPostProduction(fixSkinCount.getCnt() + fixBackgroundCount.getCnt() + cutLiquifyCount.getCnt());
+		user.setMonthDonePostProduction(fixSkinDoneCount.getCnt() + fixBackgroundDoneCount.getCnt() + cutLiquifyDoneCount.getCnt());
+		user.addPerformance(performanceList.get(0).getBaseCount(), fixSkinDoneCount.getCnt(), performanceList.get(0).getPush());
+		user.addPerformance(performanceList.get(1).getBaseCount(), fixBackgroundDoneCount.getCnt(), performanceList.get(1).getPush());
+		user.addPerformance(performanceList.get(2).getBaseCount(), cutLiquifyDoneCount.getCnt(), performanceList.get(2).getPush());
+	}
+	
+	private void createUserClockIn(User user, String startDate, String endDate) {
+		List<ClockIn> clockInList = clockInDao.getMonthClockInList(user.getId(), startDate, endDate);
+		if (clockInList != null && clockInList.size() > 0) {
+			for (ClockIn clockIn : clockInList) {
+				if (clockIn != null) {
+					user.addClockIn(clockIn);
+				}
+			}
+		}
+	}
+	
+	@RequestMapping(value = "/getUserClockIn", method = RequestMethod.POST)
+	@ResponseBody
+	public User getUserClockIn(@RequestBody ClockIn clockIn, HttpServletRequest request) {
+		User user = userDao.getUserById(clockIn.getUserId());
+		String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate(clockIn.getClockDatetime());
+		this.createUserClockIn(user, queryMonth[0], queryMonth[1]);
+		return user;
 	}
 	
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)

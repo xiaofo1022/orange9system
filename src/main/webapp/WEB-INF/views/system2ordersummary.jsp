@@ -252,6 +252,7 @@
 			<div id="date-row-3" class="order-date-row"></div>
 			<div id="date-row-4" class="order-date-row"></div>
 			<div id="date-row-5" class="order-date-row"></div>
+			<div id="date-row-6" class="order-date-row"></div>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -441,17 +442,15 @@
 		var rowIndex = 1;
 		var startDay = 1;
 		var lastDay = DateUtil.getLastDayOfMonth(startDate.getFullYear(), startDate.getMonth() + 1);
-		for (var i = 0; i < 5; i++) {
+		for (var i = 0; i < 6; i++) {
 			var rowBlock = $("#date-row-" + (i + 1));
 			rowBlock.html("");
 			var rowHtml = "";
 			for (var j = 0; j < 7; j++) {
 				startDate.setDate(startDay);
 				var weekDay = startDate.getDay();
-				if (weekDay == j) {
-					if (startDay != lastDay) {
-						startDay++;
-					}
+				if (weekDay == j && startDay <= lastDay) {
+					startDay++;
 					rowHtml += ('<div id="order-date-' + startDate.getDate() + '" class="order-date-block">' + DateUtil.getDateLabel(startDate) + '</div>');
 				} else {
 					rowHtml += ('<div class="order-date-block"></div>');

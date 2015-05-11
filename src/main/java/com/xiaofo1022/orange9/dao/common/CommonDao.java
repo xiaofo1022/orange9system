@@ -82,6 +82,8 @@ public class CommonDao {
 							
 							if (type == int.class) {
 								field.set(entity, resultSet.getInt(columnName));
+							} else if (type == float.class) {
+								field.set(entity, resultSet.getFloat(columnName));
 							} else if (type == double.class) {
 								field.set(entity, resultSet.getDouble(columnName));
 							} else if (type == String.class) {

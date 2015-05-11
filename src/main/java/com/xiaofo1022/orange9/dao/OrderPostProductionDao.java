@@ -174,4 +174,12 @@ public class OrderPostProductionDao {
 	public Count getAllOriginalImageCount(int orderId) {
 		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1", orderId);
 	}
+	
+	public Count getAllPostProductionCount(int userId, String tableName) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + tableName + " WHERE OPERATOR_ID = ?", userId);
+	}
+	
+	public Count getAllPostProductionDoneCount(int userId, String tableName) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + tableName + " WHERE OPERATOR_ID = ? AND IS_DONE = 1", userId);
+	}
 }

@@ -1,6 +1,5 @@
 package com.xiaofo1022.orange9.controller;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +31,6 @@ import com.xiaofo1022.orange9.modal.OrderStatus;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
-import com.xiaofo1022.orange9.util.DatetimeUtil;
 import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
@@ -90,7 +88,7 @@ public class OrderController {
 		Order orderDetail = orderDao.getOrderDetail(orderId);
 		if (orderDetail != null) {
 			modelMap.addAttribute("orderDetail", orderDetail);
-			modelMap.addAttribute("timeCost", DatetimeUtil.getDatetimeDiff(orderDetail.getInsertDatetime(), new Date()));
+			modelMap.addAttribute("timeCost", orderDao.getOrderTimeCost(orderDetail));
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
 			modelMap.addAttribute("orderConvert", orderConvertDao.getOrderConvert(orderId));

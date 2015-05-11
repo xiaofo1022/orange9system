@@ -30,6 +30,10 @@ public class UserDao {
 		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE PHONE = ?", phone);
 	}
 	
+	public User getUserById(int id) {
+		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE ID = ?", id);
+	}
+	
 	public List<User> getUserList() {
 		return commonDao.query(User.class, "SELECT * FROM USER WHERE ACTIVE = 1");
 	}

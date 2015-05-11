@@ -35,6 +35,15 @@ public class User {
 	private List<ClockIn> normalClockInList = new ArrayList<ClockIn>();
 	private List<ClockIn> delayClockInList = new ArrayList<ClockIn>();
 	private List<ClockIn> leaveClockInList = new ArrayList<ClockIn>();
+	private int monthPostProduction;
+	private int monthDonePostProduction;
+	private float performance;
+	@SuppressWarnings("unused")
+	private int normalCount;
+	@SuppressWarnings("unused")
+	private int delayCount;
+	@SuppressWarnings("unused")
+	private int leaveCount;
 	
 	public int getId() {
 		return id;
@@ -137,5 +146,48 @@ public class User {
 	}
 	public void setLeaveClockInList(List<ClockIn> leaveClockInList) {
 		this.leaveClockInList = leaveClockInList;
+	}
+	public int getMonthPostProduction() {
+		return monthPostProduction;
+	}
+	public void setMonthPostProduction(int monthPostProduction) {
+		this.monthPostProduction = monthPostProduction;
+	}
+	public int getMonthDonePostProduction() {
+		return monthDonePostProduction;
+	}
+	public void setMonthDonePostProduction(int monthDonePostProduction) {
+		this.monthDonePostProduction = monthDonePostProduction;
+	}
+	public float getPerformance() {
+		return performance;
+	}
+	public void setPerformance(float performance) {
+		this.performance = performance;
+	}
+	public void addPerformance(int baseCount, int postCount, float push) {
+		int overCount = postCount - baseCount;
+		if (overCount < 0) {
+			overCount = 0;
+		}
+		this.performance += overCount * push;
+	}
+	public int getNormalCount() {
+		return this.normalClockInList.size();
+	}
+	public void setNormalCount(int normalCount) {
+		this.normalCount = normalCount;
+	}
+	public int getDelayCount() {
+		return this.delayClockInList.size();
+	}
+	public void setDelayCount(int delayCount) {
+		this.delayCount = delayCount;
+	}
+	public int getLeaveCount() {
+		return this.leaveClockInList.size();
+	}
+	public void setLeaveCount(int leaveCount) {
+		this.leaveCount = leaveCount;
 	}
 }

@@ -81,12 +81,6 @@
 								<input type="number" id="salary" name="salary" value="1500" min="1000" max="10000" step="100" class="form-control"/>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">绩效工资</label>
-							<div class="col-sm-4">
-								<input type="number" id="performancePay" name="performancePay" value="0" min="0" max="10000" step="10" class="form-control"/>
-							</div>
-						</div>
 						<input type="hidden" name="password" value="666666"/>
 					</sf:form>
 				</div>
@@ -108,19 +102,11 @@
 				<div class="modal-body">	
 					<div>
 						<div class="chart-control1">
-							<select class="form-control">
-								<option>2015</option>
-								<option>2014</option>
-								<option>2013</option>
-								<option>2012</option>
+							<select id="card-year" class="form-control" onchange="changeCardChart()">
 							</select>
 						</div>
 						<div class="chart-control2">
-							<select class="form-control" onchange="changeCardChart()">
-								<option>4月</option>
-								<option>3月</option>
-								<option>2月</option>
-								<option>1月</option>
+							<select id="card-month" class="form-control" onchange="changeCardChart()">
 							</select>
 						</div>
 						<div class="clear"></div>
@@ -147,6 +133,8 @@
 	</div>
 	
 	<div id="employeeContainer"></div>
+	
+	<input type="hidden" id="user-id"/>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
@@ -154,11 +142,33 @@
 <script src="<c:url value='/js/progress/processer.js'/>"></script>
 <script src="<c:url value='/js/chart/echarts.js'/>"></script>
 <script src="<c:url value='/js/util/base64.js'/>"></script>
+<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
 	var headerBase64 = new Base64("i-upload-header", "header");
+	var now = new Date();
+	
+	createCardYearMonthSelect();
+	
+	function createCardYearMonthSelect() {
+		var nowYear = now.getFullYear();
+		var nowMonth = now.getMonth();
+		var yearHtml = "";
+		for (var i = nowYear; i > 2010; i--) {
+			yearHtml += "<option value='" + i + "'>" + i + "年</option>";
+		}
+		$("#card-year").html(yearHtml);
+		var monthHtml = "";
+		for (var j = 12; j > 0; j--) {
+			if (j == (nowMonth + 1)) {
+				monthHtml += "<option value='" + j + "' selected>" + j + "月</option>";
+			} else {
+				monthHtml += "<option value='" + j + "'>" + j + "月</option>";
+			}
+		}
+		$("#card-month").html(monthHtml);
+	}
 	
 	getRoleList();
-	
 	getUserList();
 	
 	var updateHiddenList = ["header"];
@@ -184,8 +194,8 @@
 				$("#employeeContainer").html(employeeHtml);
 				for (var i in list) {
 					var data = list[i];
-					var plr = new Processer("t-" + data.id, "b-" + data.id, "本月进度（共0单）");
-					plr.run(0, 0);
+					var plr = new Processer("t-" + data.id, "b-" + data.id, "本月进度（共" + data.monthPostProduction + "张）");
+					plr.run(data.monthDonePostProduction, data.monthPostProduction);
 				}
 				initPopover();
 			}
@@ -215,8 +225,7 @@
 	var addEmployeeRules = {
 		name: { required: true },
 		phone: { required: true, digits: true },
-		salary: { digits: true },
-		performancePay: { digits: true }
+		salary: { digits: true }
 	};
 	
 	var validator = new Validator("addEmployeeForm", "btnAddEmployee", addEmployeeRules, "<c:url value='/user/addUser'/>", submitCallback);
@@ -260,7 +269,7 @@
 		+ '<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus">正常' + data.normalClockInList.length + '天</button>'
 		+ '<button type="button" class="btn btn-danger" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="' + getDelayClockContent(data.delayClockInList) + '">迟到' + data.delayClockInList.length + '天</button>'
 		+ '<button type="button" class="btn btn-info" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="">请假' + data.leaveClockInList.length + '天</button>'
-		+ '<button type="button" class="btn btn-success" data-toggle="modal" data-target="#cardStatistics">考勤统计</button></div>';
+		+ '<button type="button" class="btn btn-success" onclick="showCardChart(' + data.id + ', \'' + data.name + '\', ' + data.normalCount + ', ' + data.delayCount + ', ' + data.leaveCount + ')">考勤统计</button></div>';
 	}
 	
 	function getDelayClockContent(clockList) {
@@ -273,7 +282,7 @@
 	}
 	
 	function getEmployeePerformance(data) {
-		return '<div class="employee-performance">本月绩效：<span>19.0元</span><button type="button" class="btn btn-success" data-toggle="modal" data-target="#performanceStatistics">绩效统计</button></div>';
+		return '<div class="employee-performance">本月绩效：<span>' + data.performance + '元</span><button type="button" class="btn btn-success" data-toggle="modal" data-target="#performanceStatistics">绩效统计</button></div>';
 	}
 	
 	function deleteUser(userId) {
@@ -323,12 +332,27 @@
 	});
 	
 	function changeCardChart() {
-		createCardChart("2015年3月考勤统计", "沈玉琳", [28, 1, 2]);
+		var userId = $("#user-id").val();
+		var year = $("#card-year").val();
+		var month = $("#card-month").val();
+		var selectedDate = new Date(year, month - 1, 1, 0, 0, 0);
+		AjaxUtil.post("<c:url value='/user/getUserClockIn'/>", {userId: userId, clockDatetime: selectedDate}, function(data) {
+			createCardChart(year, month, data.name, [data.normalCount, data.delayCount, data.leaveCount]);
+		});
 	}
 	
-	createCardChart("2015年四月考勤统计", "沈玉琳", [5, 2, 0]);
+	function showCardChart(userid, username, normalCount, delayCount, leaveCount) {
+		$("#user-id").val(userid);
+		createCardChart(now.getFullYear(), now.getMonth() + 1, username, [normalCount, delayCount, leaveCount]);
+		$("#cardStatistics").modal("show");
+	}
 	
-	function createCardChart(title, employee, data) {
+	$("#cardStatistics").on("hidden.bs.modal", function(e) {
+		$("#card-year").val(now.getFullYear());
+		$("#card-month").val(now.getMonth() + 1);
+	});
+	
+	function createCardChart(year, month, employee, data) {
 		require(
 			[
 				'echarts',
@@ -342,7 +366,7 @@
 				var option = {
 					title: {
 						x: 'center',
-						text: title,
+						text: (year + "年" + month + "月考勤统计"),
 						subtext: employee
 					},
 					tooltip: {
@@ -402,9 +426,14 @@
 		);
 	}
 	
+	function showPerformanceChart(year, userId) {
+		$("#user-id").val(userid);
+		$("#performanceStatistics").modal("show");
+	}
+	
 	createPerformanceChart();
 	
-	function createPerformanceChart() {
+	function createPerformanceChart(year, username) {
 		require(
 			[
 				'echarts',
@@ -417,8 +446,8 @@
 				
 				var option = {
 					title : {
-						text: '2014年绩效统计',
-						subtext: '沈玉琳'
+						text: (year + '年绩效统计'),
+						subtext: username
 					},
 					tooltip : {
 						trigger: 'axis'
