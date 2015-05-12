@@ -125,7 +125,13 @@
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 					<h4 class="modal-title">绩效统计</h4>
 				</div>
-				<div class="modal-body">	
+				<div class="modal-body">
+					<div>
+						<div class="chart-control1">
+							<select id="performance-year" class="form-control" onchange="changePerformanceYear()"></select>
+						</div>
+						<div class="clear"></div>
+					</div>
 					<div id="performanceCardBody" style="width:860px;height:460px;"></div>
 				</div>
 			</div>
@@ -157,6 +163,7 @@
 			yearHtml += "<option value='" + i + "'>" + i + "年</option>";
 		}
 		$("#card-year").html(yearHtml);
+		$("#performance-year").html(yearHtml);
 		var monthHtml = "";
 		for (var j = 12; j > 0; j--) {
 			if (j == (nowMonth + 1)) {
@@ -282,7 +289,7 @@
 	}
 	
 	function getEmployeePerformance(data) {
-		return '<div class="employee-performance">本月绩效：<span>' + data.performance + '元</span><button type="button" class="btn btn-success" data-toggle="modal" data-target="#performanceStatistics">绩效统计</button></div>';
+		return '<div class="employee-performance">本月绩效：<span>' + data.performance + '元</span><button type="button" class="btn btn-success" onclick="showPerformanceChart(' + data.id + ')">绩效统计</button></div>';
 	}
 	
 	function deleteUser(userId) {
@@ -370,8 +377,8 @@
 						subtext: employee
 					},
 					tooltip: {
-						trigger: 'item',
-						formatter: cardChartTooltipFormatter
+						trigger: 'item'
+						//formatter: cardChartTooltipFormatter
 					},
 					toolbox: {
 						show: true,
@@ -426,14 +433,32 @@
 		);
 	}
 	
-	function showPerformanceChart(year, userId) {
-		$("#user-id").val(userid);
-		$("#performanceStatistics").modal("show");
+	$("#performanceStatistics").on("hidden.bs.modal", function(e) {
+		$("#performance-year").val(now.getFullYear());
+	});
+	
+	function changePerformanceYear() {
+		var userId = $("#user-id").val();
+		var year = $("#performance-year").val();
+		getPerformanceChart(year, userId);
 	}
 	
-	createPerformanceChart();
+	function showPerformanceChart(userId) {
+		$("#user-id").val(userId);
+		var year = $("#performance-year").val();
+		getPerformanceChart(year, userId);
+	}
 	
-	function createPerformanceChart(year, username) {
+	function getPerformanceChart(year, userId) {
+		$.get("<c:url value='/user/getUserPerformanceChart/" + year + "/" + userId + "'/>", function(data) {
+			if (data) {
+				createPerformanceChart(year, data.userName, data.performanceList);
+				$("#performanceStatistics").modal("show");
+			}
+		});
+	}
+	
+	function createPerformanceChart(year, username, datalist) {
 		require(
 			[
 				'echarts',
@@ -481,7 +506,7 @@
 						{
 							name:'业绩统计',
 							type:'line',
-							data:[560, 510, 420, 380, 590, 570, 320, 610, 720, 730, 510, 410],
+							data:datalist,
 							markPoint : {
 								data : [
 									{type : 'max', name: '最高'},

@@ -1,5 +1,6 @@
 package com.xiaofo1022.orange9.controller;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.ClockIn;
 import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.Performance;
+import com.xiaofo1022.orange9.modal.PerformanceChart;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
@@ -76,21 +78,21 @@ public class UserController {
 			String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate(new Date());
 			for (User user : userList) {
 				this.createUserClockIn(user, queryMonth[0], queryMonth[1]);
-				this.createUserPerformance(user);
+				this.createUserPerformance(user, queryMonth[0], queryMonth[1]);
 			}
 			return userList;
 		}
 		return null;
 	}
 	
-	private void createUserPerformance(User user) {
+	private void createUserPerformance(User user, String startDate, String endDate) {
 		List<Performance> performanceList = performanceDao.getPerformanceList();
-		Count fixSkinCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN);
-		Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN);
-		Count fixBackgroundCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND);
-		Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND);
-		Count cutLiquifyCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY);
-		Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY);
+		Count fixSkinCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, startDate, endDate);
+		Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, startDate, endDate);
+		Count fixBackgroundCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, startDate, endDate);
+		Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, startDate, endDate);
+		Count cutLiquifyCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, startDate, endDate);
+		Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, startDate, endDate);
 		user.setMonthPostProduction(fixSkinCount.getCnt() + fixBackgroundCount.getCnt() + cutLiquifyCount.getCnt());
 		user.setMonthDonePostProduction(fixSkinDoneCount.getCnt() + fixBackgroundDoneCount.getCnt() + cutLiquifyDoneCount.getCnt());
 		user.addPerformance(performanceList.get(0).getBaseCount(), fixSkinDoneCount.getCnt(), performanceList.get(0).getPush());
@@ -116,6 +118,26 @@ public class UserController {
 		String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate(clockIn.getClockDatetime());
 		this.createUserClockIn(user, queryMonth[0], queryMonth[1]);
 		return user;
+	}
+	
+	@RequestMapping(value = "/getUserPerformanceChart/{year}/{userId}", method = RequestMethod.GET)
+	@ResponseBody
+	public PerformanceChart getUserPerformanceChart(@PathVariable int year, @PathVariable int userId, HttpServletRequest request) {
+		User user = userDao.getUserById(userId);
+		PerformanceChart performanceChart = new PerformanceChart();
+		if (user != null) {
+			performanceChart.setUserName(user.getName());
+			Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.YEAR, year);
+			for (int i = 0; i < 12; i++) {
+				calendar.set(Calendar.MONTH, i);
+				calendar.set(Calendar.DATE, 1);
+				String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate(calendar.getTime());
+				this.createUserPerformance(user, queryMonth[0], queryMonth[1]);
+				performanceChart.addPerformance(user.getMonthDonePostProduction());
+			}
+		}
+		return performanceChart;
 	}
 	
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
