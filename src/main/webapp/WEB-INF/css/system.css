@@ -53,6 +53,10 @@ div.hidden {
 	float: left;
 }
 
+.fright {
+	float: right;
+}
+
 span.danger {
 	color: #D9534F;
 }

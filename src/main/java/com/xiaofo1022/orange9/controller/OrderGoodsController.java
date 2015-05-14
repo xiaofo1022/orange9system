@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,7 +40,12 @@ public class OrderGoodsController {
 	@RequestMapping(value = "/updateShootGoods", method = RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse updateShootGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
-		orderGoodsDao.updateOrderShootGoods(orderGoods);
+		OrderGoods existGoods = orderGoodsDao.getOrderShootGoods(orderGoods.getOrderId());
+		if (existGoods == null) {
+			orderGoodsDao.addOrderShootGoods(orderGoods);
+		} else {
+			orderGoodsDao.updateOrderShootGoods(orderGoods);
+		}
 		return new SuccessResponse("Update Shoot Goods Success");
 	}
 	
@@ -48,5 +54,11 @@ public class OrderGoodsController {
 	public CommonResponse addShootGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
 		orderGoodsDao.addOrderShootGoods(orderGoods);
 		return new SuccessResponse("Add Shoot Goods Success");
+	}
+	
+	@RequestMapping(value = "/getOrderGoods/{orderId}", method = RequestMethod.GET)
+	@ResponseBody
+	public OrderGoods getOrderGoods(@PathVariable int orderId) {
+		return orderGoodsDao.getOrderShootGoods(orderId);
 	}
 }

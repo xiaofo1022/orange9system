@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.Client;
+import com.xiaofo1022.orange9.modal.ClientMessage;
 
 @Repository
 public class ClientDao {
@@ -23,5 +24,16 @@ public class ClientDao {
 	
 	public List<Client> getClientList() {
 		return commonDao.query(Client.class, "SELECT * FROM CLIENT WHERE ACTIVE = 1 ORDER BY NAME");
+	}
+	
+	public void insertClientMessage(ClientMessage clientMessage) {
+		Date now = new Date();
+		int id = commonDao.insert("INSERT INTO CLIENT_MESSAGE (INSERT_DATETIME, UPDATE_DATETIME, CLIENT_ID, ORDER_ID, MESSAGE) VALUES (?, ?, ?, ?, ?)",
+				now, now, clientMessage.getClientId(), clientMessage.getOrderId(), clientMessage.getMessage());
+		clientMessage.setId(id);
+	}
+	
+	public List<ClientMessage> getClientMessageList(int clientId, int orderId) {
+		return commonDao.query(ClientMessage.class, "SELECT * FROM CLIENT_MESSAGE WHERE CLIENT_ID = ? AND ORDER_ID = ? ORDER BY INSERT_DATETIME DESC", clientId, orderId);
 	}
 }

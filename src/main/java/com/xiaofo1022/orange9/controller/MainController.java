@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.xiaofo1022.orange9.common.Message;
 import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
+import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.ClockInDao;
 import com.xiaofo1022.orange9.dao.LoginDao;
@@ -74,7 +75,11 @@ public class MainController {
 		} else {
 			HttpSession session = request.getSession(true);
 			session.setAttribute("user", user);
-			return new SuccessResponse(Message.LOGIN_SUCCESS, "orderSummary");
+			if (user.getRoleId() == RoleConst.CLIENT_ID) {
+				return new SuccessResponse(Message.LOGIN_SUCCESS, "client/main/" + user.getBossId());
+			} else {
+				return new SuccessResponse(Message.LOGIN_SUCCESS, "orderSummary");
+			}
 		}
 	}
 	

@@ -96,19 +96,25 @@
 	}
 	
 	function setTransferComplete(orderTransferId, orderId) {
-		var result = confirm("确定原片已上传完成吗？");
-		if (result) {
-			$.ajax({  
-	            url: "<c:url value='/orderTransfer/setTransferImageIsDone/" + orderId + "/" + orderTransferId + "'/>",  
-	            type: 'post',
-	            success: function(data) {
-	            	location.reload(true);
-	            },  
-	            error: function(data) {
-	                console.log(data);
-	            }  
-	        });
-		}
+		$.get("<c:url value='/orderTransfer/getTransferImageCount/" + orderId + "'/>", function(data) {
+			if (data && data.cnt > 0) {
+				var result = confirm("确定原片已上传完成吗？");
+				if (result) {
+					$.ajax({  
+			            url: "<c:url value='/orderTransfer/setTransferImageIsDone/" + orderId + "/" + orderTransferId + "'/>",  
+			            type: 'post',
+			            success: function(data) {
+			            	location.reload(true);
+			            },  
+			            error: function(data) {
+			                console.log(data);
+			            }  
+			        });
+				}
+			} else {
+				alert("还未上传原片");
+			}
+		});
 	}
 </script>
 </body>

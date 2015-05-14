@@ -142,6 +142,7 @@
 		<div class="order-detail-block bd-blue">
 			订单详情：
 			<input type="hidden" id="orderId" value="${orderDetail.id}"/>
+			<input type="hidden" id="clientId" value="${orderDetail.clientId}"/>
 			<span>单号：<span class="oc-label">${orderDetail.id}</span></span>
 			<span>拍摄日期：<span class="oc-label">${orderDetail.shootDateLabel}</span></span> 
 			<span>状态：</span> 
@@ -377,21 +378,6 @@
 				<div class="clear"></div>
 			</div>
 			<div id="blink3-block" class="detail-bottom-block hidden">
-				<p>
-					<span class="oc-label">2015-4-12 10:22</span>
-					<br/>
-					终于修完了，这次合作比较愉快，期待下次哈。
-				</p>
-				<p>
-					<span class="oc-label">2015-4-11 13:31</span>
-					<br/>
-					嗯，这次收到的图片我们很满意，再接再厉，加快进度！
-				</p>
-				<p>
-					<span class="oc-label">2015-4-10 15:30</span>
-					<br/>
-					快点啊，我们很急的咧！
-				</p>
 			</div>
 			<div id="blink4-block" class="detail-bottom-block hidden">
 				<c:forEach items="${orderHistoryList}" var="orderHistory">
@@ -491,87 +477,6 @@
 		});
 	}
 	
-	var selectedPictureIdList = [];
-	var CHOSEN_MAX = parseInt($("#allOrderGoodsCount").val()) * 8;
-	var isConfirmOverSelect = false;
-	var selectedLabel = "<span class='orange-color'>已选</span>";
-	
-	setChosenLabel();
-	
-	function clientPictureSelected(event) {
-		var overlay = $(event.currentTarget);
-		var img = overlay.next();
-		var imgId = img.attr("id").replace("client-pic-", "");
-		var clientLabel = $("#client-pic-label-" + imgId);
-		if (overlay.hasClass("picture-selected")) {
-			overlay.removeClass("picture-selected");
-			removeSelectedPicture(imgId);
-			clientLabel.html("(" + imgId + ")");
-		} else {
-			if (selectedPictureIdList.length == CHOSEN_MAX) {
-				if (!isConfirmOverSelect) {
-					var result = confirm("您选定的张数已超过上限，继续选择每张将收取10元的额外费用，是否继续选择？");
-					isConfirmOverSelect = result;
-				}
-				if (isConfirmOverSelect) {
-					overlay.addClass("picture-selected");
-					selectedPictureIdList.push(imgId);
-					CHOSEN_MAX++;
-				}
-			} else {
-				overlay.addClass("picture-selected");
-				selectedPictureIdList.push(imgId);
-			}
-			clientLabel.html(clientLabel.text() + selectedLabel);
-		}
-		setChosenLabel();
-	}
-	
-	function setChosenLabel() {
-		$("#chosen-label").text("已选 (" + selectedPictureIdList.length + " / " + CHOSEN_MAX + ") 张");
-	}
-	
-	function isPictureSelected(linkId) {
-		var id = linkId.replace("client-pic-", "");
-		for (var i in selectedPictureIdList) {
-			if (selectedPictureIdList[i] == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	function removeSelectedPicture(id) {
-		for (var i in selectedPictureIdList) {
-			if (selectedPictureIdList[i] == id) {
-				selectedPictureIdList.splice(i, 1);
-			}
-		}
-	}
-	
-	function submitSelectedPictures() {
-		if (selectedPictureIdList.length == 0) {
-			alert("您还未选定照片");
-			return;
-		}
-		var result = confirm("您已选定" + selectedPictureIdList.length + "张照片，是否确定提交？");
-		if (result) {
-			$('#zoom .close').click();
-			$.ajax({  
-	            url: "<c:url value='/orderTransfer/setTransferImageSelected/" + $("#orderId").val() + "'/>",  
-	            type: 'post',
-	            contentType: 'application/json',
-	            data: JSON.stringify(selectedPictureIdList),  
-	            success: function(data) {
-	            	location.reload(true);
-	            },  
-	            error: function(data) {
-	            	console.log(data);
-	            }
-			});
-		}
-	}
-	
 	var confirmGoodsRules = {
 		coatCount: { digits: true },
 		pantsCount: { digits: true },
@@ -617,6 +522,22 @@
 		} else {
 			alert(response.msg);
 		}
+	}
+	
+	getMessage();
+	
+	function getMessage() {
+		$.get("<c:url value='/client/getClientMessageList/" + $("#clientId").val() + "/" + $("#orderId").val() + "'/>", function(list) {
+			if (list) {
+				$("#blink3-block").html("");
+				var messageHtml = "";
+				for (var i in list) {
+					var data = list[i];
+					messageHtml += ("<p><span class='oc-label'>" + data.insertDatetimeLabel + "</span><br/>" + data.message + "</p>");
+				}
+				$("#blink3-block").html(messageHtml);
+			}
+		});
 	}
 </script>
 </body>

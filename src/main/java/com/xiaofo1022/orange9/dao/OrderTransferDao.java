@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.xiaofo1022.orange9.dao.common.CommonDao;
+import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.OrderTransferImage;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 
@@ -35,6 +36,10 @@ public class OrderTransferDao {
 	
 	public List<OrderTransferImageData> getTransferImageDataListByOrder(int orderId) {
 		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? ORDER BY ID", orderId);
+	}
+	
+	public Count getTransferImageDataCount(int orderId) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ?", orderId);
 	}
 	
 	public List<OrderTransferImageData> getSelectedTransferImageDataList(int orderId) {

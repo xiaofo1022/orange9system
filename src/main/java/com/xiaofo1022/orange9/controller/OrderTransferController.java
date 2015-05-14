@@ -17,6 +17,7 @@ import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderTransferDao;
+import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.OrderTransferImage;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -44,6 +45,12 @@ public class OrderTransferController {
 	@ResponseBody
 	public List<OrderTransferImageData> getTransferImageDataListByOrder(@PathVariable int orderId) {
 		return orderTransferDao.getTransferImageDataListByOrder(orderId);
+	}
+	
+	@RequestMapping(value = "/getTransferImageCount/{orderId}", method = RequestMethod.GET)
+	@ResponseBody
+	public Count getTransferImageCount(@PathVariable int orderId) {
+		return orderTransferDao.getTransferImageDataCount(orderId);
 	}
 	
 	@RequestMapping(value = "/uploadTransferImage", method = RequestMethod.POST)
