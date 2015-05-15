@@ -38,7 +38,7 @@ public class OrderDao {
 	}
 	
 	public List<Order> getOrderListByClient(int clientId) {
-		return commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE CLIENT_ID = ? AND ACTIVE = 1 AND STATUS_ID = 3 ORDER BY ID DESC", clientId);
+		return commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE CLIENT_ID = ? AND ACTIVE = 1 ORDER BY ID DESC", clientId);
 	}
 	
 	public List<Order> getOrderListByDate(String startDate, String endDate) {

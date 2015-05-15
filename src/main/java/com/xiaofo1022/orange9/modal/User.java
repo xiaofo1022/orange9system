@@ -21,6 +21,10 @@ public class User {
 	private String phone;
 	@Column("ROLE_ID")
 	private int roleId;
+	@Column("ACTIVE")
+	private int active;
+	@Column("IS_ADMIN")
+	private int isAdmin;
 	@Column("SALARY")
 	private double salary;
 	@Column("PERFORMANCE_PAY")
@@ -189,5 +193,17 @@ public class User {
 	}
 	public void setLeaveCount(int leaveCount) {
 		this.leaveCount = leaveCount;
+	}
+	public int getActive() {
+		return active;
+	}
+	public void setActive(int active) {
+		this.active = active;
+	}
+	public int getIsAdmin() {
+		return isAdmin;
+	}
+	public void setIsAdmin(int isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 }

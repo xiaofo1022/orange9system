@@ -11,6 +11,7 @@ public class ClientOrder {
 	private List<OrderFixedImageData> orderFixedImageDataList;
 	private boolean first = false;
 	private int goodsCount;
+	private String status;
 	
 	public int getOrderId() {
 		return orderId;
@@ -63,5 +64,11 @@ public class ClientOrder {
 	}
 	public void setClientId(int clientId) {
 		this.clientId = clientId;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

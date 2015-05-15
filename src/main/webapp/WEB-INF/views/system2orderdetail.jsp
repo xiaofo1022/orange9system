@@ -25,9 +25,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
@@ -146,18 +144,25 @@
 			<span>单号：<span class="oc-label">${orderDetail.id}</span></span>
 			<span>拍摄日期：<span class="oc-label">${orderDetail.shootDateLabel}</span></span> 
 			<span>状态：</span> 
-			<select id="orderStatus" class="form-control" style="width:140px;display:inline;" onchange="updateOrderStatus()">
-				<c:forEach items="${orderStatusList}" var="orderStatus">
-					<c:choose>
-						<c:when test="${orderStatus.id == orderDetail.statusId}">
-							<option value="${orderStatus.id}" selected>${orderStatus.name}</option>
-						</c:when>
-						<c:otherwise>
-							<option value="${orderStatus.id}">${orderStatus.name}</option>
-						</c:otherwise>
-					</c:choose>
-				</c:forEach>
-			</select>
+			<c:choose>
+				<c:when test="${user.isAdmin == 1}">
+					<select id="orderStatus" class="form-control" style="width:140px;display:inline;" onchange="updateOrderStatus()">
+						<c:forEach items="${orderStatusList}" var="orderStatus">
+							<c:choose>
+								<c:when test="${orderStatus.id == orderDetail.statusId}">
+									<option value="${orderStatus.id}" selected>${orderStatus.name}</option>
+								</c:when>
+								<c:otherwise>
+									<option value="${orderStatus.id}">${orderStatus.name}</option>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</select>
+				</c:when>
+				<c:otherwise>
+					<span>${orderDetail.orderStatus.name}</span> 
+				</c:otherwise>
+			</c:choose>
 			<span>共计用时：<span class="oc-label">${timeCost}</span></span>
 		</div>
 		<div class="order-detail-block bd-blue">
@@ -176,7 +181,9 @@
 			<c:choose>
 				<c:when test="${orderDetail.orderGoods == null}">
 					<input type="hidden" id="allOrderGoodsCount" value="0"/>
-					<button class="btn btn-info" onclick="showAddOrderGoodsWindow(${orderDetail.id})">添加</button>
+					<c:if test="${user.isAdmin == 1}">
+						<button class="btn btn-info" onclick="showAddOrderGoodsWindow(${orderDetail.id})">添加</button>
+					</c:if>
 				</c:when>
 				<c:otherwise>
 					<input type="hidden" id="allOrderGoodsCount" value="${orderDetail.orderGoods.allCount}"/>
@@ -201,18 +208,20 @@
 					<c:if test="${orderDetail.orderGoods.otherCount > 0}">
 						<span><span class="oc-label">${orderDetail.orderGoods.otherCount}</span>件其他</span>
 					</c:if>
-					<button class="btn btn-info"
-						onclick="showUpdateOrderGoodsWindow(
-							${orderDetail.id}, 
-							${orderDetail.orderGoods.coatCount}, 
-							${orderDetail.orderGoods.pantsCount}, 
-							${orderDetail.orderGoods.jumpsuitsCount}, 
-							${orderDetail.orderGoods.shoesCount},
-							${orderDetail.orderGoods.hatCount},
-							${orderDetail.orderGoods.bagCount},
-							${orderDetail.orderGoods.otherCount})">
-						修改
-					</button>
+					<c:if test="${user.isAdmin == 1}">
+						<button class="btn btn-info"
+							onclick="showUpdateOrderGoodsWindow(
+								${orderDetail.id}, 
+								${orderDetail.orderGoods.coatCount}, 
+								${orderDetail.orderGoods.pantsCount}, 
+								${orderDetail.orderGoods.jumpsuitsCount}, 
+								${orderDetail.orderGoods.shoesCount},
+								${orderDetail.orderGoods.hatCount},
+								${orderDetail.orderGoods.bagCount},
+								${orderDetail.orderGoods.otherCount})">
+							修改
+						</button>
+					</c:if>
 				</c:otherwise>
 			</c:choose>
 		</div>
@@ -237,7 +246,9 @@
 					<c:when test="${orderDetail.orderStatus.name.equals('导图')}">
 						<c:choose>
 							<c:when test="${orderConvert == null}">
-								<button class="btn btn-info" onclick="showSetConvertWindow()">指定</button>
+								<c:if test="${user.isAdmin == 1}">
+									<button class="btn btn-info" onclick="showSetConvertWindow()">指定</button>
+								</c:if>
 							</c:when>
 							<c:otherwise>
 								<img src="${orderConvert.operator.header}"/><span class="oc-label">${orderConvert.operator.name}</span>

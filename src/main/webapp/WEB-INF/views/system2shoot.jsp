@@ -20,9 +20,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
@@ -43,7 +41,9 @@
 			<p class="model-label transfer-label">
 				摄影师：
 				<img src="${orderShoot.photographer.header}"/><span class="ml10">${orderConvert.photographer.name}</span>
-				<button id="btn-convert-done-${orderShoot.id}" class="btn btn-success ml10" onclick="confirmShootComplete(${orderShoot.id}, ${orderShoot.photographerId})">完成</button>
+				<c:if test="${ orderShoot.photographer.id == user.id}">
+					<button id="btn-convert-done-${orderShoot.id}" class="btn btn-success ml10" onclick="confirmShootComplete(${orderShoot.id}, ${orderShoot.photographerId})">完成</button>
+				</c:if>
 			</p>
 			<div id="time-progress-bar-${orderShoot.id}" class="progress" style="margin-bottom:0;">
 				<div id="time-bar-${orderShoot.id}" class="progress-bar progress-bar-success" role="progressbar"

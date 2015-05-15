@@ -50,6 +50,11 @@ public class ClientController {
 	
 	@RequestMapping(value = "/main/{clientId}", method = RequestMethod.GET)
 	public String main(@PathVariable int clientId, ModelMap modelMap) {
+		this.createClientMainModelMap(clientId, 0, modelMap);
+		return "system2clientpage";
+	}
+	
+	private void createClientMainModelMap(int clientId, int orderId, ModelMap modelMap) {
 		List<Order> orderList = orderDao.getOrderListByClient(clientId);
 		ClientOrder clientOrder = null;
 		List<Integer> orderIdList = null;
@@ -58,9 +63,15 @@ public class ClientController {
 			for (Order order : orderList) {
 				orderIdList.add(order.getId());
 			}
-			Order order = orderList.get(0);
+			Order order = null;
+			if (orderId == 0) {
+				order = orderList.get(0);
+			} else {
+				order = orderDao.getOrderDetail(orderId);
+			}
 			clientOrder = new ClientOrder();
 			clientOrder.setOrderId(order.getId());
+			clientOrder.setStatus(order.getOrderStatus().getName());
 			clientOrder.setClientId(clientId);
 			if (order.getOrderGoods() != null) {
 				clientOrder.setGoodsCount(order.getOrderGoods().getAllCount());
@@ -72,6 +83,11 @@ public class ClientController {
 		}
 		modelMap.addAttribute("order", clientOrder);
 		modelMap.addAttribute("orderIdList", orderIdList);
+	}
+	
+	@RequestMapping(value = "/main/{clientId}/{orderId}", method = RequestMethod.GET)
+	public String main(@PathVariable int clientId, @PathVariable int orderId, ModelMap modelMap) {
+		this.createClientMainModelMap(clientId, orderId, modelMap);
 		return "system2clientpage";
 	}
 	

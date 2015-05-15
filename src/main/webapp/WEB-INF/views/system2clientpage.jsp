@@ -18,9 +18,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<div class="panel-group" style="margin:20px;" id="accordion" role="tablist" aria-multiselectable="true">
 		<input type="hidden" id="allOrderGoodsCount" value="${order.goodsCount}"/>
@@ -29,7 +27,7 @@
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="headingOne">
 				<h4 class="panel-title">
-					<select class="form-control" style="width:100px;display:inline;margin-right:10px;">
+					<select id="order-list" class="form-control" style="width:100px;display:inline;margin-right:10px;" onchange="changeOrder()">
 						<c:forEach items="${orderIdList}" var="orderId">
 							<c:choose>
 								<c:when test="${orderId == order.orderId}">
@@ -84,7 +82,14 @@
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
-<script src="<c:url value='/js/zoom-select.js'/>"></script>
+<c:choose>
+	<c:when test="${order.status.equals('等待客户选片')}">
+		<script src="<c:url value='/js/zoom-select.js'/>"></script>
+	</c:when>
+	<c:otherwise>
+		<script src="<c:url value='/js/zoom.js'/>"></script>
+	</c:otherwise>
+</c:choose>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
 	var selectedPictureIdList = [];
@@ -199,6 +204,11 @@
 				getMessage();
 			});
 		}
+	}
+	
+	function changeOrder() {
+		var selectedOrderId = $("#order-list").val();
+		location.assign("<c:url value='/client/main/" + $("#clientId").val() + "/" + selectedOrderId + "'/>");
 	}
 </script>
 </body>

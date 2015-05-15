@@ -17,9 +17,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
@@ -49,10 +47,14 @@
 				<c:choose>
 					<c:when test="${orderConvert.operatorId != 0}">
 						<img src="${orderConvert.operator.header}"/><span class="ml10">${orderConvert.operator.name}</span>
-						<button id="btn-convert-done-${orderConvert.id}" class="btn btn-success ml10" onclick="confirmConvertComplete(${orderConvert.orderId}, ${orderConvert.id})">完成</button>
+						<c:if test="${orderConvert.operatorId == user.id}">
+							<button id="btn-convert-done-${orderConvert.id}" class="btn btn-success ml10" onclick="confirmConvertComplete(${orderConvert.orderId}, ${orderConvert.id})">完成</button>
+						</c:if>
 					</c:when>
 					<c:otherwise>
-						<button class="btn btn-info" onclick="showSetConvertWindow(${orderConvert.orderId})">指定</button>
+						<c:if test="${user.isAdmin == 1}">
+							<button class="btn btn-info" onclick="showSetConvertWindow(${orderConvert.orderId})">指定</button>
+						</c:if>
 					</c:otherwise>
 				</c:choose>
 			</p>

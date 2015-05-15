@@ -66,6 +66,17 @@ public class MainController {
 		return "login";
 	}
 	
+	@RequestMapping(value="/logout", method=RequestMethod.GET)
+	@ResponseBody
+	public String logout(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.removeAttribute("user");
+			session.invalidate();
+		}
+		return "/";
+	}
+	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse login(@ModelAttribute("login") Login login, BindingResult result, HttpServletRequest request) {

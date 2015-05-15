@@ -179,3 +179,17 @@ div.card-chart {
 p.error {
 	margin-top:6px;
 }
+
+a.logout {
+	position:absolute;
+	top:10px;
+	right:10px;
+	color:#F0AD4E;
+	font-weight:bold;
+	font-size:16px;
+	z-index:9999;
+}
+
+a.logout:hover {
+	cursor:pointer;
+}

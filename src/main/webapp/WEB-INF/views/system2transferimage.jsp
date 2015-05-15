@@ -17,9 +17,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
@@ -32,6 +30,8 @@
 	<div id="transferContainer"></div>
 	
 	<jsp:include page="system2uploadimage.jsp"/>
+	
+	<input type="hidden" id="user-id" value="${user.id}"/>
 </div>
 </div>
 <input type="hidden" id="limitMinutes" value="${limitMinutes}"/>
@@ -41,6 +41,7 @@
 <script src="<c:url value='/js/util/transferUploader.js'/>"></script>
 <script>
 	var limitSecond = parseInt($("#limitMinutes").val()) * 60;
+	var userId = $("#user-id").val();
 	
 	init();
 	
@@ -77,10 +78,13 @@
 	}
 	
 	function getTransferInfo(data) {
-		return '<p class="model-label transfer-label">'
-			+ '摄影师：<img src="' + data.operator.header + '"/><span class="ml10">' + data.operator.name + '</span>'
-			+ '<button id="btn-transfer-' + data.id + '" class="btn btn-info ml10" onclick="openUploadImageWindow(' + data.id + ', ' + data.orderId + ')">上传</button>'
-			+ '<button id="btn-transfer-done-' + data.id + '" class="btn btn-success ml10" onclick="setTransferComplete(' + data.id + ', ' + data.orderId + ')">完成</button></p>';
+		var infoHtml = '<p class="model-label transfer-label">'
+			+ '摄影师：<img src="' + data.operator.header + '"/><span class="ml10">' + data.operator.name + '</span>';
+		if (data.operator.id == userId) {
+			infoHtml += ('<button id="btn-transfer-' + data.id + '" class="btn btn-info ml10" onclick="openUploadImageWindow(' + data.id + ', ' + data.orderId + ')">上传</button>'
+				+ '<button id="btn-transfer-done-' + data.id + '" class="btn btn-success ml10" onclick="setTransferComplete(' + data.id + ', ' + data.orderId + ')">完成</button></p>');
+		}
+		return infoHtml;
 	}
 	
 	function getTransferBar(data) {
