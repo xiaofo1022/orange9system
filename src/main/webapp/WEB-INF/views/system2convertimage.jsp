@@ -94,6 +94,7 @@
 </div>
 </div>
 <input type="hidden" id="limitMinutes" value="${limitMinutes}"/>
+<input type="hidden" id="picbaseurl" value="${user.picbaseurl}"/>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/util/countDown.js'/>"></script>
@@ -127,16 +128,19 @@
 	});
 	
 	function confirmConvertComplete(orderId, convertId) {
-		var result = confirm("是否确认导图完成？");
-		if (result) {
-			$.post("<c:url value='/orderConvert/setOrderConvertDone/" + orderId + "/" + convertId + "'/>", null, function(data, status) {
-				if (data.status == "success") {
-					location.reload(true);
-				} else {
-					console.log(data);
-				}
-			});
-		}
+		$.get($("#picbaseurl").val() + "checkConvertImage/" + orderId, function(data, status) {
+			if (data.result) {
+				$.post("<c:url value='/orderConvert/setOrderConvertDone/" + orderId + "/" + convertId + "'/>", null, function(data, status) {
+					if (data.status == "success") {
+						location.reload(true);
+					} else {
+						console.log(data);
+					}
+				});
+			} else {
+				alert(data.message);
+			}
+		});
 	}
 </script>
 </body>

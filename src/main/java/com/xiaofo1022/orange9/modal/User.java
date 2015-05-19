@@ -48,6 +48,7 @@ public class User {
 	private int delayCount;
 	@SuppressWarnings("unused")
 	private int leaveCount;
+	private String picbaseurl;
 	
 	public int getId() {
 		return id;
@@ -205,5 +206,11 @@ public class User {
 	}
 	public void setIsAdmin(int isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+	public String getPicbaseurl() {
+		return picbaseurl;
+	}
+	public void setPicbaseurl(String picbaseurl) {
+		this.picbaseurl = picbaseurl;
 	}
 }

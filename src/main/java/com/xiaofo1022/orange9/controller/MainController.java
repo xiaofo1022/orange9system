@@ -20,6 +20,7 @@ import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
+import com.xiaofo1022.orange9.core.GlobalData;
 import com.xiaofo1022.orange9.dao.ClockInDao;
 import com.xiaofo1022.orange9.dao.LoginDao;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
@@ -84,6 +85,7 @@ public class MainController {
 		if (user == null) {
 			return new FailureResponse(Message.LOGIN_FAILURE);
 		} else {
+			user.setPicbaseurl(GlobalData.getInstance().getPicbaseurl());
 			HttpSession session = request.getSession(true);
 			session.setAttribute("user", user);
 			if (user.getRoleId() == RoleConst.CLIENT_ID) {
