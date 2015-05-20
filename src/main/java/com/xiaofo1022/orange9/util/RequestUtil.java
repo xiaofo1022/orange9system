@@ -13,4 +13,13 @@ public class RequestUtil {
 		}
 		return null;
 	}
+	
+	public static int getLoginUserId(HttpServletRequest request) {
+		int userId = 0;
+		User user = getLoginUser(request);
+		if (user != null && user.getIsAdmin() != 1) {
+			userId = user.getId();
+		}
+		return userId;
+	}
 }

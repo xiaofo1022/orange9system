@@ -13,6 +13,26 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/sidebar/component.css'/>" />
 <script src="<c:url value='/js/jquery-1.11.2.min.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
+<style>
+	div.post-pic-block {
+		border:1px solid #F0AD4E;
+		margin:20px;
+	}
+	
+	div.post-pic-block img {
+		float:left;
+		width:160px;
+	}
+	
+	div.post-pic-block a:hover {
+		cursor:pointer;
+	}
+	
+	div.post-pic-border {
+		float:left;
+		margin:10px;
+	}
+</style>
 </head>
 <body>
 <div id="st-container" class="st-container">
@@ -25,6 +45,21 @@
 		<button class="btn btn-warning nav-btn" data-effect="st-effect-3">
 			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 		</button>
+	</div>
+	
+	<div id="blink1-block" class="detail-bottom-block post-pic-block">
+		<c:forEach items="${postProduction.imageDataList}" var="imageData">
+			<div class="post-pic-border">
+				<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+				<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
+				<p>
+					<a>下载</a>
+					<a>完成</a>
+				</p>
+				<div class="clear"></div>
+			</div>
+		</c:forEach>
+		<div class="clear"></div>
 	</div>
 </div>
 </div>

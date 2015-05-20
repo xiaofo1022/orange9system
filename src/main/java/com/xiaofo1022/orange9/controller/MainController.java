@@ -34,6 +34,7 @@ import com.xiaofo1022.orange9.modal.ClockIn;
 import com.xiaofo1022.orange9.modal.Login;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderFixedImageData;
+import com.xiaofo1022.orange9.modal.OrderPostProduction;
 import com.xiaofo1022.orange9.modal.OrderVerifyImage;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -150,13 +151,17 @@ public class MainController {
 	
 	@RequestMapping(value="/fixSkin", method=RequestMethod.GET)
 	public String system2fixskin(HttpServletRequest request, ModelMap modelMap) {
-		User user = RequestUtil.getLoginUser(request);
-		int userId = 0;
-		if (user != null && user.getIsAdmin() != 1) {
-			userId = user.getId();
+		int userId = RequestUtil.getLoginUserId(request);
+		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_SKIN, userId);
+		if (userId == 0) {
+			modelMap.addAttribute("fixSkinList", postProductionList);
+			return "system2fixskin";
+		} else {
+			if (postProductionList != null && postProductionList.size() > 0) {
+				modelMap.addAttribute("postProduction", postProductionList.get(0));
+			}
+			return "system2designerfixskin";
 		}
-		modelMap.addAttribute("fixSkinList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_SKIN, userId));
-		return "system2fixskin";
 	}
 	
 	@RequestMapping(value="/fixBackground", method=RequestMethod.GET)

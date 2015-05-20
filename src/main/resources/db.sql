@@ -15,7 +15,7 @@ INSERT INTO orange9.role (ID,NAME,NAME_CN,IS_SHOW) VALUES
 ,(5,'CLIENT','客户',0)
 ;
 
-CREATE TA5LE orange9.user (
+CREATE TABLE orange9.user (
 	ID INT NOT NULL AUTO_INCREMENT,
 	NAME VARCHAR(100),
 	ROLE_ID INT,
@@ -34,8 +34,8 @@ CREATE TA5LE orange9.user (
 )
 ENGINE=InnoDB;
 
-INSERT INTO orange9.user (ID,NAME,ROLE_ID,ACCOUNT,PASSWORD,SALARY,PERFORMANCE_PAY,HEADER,BOSS_ID) VALUES 
-(1,'administrator',1,'administrator','administrator',0,0,NULL,NULL)
+INSERT INTO orange9.user (ID,NAME,ROLE_ID,ACCOUNT,PASSWORD,SALARY,PERFORMANCE_PAY,HEADER,BOSS_ID,IS_ADMIN) VALUES 
+(1,'administrator',1,'administrator','administrator',0,0,NULL,NULL,1)
 ;
 
 CREATE TABLE orange9.orders (
