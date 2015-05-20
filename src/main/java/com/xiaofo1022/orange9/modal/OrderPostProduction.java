@@ -1,6 +1,7 @@
 package com.xiaofo1022.orange9.modal;
 
 import java.util.Date;
+import java.util.List;
 
 import com.xiaofo1022.orange9.dao.common.Column;
 import com.xiaofo1022.orange9.dao.common.JoinTable;
@@ -27,6 +28,8 @@ public class OrderPostProduction {
 	private String fileNames;
 	private int imageCount;
 	private String timeCost;
+	private int limitMinutes;
+	private List<OrderTransferImageData> imageDataList;
 	
 	public int getId() {
 		return id;
@@ -103,5 +106,17 @@ public class OrderPostProduction {
 	}
 	public void setTimeCost(String timeCost) {
 		this.timeCost = timeCost;
+	}
+	public int getLimitMinutes() {
+		return limitMinutes;
+	}
+	public void setLimitMinutes(int limitMinutes) {
+		this.limitMinutes = limitMinutes;
+	}
+	public List<OrderTransferImageData> getImageDataList() {
+		return imageDataList;
+	}
+	public void setImageDataList(List<OrderTransferImageData> imageDataList) {
+		this.imageDataList = imageDataList;
 	}
 }

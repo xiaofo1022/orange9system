@@ -32,18 +32,18 @@ public class OrderStatusDao {
 		return commonDao.getFirst(OrderStatus.class, "SELECT * FROM ORDER_STATUS WHERE ID = ?", statusId);
 	}
 	
-	public Map<String, Integer> getOrderStatusCountMap() {
+	public Map<String, Integer> getOrderStatusCountMap(int userId) {
 		List<OrderStatus> orderStatusList = this.getOrderStatusList();
 		Map<String, Integer> statusCountMap = new HashMap<String, Integer>();
 		for (OrderStatus orderStatus : orderStatusList) {
 			OrderStatusCount orderStatusCount = this.getOrderStatusCount(orderStatus.getId());
 			statusCountMap.put(orderStatus.getName(), orderStatusCount == null ? 0 : orderStatusCount.getStatusCount());
 		}
-		OrderStatusCount fixSkinCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_SKIN);
+		OrderStatusCount fixSkinCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_SKIN, userId);
 		statusCountMap.put(OrderStatusConst.FIX_SKIN, fixSkinCount == null ? 0 : fixSkinCount.getStatusCount());
-		OrderStatusCount fixBackgroundCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_BACKGROUND);
+		OrderStatusCount fixBackgroundCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_BACKGROUND, userId);
 		statusCountMap.put(OrderStatusConst.FIX_BACKGROUND, fixBackgroundCount == null ? 0 : fixBackgroundCount.getStatusCount());
-		OrderStatusCount cutLiquifyCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_CUT_LIQUIFY);
+		OrderStatusCount cutLiquifyCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_CUT_LIQUIFY, userId);
 		statusCountMap.put(OrderStatusConst.CUT_LIQUIFY, cutLiquifyCount == null ? 0 : cutLiquifyCount.getStatusCount());
 		return statusCountMap;
 	}

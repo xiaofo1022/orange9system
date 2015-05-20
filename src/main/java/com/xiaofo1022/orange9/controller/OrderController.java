@@ -79,8 +79,13 @@ public class OrderController {
 	
 	@RequestMapping(value = "/getOrderStatusCountMap", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Integer> getOrderStatusCountMap() {
-		return orderStatusDao.getOrderStatusCountMap();
+	public Map<String, Integer> getOrderStatusCountMap(HttpServletRequest request) {
+		User user = RequestUtil.getLoginUser(request);
+		int userId = 0;
+		if (user != null && user.getIsAdmin() != 1) {
+			userId = user.getId();
+		}
+		return orderStatusDao.getOrderStatusCountMap(userId);
 	}
 	
 	@RequestMapping(value="/orderDetail/{orderId}", method=RequestMethod.GET)

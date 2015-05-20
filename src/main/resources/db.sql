@@ -154,6 +154,9 @@ INSERT INTO orange9.order_time_limit (ID,NAME,LIMIT_MINUTES) VALUES
 (1,'TRANSFER_IMAGE',30)
 ,(2,'CONVERT_IMAGE',300)
 ,(3,'SHOOT',480)
+,(4,'FIX_PER_SKIN',5)
+,(5,'FIX_PER_BACKGROUND',5)
+,(6,'CUT_PER_LIQUIFY',10)
 ;
 
 CREATE TABLE orange9.order_transfer_image_data (

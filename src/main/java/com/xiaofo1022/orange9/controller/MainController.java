@@ -149,20 +149,25 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/fixSkin", method=RequestMethod.GET)
-	public String system2fixskin(ModelMap modelMap) {
-		modelMap.addAttribute("fixSkinList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_SKIN));
+	public String system2fixskin(HttpServletRequest request, ModelMap modelMap) {
+		User user = RequestUtil.getLoginUser(request);
+		int userId = 0;
+		if (user != null && user.getIsAdmin() != 1) {
+			userId = user.getId();
+		}
+		modelMap.addAttribute("fixSkinList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_SKIN, userId));
 		return "system2fixskin";
 	}
 	
 	@RequestMapping(value="/fixBackground", method=RequestMethod.GET)
 	public String system2fixbackground(ModelMap modelMap) {
-		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_BACKGROUND));
+		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_BACKGROUND, 0));
 		return "system2fixbackground";
 	}
 	
 	@RequestMapping(value="/cutLiquify", method=RequestMethod.GET)
 	public String system2cutliquify(ModelMap modelMap) {
-		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY));
+		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY, 0));
 		return "system2cutliquify";
 	}
 	

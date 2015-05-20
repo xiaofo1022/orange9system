@@ -8,11 +8,13 @@ import org.springframework.stereotype.Repository;
 
 import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.RoleConst;
+import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.OrderFixedImageData;
 import com.xiaofo1022.orange9.modal.OrderPostProduction;
 import com.xiaofo1022.orange9.modal.OrderStatusCount;
+import com.xiaofo1022.orange9.modal.OrderTimeLimit;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.util.DatetimeUtil;
@@ -25,6 +27,8 @@ public class OrderPostProductionDao {
 	private UserDao userDao;
 	@Autowired
 	private OrderTransferDao orderTransferDao;
+	@Autowired
+	private OrderTimeLimitDao orderTimeLimitDao;
 	
 	//private static final int DESIGNER_MAX_IMAGE = 500;
 	
@@ -62,41 +66,54 @@ public class OrderPostProductionDao {
 				orderId, now, now, userId, imageId);
 	}
 	
-	public OrderStatusCount getOrderPostProductionCount(String tableName) {
+	public OrderStatusCount getOrderPostProductionCount(String tableName, int userId) {
 		OrderStatusCount orderStatusCount = new OrderStatusCount();
-		List<OrderPostProduction> postProductionList = this.getPostProductionGroupList(tableName);
+		List<OrderPostProduction> postProductionList = this.getPostProductionGroupList(tableName, userId);
+		int statusCount = 0;
 		if (postProductionList != null && postProductionList.size() > 0) {
-			orderStatusCount.setStatusCount(postProductionList.size());
+			for (OrderPostProduction postProduction : postProductionList) {
+				List<OrderTransferImageData> imageDataList = this.getImageDataList(tableName, postProduction.getOperatorId());
+				statusCount += imageDataList.size();
+			}
 		}
+		orderStatusCount.setStatusCount(statusCount);
 		return orderStatusCount;
 	}
 	
-	public List<OrderPostProduction> getPostProductionList(String tableName) {
-		List<OrderPostProduction> postProductionList = this.getPostProductionGroupList(tableName);
+	public List<OrderPostProduction> getPostProductionList(String tableName, int userId) {
+		List<OrderPostProduction> postProductionList = this.getPostProductionGroupList(tableName, userId);
 		if (postProductionList != null && postProductionList.size() > 0) {
 			Date now = new Date();
 			for (OrderPostProduction postProduction : postProductionList) {
-				List<OrderTransferImageData> imageDataList = this.getImageDataList(tableName, postProduction.getOrderId(), postProduction.getOperatorId());
+				List<OrderTransferImageData> imageDataList = this.getImageDataList(tableName, postProduction.getOperatorId());
 				String fileNames = orderTransferDao.getConnectImageName(imageDataList);
+				OrderTimeLimit timeLimit = orderTimeLimitDao.getTimeLimit(TimeLimitConst.getIdByTable(tableName));
 				postProduction.setImageCount(imageDataList.size());
 				postProduction.setTimeCost(DatetimeUtil.getDatetimeDiff(postProduction.getInsertDatetime(), now));
+				postProduction.setLimitMinutes(timeLimit.getLimitMinutes() * postProduction.getImageCount());
 				postProduction.setFileNames(fileNames);
+				postProduction.setImageDataList(imageDataList);
 			}
 		}
 		return postProductionList;
 	}
 	
-	public List<OrderTransferImageData> getImageDataList(String tableName, int orderId, int operatorId) {
-		return commonDao.query(OrderTransferImageData.class, "SELECT B.* FROM " + tableName + " A LEFT JOIN ORDER_TRANSFER_IMAGE_DATA B ON A.IMAGE_ID = B.ID WHERE A.ORDER_ID = ? AND A.OPERATOR_ID = ?",
-			orderId, operatorId);
+	public List<OrderTransferImageData> getImageDataList(String tableName, int operatorId) {
+		return commonDao.query(OrderTransferImageData.class, "SELECT B.* FROM " + tableName + " A LEFT JOIN ORDER_TRANSFER_IMAGE_DATA B ON A.IMAGE_ID = B.ID WHERE A.OPERATOR_ID = ? AND A.IS_DONE = 0",
+			operatorId);
 	}
 	
 	public List<OrderPostProduction> getPostProductionListByOrder(String tableName, int orderId) {
 		return commonDao.query(OrderPostProduction.class, "SELECT ORDER_ID, OPERATOR_ID, INSERT_DATETIME, UPDATE_DATETIME, IS_DONE FROM " + tableName + " WHERE ORDER_ID = ? GROUP BY ORDER_ID, OPERATOR_ID", orderId);
 	}
 	
-	public List<OrderPostProduction> getPostProductionGroupList(String tableName) {
-		return commonDao.query(OrderPostProduction.class, "SELECT ORDER_ID, OPERATOR_ID, INSERT_DATETIME, UPDATE_DATETIME FROM " + tableName + " WHERE IS_DONE = 0 GROUP BY ORDER_ID, OPERATOR_ID");
+	public List<OrderPostProduction> getPostProductionGroupList(String tableName, int userId) {
+		String sql = "SELECT ID, ORDER_ID, OPERATOR_ID, INSERT_DATETIME, UPDATE_DATETIME FROM " + tableName + " WHERE IS_DONE = 0";
+		if (userId != 0) {
+			sql += " AND OPERATOR_ID = " + userId;
+		}
+		sql += " GROUP BY OPERATOR_ID";
+		return commonDao.query(OrderPostProduction.class, sql);
 	}
 	
 	public List<OrderPostProduction> getPostProductionListByOrderAndOperator(String tableName, int orderId, int userId) {

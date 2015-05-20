@@ -17,9 +17,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
@@ -33,29 +31,42 @@
 		<input type="hidden" id="${fixSkin.id}" class="fix-start-time" value="${fixSkin.insertTime}"/>
 		<div class="order-block">
 			<p class="model-label transfer-label">
-				单号：<a href="<c:url value='/order/orderDetail/${fixSkin.orderId}'/>" target="_blank">O9${fixSkin.orderId}</a>
-			</p>
-			<p class="model-label transfer-label">
-				图片：<span style="color:#428BCA;">${fixSkin.fileNames}</span>
-			</p>
-			<p class="model-label transfer-label">
 				共计：
 				<span style="color:#428BCA;">${fixSkin.imageCount} </span>张
-				<span class="oc-label">用时：</span>
-				${fixSkin.timeCost}
+				<span id="time-label-${fixSkin.id}" class="ml10" style="color:#F0AD4E;">剩余时间：</span>
+				<span id="remain-time-${fixSkin.id}"></span>
+				<input type="hidden" id="limit-minutes-${fixSkin.id}" value="${fixSkin.limitMinutes}"/>
 			</p>
 			<p class="model-label transfer-label">
 				设计师：
 				<img src="${fixSkin.operator.header}"/><span class="ml10">${fixSkin.operator.name}</span>
-				<button id="btn-fix-done-${fixSkin.id}" class="btn btn-success ml10" onclick="setFixSkinDone(${fixSkin.orderId}, ${fixSkin.operator.id})">完成</button>
+				<c:if test="${fixSkin.operator.id == user.id}">
+					<button id="btn-fix-done-${fixSkin.id}" class="btn btn-success ml10" onclick="setFixSkinDone(${fixSkin.orderId}, ${fixSkin.operator.id})">完成</button>
+				</c:if>
 			</p>
+			<div id="time-progress-bar-${fixSkin.id}" class="progress" style="margin-bottom:0;">
+				<div id="time-bar-${fixSkin.id}" class="progress-bar progress-bar-success" role="progressbar"
+					aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+				</div>
+			</div>
 		</div>
 	</c:forEach>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
+<script src="<c:url value='/js/util/countDown.js'/>"></script>
 <script>
+	$(".fix-start-time").each(function(index, element) {
+		if (element.value != 0) {
+			var id = element.id;
+			var startTime = new Date();
+			var limitSecond = parseInt($("#limit-minutes-" + id).val()) * 60;
+			startTime.setTime(element.value);
+			new CountDown(startTime, limitSecond, "time-bar-" + id, "time-label-" + id, "remain-time-" + id);
+		}
+	});
+
 	function setFixSkinDone(orderId, userId) {
 		var result = confirm("是否确定修皮肤已完成？");
 		if (result) {
