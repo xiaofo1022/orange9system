@@ -120,8 +120,21 @@ public class OrderPostProductionDao {
 		return commonDao.query(OrderPostProduction.class, "SELECT * FROM " + tableName + " WHERE IS_DONE = 0 AND ORDER_ID = ? AND OPERATOR_ID = ?", orderId, userId);
 	}
 	
+	public List<OrderPostProduction> getPostProductionListById(String tableName, int id) {
+		return commonDao.query(OrderPostProduction.class, "SELECT * FROM " + tableName + " WHERE IS_DONE = 0 AND ID = ?", id);
+	}
+	
 	public List<OrderPostProduction> setPostProductionDone(String tableName, int orderId, int userId) {
 		List<OrderPostProduction> postProductionList = this.getPostProductionListByOrderAndOperator(tableName, orderId, userId);
+		Date now = new Date();
+		for (OrderPostProduction postProduction : postProductionList) {
+			commonDao.update("UPDATE " + tableName + " SET IS_DONE = 1, UPDATE_DATETIME = ? WHERE ID = ?", now, postProduction.getId());
+		}
+		return postProductionList;
+	}
+	
+	public List<OrderPostProduction> setPostProductionDone(String tableName, int id) {
+		List<OrderPostProduction> postProductionList = this.getPostProductionListById(tableName, id);
 		Date now = new Date();
 		for (OrderPostProduction postProduction : postProductionList) {
 			commonDao.update("UPDATE " + tableName + " SET IS_DONE = 1, UPDATE_DATETIME = ? WHERE ID = ?", now, postProduction.getId());

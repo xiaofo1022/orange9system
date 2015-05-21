@@ -53,19 +53,63 @@
 				<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
 				<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
 				<p>
-					<a>下载</a>
-					<a>完成</a>
+					<a href="<c:url value='/order/orderDetail/${imageData.orderId}'/>" target="_blank">#O9${imageData.orderId}</a>
+					<a href='${user.picbaseurl}/downloadPicture/${imageData.orderId}/${imageData.fileName}'>下载</a>
+					<a onclick="completePostProduction(${imageData.id}, ${imageData.orderId}, '${imageData.fileName}')">完成</a>
 				</p>
 				<div class="clear"></div>
 			</div>
 		</c:forEach>
 		<div class="clear"></div>
 	</div>
+	<input class="hidden" type="file" id="complete-post-production"/>
+	<input type="hidden" id="picbaseurl" value="${user.picbaseurl}"/>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
+<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
+	var picbaseurl = $("#picbaseurl");
+	var compId;
+	var compOrderId;
+	var compFileName;
+	var reader = new FileReader();
+	
+	reader.onload = function(event) {
+		var base64Data = event.target.result.split(",")[1];
+		AjaxUtil.acrossPost(picbaseurl.val() + "saveFixSkinPicture", {orderId:compOrderId, fileName:compFileName, base64Data:base64Data}, function(data) {
+			if (data) {
+				/*
+				$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + compId + "'/>", null, function(data, status) {
+					if (data.status == "success") {
+						location.reload(true);
+					}
+				});
+				*/
+			}
+		});
+	};
+	
+	$("#complete-post-production").bind("change", function(event) {
+		var img = event.target.files[0];
+		if (!img) {
+			return;
+		}
+		var frontName = img.name.split(".")[0];
+		if (frontName != compFileName) {
+			alert("应选择图片" + compFileName + ".jpg");
+			return;
+		}
+		reader.readAsDataURL(img);
+	});
+	
+	function completePostProduction(id, orderId, fileName) {
+		compId = id;
+		compOrderId = orderId;
+		compFileName = fileName;
+		$("#complete-post-production").click();
+	}
 </script>
 </body>
 </html>

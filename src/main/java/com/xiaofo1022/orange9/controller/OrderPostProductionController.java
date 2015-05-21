@@ -42,12 +42,11 @@ public class OrderPostProductionController {
 	@Autowired
 	private OrderStatusDao orderStatusDao;
 	
-	@RequestMapping(value = "/setFixSkinDone/{orderId}/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/setFixSkinDone/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setFixSkinDone(@PathVariable int orderId, @PathVariable int userId) {
-		List<OrderPostProduction> postProductionDoneList = postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_FIX_SKIN, orderId, userId);
+	public CommonResponse setFixSkinDone(@PathVariable int id) {
+		List<OrderPostProduction> postProductionDoneList = postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_FIX_SKIN, id);
 		postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_FIX_BACKGROUND, postProductionDoneList);
-		orderHistoryDao.addOrderHistory(orderId, userId, OrderConst.FIX_SKIN_DONE_INFO);
 		return new SuccessResponse("Set Fix Skin Done Success");
 	}
 	

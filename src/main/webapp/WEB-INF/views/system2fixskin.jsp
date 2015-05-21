@@ -40,9 +40,6 @@
 			<p class="model-label transfer-label">
 				设计师：
 				<img src="${fixSkin.operator.header}"/><span class="ml10">${fixSkin.operator.name}</span>
-				<c:if test="${fixSkin.operator.id == user.id}">
-					<button id="btn-fix-done-${fixSkin.id}" class="btn btn-success ml10" onclick="setFixSkinDone(${fixSkin.orderId}, ${fixSkin.operator.id})">完成</button>
-				</c:if>
 			</p>
 			<div id="time-progress-bar-${fixSkin.id}" class="progress" style="margin-bottom:0;">
 				<div id="time-bar-${fixSkin.id}" class="progress-bar progress-bar-success" role="progressbar"
