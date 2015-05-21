@@ -221,4 +221,9 @@ public class MainController {
 		map.addAttribute("orderList", orderDao.getOrderListByStatus(OrderStatusConst.WAITING_FOR_CLIENT_CHOSE));
 		return "system2clientwaiting";
 	}
+	
+	@RequestMapping(value="/picframe", method=RequestMethod.GET)
+	public String system2picframe(ModelMap map) {
+		return "system2picframe";
+	}
 }

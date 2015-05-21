@@ -19,32 +19,37 @@ import com.xiaofo1022.orange9.modal.Across;
 @Controller
 @RequestMapping("/across")
 public class AcrossController {
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/picbase", method = RequestMethod.POST)
 	@ResponseBody
 	public String acrossPost(@RequestBody Across across, HttpServletRequest request) {
-		URL connect;
-	    StringBuffer data = new StringBuffer();
-	    try {
-	        connect = new URL(across.getUrl());
+		StringBuffer data = new StringBuffer();
+		try {
+	    	URL connect = new URL(across.getUrl());
 	        HttpURLConnection connection = (HttpURLConnection) connect.openConnection();
 	        connection.setRequestMethod("POST");
 	        connection.setDoOutput(true);
-	        
-	        OutputStreamWriter paramout = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
-	        //paramout.write(across);
-	        paramout.flush();
+	        connection.setDoInput(true);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            
+//	        DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+//	        out.writeBytes("{'orderId':'1'}");
+//	        out.flush();
 	 
+            OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());  
+            out.write("orderId=1");  
+            out.flush();  
+            out.close();  
+            
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
 	        String line;            
 	        while ((line = reader.readLine()) != null) {        
 	            data.append(line);          
 	        }
 	     
-	        paramout.close();
 	        reader.close();
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-		return "";
+		return data.toString();
 	}
 }

@@ -64,13 +64,15 @@
 	</div>
 	<input class="hidden" type="file" id="complete-post-production"/>
 	<input type="hidden" id="picbaseurl" value="${user.picbaseurl}"/>
+	<iframe id="postframe" name="postframe" class="hidden" src="picframe"></iframe>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
-	var picbaseurl = $("#picbaseurl");
+	var picbaseurl = $("#picbaseurl").val() + "saveFixSkinPicture";
+	var frame = window.frames["postframe"].document;
 	var compId;
 	var compOrderId;
 	var compFileName;
@@ -78,15 +80,14 @@
 	
 	reader.onload = function(event) {
 		var base64Data = event.target.result.split(",")[1];
-		AjaxUtil.acrossPost(picbaseurl.val() + "saveFixSkinPicture", {orderId:compOrderId, fileName:compFileName, base64Data:base64Data}, function(data) {
-			if (data) {
-				/*
-				$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + compId + "'/>", null, function(data, status) {
-					if (data.status == "success") {
-						location.reload(true);
-					}
-				});
-				*/
+		$(window.frames["postframe"].document).find("#orderId").val(compOrderId);
+		$(window.frames["postframe"].document).find("#fileName").val(compFileName);
+		$(window.frames["postframe"].document).find("#base64Data").val(base64Data);
+		$(window.frames["postframe"].document).find("#postForm").attr("action", picbaseurl);
+		$(window.frames["postframe"].document).find("#postForm").submit();
+		$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + compId + "'/>", null, function(data, status) {
+			if (data.status == "success") {
+				location.reload(true);
 			}
 		});
 	};
