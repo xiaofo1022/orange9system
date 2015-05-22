@@ -17,9 +17,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
@@ -29,43 +27,42 @@
 		</button>
 	</div>
 	
-	<c:forEach items="${postProductionList}" var="postProduction">
-		<input type="hidden" id="${postProduction.id}" class="fix-start-time" value="${postProduction.insertTime}"/>
+	<c:forEach items="${postProductionList}" var="fixBackground">
+		<input type="hidden" id="${fixBackground.id}" class="fix-start-time" value="${fixBackground.insertTime}"/>
 		<div class="order-block">
 			<p class="model-label transfer-label">
-				单号：<a href="<c:url value='/order/orderDetail/${postProduction.orderId}'/>" target="_blank">O9${postProduction.orderId}</a>
-			</p>
-			<p class="model-label transfer-label">
-				图片：<span style="color:#428BCA;">${postProduction.fileNames}</span>
-			</p>
-			<p class="model-label transfer-label">
 				共计：
-				<span style="color:#428BCA;">${postProduction.imageCount} </span>张
-				<span class="oc-label">用时：</span>
-				${postProduction.timeCost}
+				<span style="color:#428BCA;">${fixBackground.imageCount} </span>张
+				<span id="time-label-${fixBackground.id}" class="ml10" style="color:#F0AD4E;">剩余时间：</span>
+				<span id="remain-time-${fixBackground.id}"></span>
+				<input type="hidden" id="limit-minutes-${fixBackground.id}" value="${fixBackground.limitMinutes}"/>
 			</p>
 			<p class="model-label transfer-label">
 				设计师：
-				<img src="${postProduction.operator.header}"/><span class="ml10">${postProduction.operator.name}</span>
-				<button id="btn-fix-done-${postProduction.id}" class="btn btn-success ml10" onclick="setFixSkinDone(${postProduction.orderId}, ${postProduction.operator.id})">完成</button>
+				<img src="${fixBackground.operator.header}"/><span class="ml10">${fixBackground.operator.name}</span>
 			</p>
+			<div id="time-progress-bar-${fixBackground.id}" class="progress" style="margin-bottom:0;">
+				<div id="time-bar-${fixBackground.id}" class="progress-bar progress-bar-success" role="progressbar"
+					aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+				</div>
+			</div>
 		</div>
 	</c:forEach>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
+<script src="<c:url value='/js/util/countDown.js'/>"></script>
 <script>
-	function setFixSkinDone(orderId, userId) {
-		var result = confirm("是否确定修背景已完成？");
-		if (result) {
-			$.post("<c:url value='/orderPostProduction/setFixBackgroundDone/" + orderId + "/" + userId + "'/>", null, function(data, status) {
-				if (data.status == "success") {
-					location.reload(true);
-				}
-			});
+	$(".fix-start-time").each(function(index, element) {
+		if (element.value != 0) {
+			var id = element.id;
+			var startTime = new Date();
+			var limitSecond = parseInt($("#limit-minutes-" + id).val()) * 60;
+			startTime.setTime(element.value);
+			new CountDown(startTime, limitSecond, "time-bar-" + id, "time-label-" + id, "remain-time-" + id);
 		}
-	}
+	});
 </script>
 </body>
 </html>

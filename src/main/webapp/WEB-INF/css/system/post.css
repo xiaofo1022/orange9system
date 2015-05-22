@@ -1,4 +1,4 @@
-﻿div.post-block {
+div.post-block {
 	float: left;
 	padding: 10px;
 	width: 100%;
@@ -62,4 +62,23 @@ div.post-block img {
 
 .pic-modal {
 	width: 830px;
+}
+
+div.post-pic-block {
+	border:1px solid #F0AD4E;
+	margin:20px;
+}
+
+div.post-pic-block img {
+	float:left;
+	width:160px;
+}
+
+div.post-pic-block a:hover {
+	cursor:pointer;
+}
+
+div.post-pic-border {
+	float:left;
+	margin:10px;
 }

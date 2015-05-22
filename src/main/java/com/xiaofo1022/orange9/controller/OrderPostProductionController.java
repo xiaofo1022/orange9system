@@ -42,29 +42,29 @@ public class OrderPostProductionController {
 	@Autowired
 	private OrderStatusDao orderStatusDao;
 	
-	@RequestMapping(value = "/setFixSkinDone/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/setFixSkinDone/{imageId}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setFixSkinDone(@PathVariable int id) {
-		List<OrderPostProduction> postProductionDoneList = postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_FIX_SKIN, id);
+	public CommonResponse setFixSkinDone(@PathVariable int imageId) {
+		List<OrderPostProduction> postProductionDoneList = postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_FIX_SKIN, imageId);
 		postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_FIX_BACKGROUND, postProductionDoneList);
 		return new SuccessResponse("Set Fix Skin Done Success");
 	}
 	
-	@RequestMapping(value = "/setFixBackgroundDone/{orderId}/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/setFixBackgroundDone/{imageId}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setFixBackgroundDone(@PathVariable int orderId, @PathVariable int userId) {
-		List<OrderPostProduction> postProductionDoneList = postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId, userId);
+	public CommonResponse setFixBackgroundDone(@PathVariable int imageId) {
+		List<OrderPostProduction> postProductionDoneList = postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_FIX_BACKGROUND, imageId);
 		postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_CUT_LIQUIFY, postProductionDoneList);
-		orderHistoryDao.addOrderHistory(orderId, userId, OrderConst.FIX_BACKGROUND_DONE_INFO);
 		return new SuccessResponse("Set Fix Background Done Success");
 	}
 	
-	@RequestMapping(value = "/setCutLiquifyDone/{orderId}/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/setCutLiquifyDone/{orderId}/{imageId}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setCutLiquifyDone(@PathVariable int orderId, @PathVariable int userId, HttpServletRequest request) {
-		postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId, userId);
-		orderHistoryDao.addOrderHistory(orderId, userId, OrderConst.CUT_LIQUIFY_DONE_INFO);
-		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.WAIT_FOR_VERIFY);
+	public CommonResponse setCutLiquifyDone(@PathVariable int orderId, @PathVariable int imageId, HttpServletRequest request) {
+		postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_CUT_LIQUIFY, imageId);
+		if (postProductionDao.isAllPictureFixed(orderId)) {
+			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.WAIT_FOR_VERIFY);
+		}
 		return new SuccessResponse("Set Cut Liquify Done Success");
 	}
 	

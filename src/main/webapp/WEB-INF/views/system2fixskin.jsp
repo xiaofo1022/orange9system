@@ -63,17 +63,6 @@
 			new CountDown(startTime, limitSecond, "time-bar-" + id, "time-label-" + id, "remain-time-" + id);
 		}
 	});
-
-	function setFixSkinDone(orderId, userId) {
-		var result = confirm("是否确定修皮肤已完成？");
-		if (result) {
-			$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + orderId + "/" + userId + "'/>", null, function(data, status) {
-				if (data.status == "success") {
-					location.reload(true);
-				}
-			});
-		}
-	}
 </script>
 </body>
 </html>

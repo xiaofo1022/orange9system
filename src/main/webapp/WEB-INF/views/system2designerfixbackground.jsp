@@ -35,7 +35,7 @@
 				<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
 				<p>
 					<a href="<c:url value='/order/orderDetail/${imageData.orderId}'/>" target="_blank">#O9${imageData.orderId}</a>
-					<a href='${user.picbaseurl}/downloadOriginalPicture/${imageData.orderId}/${imageData.fileName}'>下载</a>
+					<a href='${user.picbaseurl}/downloadFixSkinPicture/${imageData.orderId}/${imageData.fileName}'>下载</a>
 					<a onclick="completePostProduction(${imageData.id}, ${imageData.orderId}, '${imageData.fileName}')">完成</a>
 				</p>
 				<div class="clear"></div>
@@ -58,9 +58,9 @@
 	
 	reader.onload = function(event) {
 		var base64Data = event.target.result.split(",")[1];
-		AjaxUtil.post("<c:url value='/across/fixskin'/>", {orderId:compOrderId, fileName:compFileName, base64Data:base64Data}, function(data) {
+		AjaxUtil.post("<c:url value='/across/fixbackground'/>", {orderId:compOrderId, fileName:compFileName, base64Data:base64Data}, function(data) {
 			if (data) {
-				$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + compId + "'/>", null, function(data, status) {
+				$.post("<c:url value='/orderPostProduction/setFixBackgroundDone/" + compId + "'/>", null, function(data, status) {
 					if (data.status == "success") {
 						location.reload(true);
 					}

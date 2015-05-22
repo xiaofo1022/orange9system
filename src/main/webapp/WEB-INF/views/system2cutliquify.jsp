@@ -17,9 +17,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
@@ -29,38 +27,42 @@
 		</button>
 	</div>
 	
-	<c:forEach items="${postProductionList}" var="postProduction">
-		<input type="hidden" id="${postProduction.id}" class="fix-start-time" value="${postProduction.insertTime}"/>
+	<c:forEach items="${postProductionList}" var="cutLiquify">
+		<input type="hidden" id="${cutLiquify.id}" class="fix-start-time" value="${cutLiquify.insertTime}"/>
 		<div class="order-block">
 			<p class="model-label transfer-label">
-				单号：<a href="<c:url value='/order/orderDetail/${postProduction.orderId}'/>" target="_blank">O9${postProduction.orderId}</a>
-			</p>
-			<p class="model-label transfer-label">
-				图片：<span style="color:#428BCA;">${postProduction.fileNames}</span>
-			</p>
-			<p class="model-label transfer-label">
 				共计：
-				<span style="color:#428BCA;">${postProduction.imageCount} </span>张
-				<span class="oc-label">用时：</span>
-				${postProduction.timeCost}
+				<span style="color:#428BCA;">${cutLiquify.imageCount} </span>张
+				<span id="time-label-${cutLiquify.id}" class="ml10" style="color:#F0AD4E;">剩余时间：</span>
+				<span id="remain-time-${cutLiquify.id}"></span>
+				<input type="hidden" id="limit-minutes-${cutLiquify.id}" value="${cutLiquify.limitMinutes}"/>
 			</p>
 			<p class="model-label transfer-label">
 				设计师：
-				<img src="${postProduction.operator.header}"/><span class="ml10">${postProduction.operator.name}</span>
-				<button id="btn-fix-upload-${postProduction.id}" class="btn btn-info ml10" onclick="openUploadImageWindow(${postProduction.orderId})">上传</button>
-				<button id="btn-fix-done-${postProduction.id}" class="btn btn-success ml10" onclick="setFixSkinDone(${postProduction.orderId}, ${postProduction.operator.id})">完成</button>
+				<img src="${cutLiquify.operator.header}"/><span class="ml10">${cutLiquify.operator.name}</span>
 			</p>
+			<div id="time-progress-bar-${cutLiquify.id}" class="progress" style="margin-bottom:0;">
+				<div id="time-bar-${cutLiquify.id}" class="progress-bar progress-bar-success" role="progressbar"
+					aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+				</div>
+			</div>
 		</div>
 	</c:forEach>
-	
-	<jsp:include page="system2uploadimage.jsp"/>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
-<script src="<c:url value='/js/util/transferUploader.js'/>"></script>
+<script src="<c:url value='/js/util/countDown.js'/>"></script>
 <script>
-	init();
+	$(".fix-start-time").each(function(index, element) {
+		if (element.value != 0) {
+			var id = element.id;
+			var startTime = new Date();
+			var limitSecond = parseInt($("#limit-minutes-" + id).val()) * 60;
+			startTime.setTime(element.value);
+			new CountDown(startTime, limitSecond, "time-bar-" + id, "time-label-" + id, "remain-time-" + id);
+		}
+	});
 
 	function init() {
 		$("#upload-url").val("<c:url value='/orderPostProduction/uploadFixedImage'/>");
@@ -69,17 +71,6 @@
 	function openUploadImageWindow(orderId) {
 		$("#orderId").val(orderId);
 		$("#uploadImagesModal").modal("show");
-	}
-	
-	function setFixSkinDone(orderId, userId) {
-		var result = confirm("是否确定裁图液化已完成？");
-		if (result) {
-			$.post("<c:url value='/orderPostProduction/setCutLiquifyDone/" + orderId + "/" + userId + "'/>", null, function(data, status) {
-				if (data.status == "success") {
-					location.reload(true);
-				}
-			});
-		}
 	}
 </script>
 </body>

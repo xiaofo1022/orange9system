@@ -165,15 +165,33 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/fixBackground", method=RequestMethod.GET)
-	public String system2fixbackground(ModelMap modelMap) {
-		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_BACKGROUND, 0));
-		return "system2fixbackground";
+	public String system2fixbackground(HttpServletRequest request, ModelMap modelMap) {
+		int userId = RequestUtil.getLoginUserId(request);
+		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_BACKGROUND, userId);
+		if (userId == 0) {
+			modelMap.addAttribute("postProductionList", postProductionList);
+			return "system2fixbackground";
+		} else {
+			if (postProductionList != null && postProductionList.size() > 0) {
+				modelMap.addAttribute("postProduction", postProductionList.get(0));
+			}
+			return "system2designerfixbackground";
+		}
 	}
 	
 	@RequestMapping(value="/cutLiquify", method=RequestMethod.GET)
-	public String system2cutliquify(ModelMap modelMap) {
-		modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY, 0));
-		return "system2cutliquify";
+	public String system2cutliquify(HttpServletRequest request, ModelMap modelMap) {
+		int userId = RequestUtil.getLoginUserId(request);
+		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY, userId);
+		if (userId == 0) {
+			modelMap.addAttribute("postProductionList", postProductionList);
+			return "system2cutliquify";
+		} else {
+			if (postProductionList != null && postProductionList.size() > 0) {
+				modelMap.addAttribute("postProduction", postProductionList.get(0));
+			}
+			return "system2designercutliquify";
+		}
 	}
 	
 	@RequestMapping(value="/verifyImage", method=RequestMethod.GET)

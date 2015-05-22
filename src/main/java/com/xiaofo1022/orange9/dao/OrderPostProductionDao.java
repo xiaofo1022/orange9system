@@ -120,8 +120,8 @@ public class OrderPostProductionDao {
 		return commonDao.query(OrderPostProduction.class, "SELECT * FROM " + tableName + " WHERE IS_DONE = 0 AND ORDER_ID = ? AND OPERATOR_ID = ?", orderId, userId);
 	}
 	
-	public List<OrderPostProduction> getPostProductionListById(String tableName, int id) {
-		return commonDao.query(OrderPostProduction.class, "SELECT * FROM " + tableName + " WHERE IS_DONE = 0 AND ID = ?", id);
+	public List<OrderPostProduction> getPostProductionListByImageId(String tableName, int imageId) {
+		return commonDao.query(OrderPostProduction.class, "SELECT * FROM " + tableName + " WHERE IS_DONE = 0 AND IMAGE_ID = ?", imageId);
 	}
 	
 	public List<OrderPostProduction> setPostProductionDone(String tableName, int orderId, int userId) {
@@ -133,8 +133,8 @@ public class OrderPostProductionDao {
 		return postProductionList;
 	}
 	
-	public List<OrderPostProduction> setPostProductionDone(String tableName, int id) {
-		List<OrderPostProduction> postProductionList = this.getPostProductionListById(tableName, id);
+	public List<OrderPostProduction> setPostProductionDone(String tableName, int imageId) {
+		List<OrderPostProduction> postProductionList = this.getPostProductionListByImageId(tableName, imageId);
 		Date now = new Date();
 		for (OrderPostProduction postProduction : postProductionList) {
 			commonDao.update("UPDATE " + tableName + " SET IS_DONE = 1, UPDATE_DATETIME = ? WHERE ID = ?", now, postProduction.getId());
@@ -205,11 +205,25 @@ public class OrderPostProductionDao {
 		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1", orderId);
 	}
 	
+	public Count getAllFixedImageCount(int orderId) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_FIXED_IMAGE_DATA WHERE ORDER_ID = ?", orderId);
+	}
+	
 	public Count getAllPostProductionCount(int userId, String tableName, String startDate, String endDate) {
 		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + tableName + " WHERE OPERATOR_ID = ? AND INSERT_DATETIME BETWEEN '" + startDate + " 00:00:00' AND '" + endDate + " 23:59:59'", userId);
 	}
 	
 	public Count getAllPostProductionDoneCount(int userId, String tableName, String startDate, String endDate) {
 		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + tableName + " WHERE OPERATOR_ID = ? AND IS_DONE = 1 AND INSERT_DATETIME BETWEEN '" + startDate + " 00:00:00' AND '" + endDate + " 23:59:59'", userId);
+	}
+	
+	public boolean isAllPictureFixed(int orderId) {
+		Count originalCount = this.getAllOriginalImageCount(orderId);
+		Count fixedCount = this.getAllFixedImageCount(orderId);
+		if (originalCount.getCnt() == fixedCount.getCnt()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
