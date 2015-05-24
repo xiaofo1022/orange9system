@@ -309,7 +309,9 @@
 					<c:when test="${orderDetail.orderStatus.name.equals('等待审核')}">
 						<c:choose>
 							<c:when test="${orderVerifier == null}">
-								<button class="btn btn-info" onclick="showSetVerifierWindow()">指定</button>
+								<c:if test="${user.isAdmin == 1}">
+									<button class="btn btn-info" onclick="showSetVerifierWindow()">指定</button>
+								</c:if>
 							</c:when>
 							<c:otherwise>
 								<img src="${orderVerifier.operator.header}"/><span class="oc-label">${orderVerifier.operator.name}</span>
@@ -363,11 +365,6 @@
 				<div class="clear"></div>
 			</div>
 			<div id="blink2-block" class="detail-bottom-block hidden">
-				<c:if test="${orderDetail.orderStatus.name.equals('完成')}">
-					<div>
-						<a href="<c:url value='/orderPostProduction/getFixedImageZipPackage/${orderDetail.id}'/>" target="_blank">打包下载</a>
-					</div>
-				</c:if>
 				<c:forEach items="${orderFixedImageDataList}" var="imageData">
 					<div class="pic-block photo-frame">
 						<img src="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>"/>
@@ -378,7 +375,9 @@
 							<c:when test="${imageData.isVerified == 0 && imageData.reason != null}">
 								<p id="fixed-pic-label-${imageData.id}" class='danger-color'>(${imageData.fileName})</p>
 								<p class='danger-color'>未通过：${imageData.reason}</p>
-								<p><button class="btn btn-danger btn-sm" onclick="openUploadImageWindow(${imageData.id})">重新上传</button></p>
+								<p>
+									<button class="btn btn-danger btn-sm" onclick="completePostProduction(${imageData.id}, ${imageData.orderId}, '${imageData.fileName}')">重新上传</button>
+								</p>
 							</c:when>
 							<c:otherwise>
 								<p id="fixed-pic-label-${imageData.id}">(${imageData.fileName})</p>
@@ -404,27 +403,50 @@
 	</div>
 	
 	<jsp:include page="system2uploadimage.jsp"/>
+	
+	<input class="hidden" type="file" id="complete-post-production"/>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/zoom.js'/>"></script>
 <script src="<c:url value='/js/util/transferUploader.js'/>"></script>
+<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
-	init();
-
-	function init() {
-		$("#upload-image").removeAttr("multiple");
-		$("#uploadImagesModal").on('hidden.bs.modal', function (e) {
-			location.reload(true);
-		});
-	}
-
-	function openUploadImageWindow(imageId) {
-		$("#upload-url").val("<c:url value='/orderPostProduction/reuploadFixedImage/" + imageId + "'/>");
-		$("#uploadImagesModal").modal("show");
-	}
+	var compId;
+	var compOrderId;
+	var compFileName;
+	var reader = new FileReader();
 	
+	reader.onload = function(event) {
+		var base64Data = event.target.result.split(",")[1];
+		AjaxUtil.post("<c:url value='/orderPostProduction/reuploadFixedImage/" + compId + "'/>", {orderId:compOrderId, fileName:compFileName, imageData:base64Data}, function(data) {
+			if (data.status == "success") {
+				location.reload(true);
+			}
+		});
+	};
+	
+	$("#complete-post-production").bind("change", function(event) {
+		var img = event.target.files[0];
+		if (!img) {
+			return;
+		}
+		var frontName = img.name.split(".")[0];
+		if (frontName != compFileName) {
+			alert("应选择图片" + compFileName + ".jpg");
+			return;
+		}
+		reader.readAsDataURL(img);
+	});
+	
+	function completePostProduction(id, orderId, fileName) {
+		compId = id;
+		compOrderId = orderId;
+		compFileName = fileName;
+		$("#complete-post-production").click();
+	}
+
 	function showSetConvertWindow() {
 		$("#setConvertModal").modal("show");
 	}

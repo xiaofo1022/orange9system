@@ -17,9 +17,7 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
+	<jsp:include page="system2header.jsp" flush="true"/>
 	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
@@ -44,10 +42,14 @@
 				<c:choose>
 					<c:when test="${orderVerify.operatorId != 0}">
 						<img src="${orderVerify.operator.header}"/><span class="ml10">${orderVerify.operator.name}</span>
-						<button class="btn btn-info ml10" onclick="startVerify(${orderVerify.orderId})">开始审核</button>
+						<c:if test="${orderVerify.operatorId == user.id}">
+							<button class="btn btn-info ml10" onclick="startVerify(${orderVerify.orderId})">开始审核</button>
+						</c:if>
 					</c:when>
 					<c:otherwise>
-						<button class="btn btn-info" onclick="showSetVerifierWindow(${orderVerify.orderId})">指定</button>
+						<c:if test="${user.isAdmin == 1}">
+							<button class="btn btn-info" onclick="showSetVerifierWindow(${orderVerify.orderId})">指定</button>
+						</c:if>
 					</c:otherwise>
 				</c:choose>
 			</p>
@@ -160,9 +162,6 @@
 				$("#fixed-image-id").val(data.id);
 				$("#verifyImageContainer").html("<img src='<c:url value='/pictures/fixed/" + data.orderId + "/" + data.id + ".jpg'/>'/>");
 			} else {
-				if (data.isAllVerified) {
-					console.log("Oh my god the order is fucking DONE!!!");
-				}
 				$("#verifyModal").modal("hide");
 			}
 		});

@@ -50,7 +50,7 @@ public class OrderVerifyController {
 		OrderFixedImageData fixedImageData = orderPostProductionDao.getVerifyImageData(orderId);
 		Count fixedCount = orderPostProductionDao.getVerifiedImageCount(orderId);
 		Count originalCount = orderPostProductionDao.getAllOriginalImageCount(orderId);
-		if (originalCount.getCnt() != 0 && fixedCount.getCnt() >= originalCount.getCnt()) {
+		if (fixedCount.getCnt() == originalCount.getCnt()) {
 			orderVerifyDao.setVerifyDone(orderId);
 			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.COMPLETE);
 			fixedImageData = new OrderFixedImageData();

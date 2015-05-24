@@ -46,30 +46,57 @@
 	     	 	<div class="panel-body">
 	     	 		<ul class="nav nav-tabs nav-justified">
 						<li role="presentation" class="active detail-bottom-nav">
-							<a id="blink1" onclick="changeBottomNavView(this)">原片</a>
+							<c:choose>
+								<c:when test="${order.status.equals('完成')}">
+									<a id="blink2" onclick="changeBottomNavView(this)">精修</a>
+								</c:when>
+								<c:otherwise>
+									<a id="blink1" onclick="changeBottomNavView(this)">原片</a>
+								</c:otherwise>
+							</c:choose>
 						</li>
 						<li role="presentation" class="detail-bottom-nav">
 							<a id="blink3" onclick="changeBottomNavView(this)">留言</a>
 						</li>
 					</ul>
-					<div id="blink1-block" class="detail-bottom-block">
-						<c:forEach items="${order.orderTransferImageDataList}" var="imageData">
-							<div class="pic-block photo-frame gallery">
-								<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>">
-									<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
-								</a>
-								<c:choose>
-									<c:when test="${imageData.isSelected == 1}">
-										<p id="client-pic-label-${imageData.id}">(${imageData.id})<span class='orange-color'>已选</span></p>
-									</c:when>
-									<c:otherwise>
-										<p id="client-pic-label-${imageData.id}">(${imageData.id})</p>
-									</c:otherwise>
-								</c:choose>
+					<c:choose>
+						<c:when test="${order.status.equals('完成')}">
+							<div id="blink2-block" class="detail-bottom-block">
+								<div>
+									<a href="<c:url value='/orderPostProduction/getFixedImageZipPackage/${order.orderId}'/>" target="_blank">打包下载</a>
+								</div>
+								<c:forEach items="${order.orderFixedImageDataList}" var="imageData">
+									<div class="pic-block photo-frame gallery">
+										<a id="client-pic-fixed-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>">
+											<img src="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+										</a>
+										<p id="client-pic-fixed-label-${imageData.id}">(${imageData.fileName})</p>
+									</div>
+								</c:forEach>
+								<div class="clear"></div>
 							</div>
-						</c:forEach>
-						<div class="clear"></div>
-					</div>
+						</c:when>
+						<c:otherwise>
+							<div id="blink1-block" class="detail-bottom-block">
+								<c:forEach items="${order.orderTransferImageDataList}" var="imageData">
+									<div class="pic-block photo-frame gallery">
+										<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>">
+											<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+										</a>
+										<c:choose>
+											<c:when test="${imageData.isSelected == 1}">
+												<p id="client-pic-label-${imageData.id}">(${imageData.fileName})<span class='orange-color'>已选</span></p>
+											</c:when>
+											<c:otherwise>
+												<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
+											</c:otherwise>
+										</c:choose>
+									</div>
+								</c:forEach>
+								<div class="clear"></div>
+							</div>
+						</c:otherwise>
+					</c:choose>
 					<div id="blink3-block" class="detail-bottom-block hidden">
 						<div id="message-block"></div>
 						<textarea id="client-message" rows="4" class="form-control"></textarea>
