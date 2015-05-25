@@ -21,6 +21,7 @@ import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.core.GlobalData;
+import com.xiaofo1022.orange9.dao.ClientDao;
 import com.xiaofo1022.orange9.dao.ClockInDao;
 import com.xiaofo1022.orange9.dao.LoginDao;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
@@ -50,6 +51,8 @@ public class MainController {
 	private UserDao userDao;
 	@Autowired
 	private ClockInDao clockInDao;
+	@Autowired
+	private ClientDao clientDao;
 	@Autowired
 	private OrderTimeLimitDao orderTimeLimitDao;
 	@Autowired
@@ -126,6 +129,12 @@ public class MainController {
 		}
 		modelMap.addAttribute("orderList", orderList);
 		return "system2ordergoods";
+	}
+	
+	@RequestMapping(value="/client", method=RequestMethod.GET)
+	public String client(ModelMap modelMap) {
+		modelMap.addAttribute("clientList", clientDao.getClientList());
+		return "system2client";
 	}
 	
 	@RequestMapping(value="/shooting", method=RequestMethod.GET)

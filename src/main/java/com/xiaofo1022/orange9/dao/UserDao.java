@@ -30,6 +30,10 @@ public class UserDao {
 		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE PHONE = ?", phone);
 	}
 	
+	public void updateUserPhone(int userId, String phone) {
+		commonDao.update("UPDATE USER SET PHONE = ? WHERE ID = ?", phone, userId);
+	}
+	
 	public User getUserById(int id) {
 		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE ID = ?", id);
 	}

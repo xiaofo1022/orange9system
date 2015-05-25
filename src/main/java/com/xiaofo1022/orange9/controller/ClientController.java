@@ -108,6 +108,39 @@ public class ClientController {
 		return new SuccessResponse("Add Client Success");
 	}
 	
+	@RequestMapping(value = "/updateClient", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse updateClient(@ModelAttribute("employee") Client client, BindingResult result, HttpServletRequest request) {
+		Client existClient = clientDao.getClient(client.getId());
+		if (existClient != null) {
+			if (!existClient.getClientPhone().equals(client.getClientPhone())) {
+				if (userDao.getUserByPhone(client.getClientPhone()) != null) {
+					return new FailureResponse(Message.EXIST_USER_PHONE);
+				}
+				User clientUser = userDao.getUserByPhone(existClient.getClientPhone());
+				if (clientUser != null) {
+					userDao.updateUserPhone(clientUser.getId(), client.getClientPhone());
+				}
+			}
+			clientDao.updateClient(client);
+		}
+		return new SuccessResponse("Update Client Success");
+	}
+	
+	@RequestMapping(value = "/deleteClient/{clientId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse deleteClient(@PathVariable int clientId, HttpServletRequest request) {
+		Client existClient = clientDao.getClient(clientId);
+		if (existClient != null) {
+			User clientUser = userDao.getUserByPhone(existClient.getClientPhone());
+			if (clientUser != null) {
+				userDao.deleteUser(clientUser.getId());
+			}
+			clientDao.deleteClient(clientId);
+		}
+		return new SuccessResponse("Delete Client Success");
+	}
+	
 	@RequestMapping(value = "/getClientList", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Client> getClientList() {

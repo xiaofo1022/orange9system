@@ -15,6 +15,7 @@
 		<c:if test="${user.isAdmin == 1}">
 			<li><a class="icon icon-location nav-sidebar" href="<c:url value='/employee'/>">员工管理</a></li>
 			<li><a class="icon icon-location nav-sidebar" href="<c:url value='/orderGoods'/>">货品管理</a></li>
+			<li><a class="icon icon-location nav-sidebar" href="<c:url value='/client'/>">客户管理</a></li>
 		</c:if>
 	</ul>
 </nav>

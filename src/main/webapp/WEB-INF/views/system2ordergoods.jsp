@@ -20,16 +20,14 @@
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
+	<jsp:include page="system2header.jsp" flush="true"/>
+
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
 	<div id="st-trigger-effects">
 		<button class="btn btn-warning nav-btn" data-effect="st-effect-3">
 			<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 		</button>
-	</div>
-	
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
 	</div>
 	
 	<div id="orderGoodsModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">

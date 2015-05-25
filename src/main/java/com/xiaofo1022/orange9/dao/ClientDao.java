@@ -22,8 +22,21 @@ public class ClientDao {
 		client.setId(id);
 	}
 	
+	public void updateClient(Client client) {
+		commonDao.update("UPDATE CLIENT SET UPDATE_DATETIME = ?, NAME = ?, PHONE = ?, EMAIL = ?, SHOP_NAME = ?, SHOP_LINK = ?, REMARK = ? WHERE ID = ?",
+				new Date(), client.getClientName(), client.getClientPhone(), client.getClientEmail(), client.getClientShopName(), client.getClientShopLink(), client.getClientRemark(), client.getId());
+	}
+	
+	public void deleteClient(int clientId) {
+		commonDao.update("UPDATE CLIENT SET ACTIVE = 0 WHERE ID = ?", clientId);
+	}
+	
 	public List<Client> getClientList() {
 		return commonDao.query(Client.class, "SELECT * FROM CLIENT WHERE ACTIVE = 1 ORDER BY NAME");
+	}
+	
+	public Client getClient(int id) {
+		return commonDao.getFirst(Client.class, "SELECT * FROM CLIENT WHERE ID = ?", id);
 	}
 	
 	public void insertClientMessage(ClientMessage clientMessage) {
