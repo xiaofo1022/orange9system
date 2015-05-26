@@ -37,6 +37,7 @@ import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderFixedImageData;
 import com.xiaofo1022.orange9.modal.OrderPostProduction;
 import com.xiaofo1022.orange9.modal.OrderVerifyImage;
+import com.xiaofo1022.orange9.modal.Password;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
@@ -80,6 +81,19 @@ public class MainController {
 			session.invalidate();
 		}
 		return "/";
+	}
+	
+	@RequestMapping(value="/resetPassword", method=RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse resetPassword(@ModelAttribute("password") Password password, HttpServletRequest request) {
+		User user = RequestUtil.getLoginUser(request);
+		if (user != null) {
+			if (!user.getPassword().equals(password.getOldPassword())) {
+				return new FailureResponse("Wrong old password!");
+			}
+			userDao.updatePassword(user.getId(), password.getNewPassword());
+		}
+		return new SuccessResponse("Reset password success!");
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
@@ -212,6 +226,7 @@ public class MainController {
 				OrderVerifyImage verifyImage = orderVerifyDao.getOrderVerifyImage(order.getId());
 				if (verifyImage == null) {
 					verifyImage = new OrderVerifyImage();
+					verifyImage.setOrderNo(order.getOrderNo());
 					verifyImage.setOrderId(order.getId());
 				}
 				List<OrderFixedImageData> fixedImageDataList = orderPostProductionDao.getOrderFixedImageDataList(order.getId());

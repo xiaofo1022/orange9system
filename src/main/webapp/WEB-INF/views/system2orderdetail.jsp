@@ -141,7 +141,7 @@
 			订单详情：
 			<input type="hidden" id="orderId" value="${orderDetail.id}"/>
 			<input type="hidden" id="clientId" value="${orderDetail.clientId}"/>
-			<span>单号：<span class="oc-label">${orderDetail.id}</span></span>
+			<span>单号：<span class="oc-label">${orderDetail.orderNo}</span></span>
 			<span>拍摄日期：<span class="oc-label">${orderDetail.shootDateLabel}</span></span> 
 			<span>状态：</span> 
 			<c:choose>

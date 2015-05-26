@@ -58,4 +58,8 @@ public class UserDao {
 	public void deleteUser(int userId) {
 		commonDao.update("UPDATE USER SET ACTIVE = 0, UPDATE_DATETIME = ? WHERE ID = ?", new Date(), userId);
 	}
+	
+	public void updatePassword(int userId, String password) {
+		commonDao.update("UPDATE USER SET PASSWORD = ? WHERE ID = ?", password, userId);
+	}
 }

@@ -10,6 +10,8 @@ public class OrderTransferImage {
 	private int id;
 	@Column("ORDER_ID")
 	private int orderId;
+	@Column(value="ORDER_ID", isOrderNo=true)
+	private String orderNo;
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
 	@Column("UPDATE_DATETIME")
@@ -62,5 +64,11 @@ public class OrderTransferImage {
 	}
 	public void setOperator(User operator) {
 		this.operator = operator;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

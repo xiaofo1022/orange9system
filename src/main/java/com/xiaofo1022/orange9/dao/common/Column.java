@@ -12,4 +12,5 @@ public @interface Column {
 	boolean isImage() default false;
 	boolean isFormatDate() default false;
 	boolean isFormatDatetime() default false;
+	boolean isOrderNo() default false;
 }

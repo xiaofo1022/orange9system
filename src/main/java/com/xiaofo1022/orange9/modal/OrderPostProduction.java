@@ -11,6 +11,8 @@ public class OrderPostProduction {
 	private int id;
 	@Column("ORDER_ID")
 	private int orderId;
+	@Column(value="ORDER_ID", isOrderNo=true)
+	private String orderNo;
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
 	@Column("UPDATE_DATETIME")
@@ -118,5 +120,11 @@ public class OrderPostProduction {
 	}
 	public void setImageDataList(List<OrderTransferImageData> imageDataList) {
 		this.imageDataList = imageDataList;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

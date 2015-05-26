@@ -34,7 +34,7 @@
 		<input type="hidden" id="${orderShoot.id}" class="convert-time" value="${orderShoot.shootTime}"/>
 		<div class="order-block">
 			<p class="model-label transfer-label">
-				单号：<a href="<c:url value='/order/orderDetail/${orderShoot.id}'/>" target="_blank">O9${orderShoot.id}</a>
+				单号：<a href="<c:url value='/order/orderDetail/${orderShoot.id}'/>" target="_blank">${orderShoot.orderNo}</a>
 				<span id="time-label-${orderShoot.id}" class="ml10" style="color:#F0AD4E;">剩余时间：</span>
 				<span id="remain-time-${orderShoot.id}"></span>
 			</p>

@@ -31,7 +31,7 @@
 	<c:forEach items="${orderList}" var="order">
 		<div class="order-block">
 			<p class="model-label transfer-label">
-				单号：<a href="<c:url value='/order/orderDetail/${order.id}'/>" target="_blank">#O9${order.id}</a>
+				单号：<a href="<c:url value='/order/orderDetail/${order.id}'/>" target="_blank">${order.orderNo}</a>
 				<button class="btn btn-warning btn-sm">提醒一下</button>
 			</p>
 			<p class="model-label transfer-label">

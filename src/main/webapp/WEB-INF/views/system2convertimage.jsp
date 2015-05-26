@@ -31,7 +31,7 @@
 		<input type="hidden" id="${orderConvert.id}" class="convert-time" value="${orderConvert.insertTime}"/>
 		<div class="order-block">
 			<p class="model-label transfer-label">
-				单号：<a href="<c:url value='/order/orderDetail/${orderConvert.orderId}'/>" target="_blank">O9${orderConvert.orderId}</a>
+				单号：<a href="<c:url value='/order/orderDetail/${orderConvert.orderId}'/>" target="_blank">${orderConvert.orderNo}</a>
 				<c:if test="${orderConvert.operatorId != 0}">
 					<span id="time-label-${orderConvert.id}" class="ml10" style="color:#F0AD4E;">剩余时间：</span>
 					<span id="remain-time-${orderConvert.id}"></span>

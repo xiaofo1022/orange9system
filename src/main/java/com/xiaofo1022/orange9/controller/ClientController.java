@@ -28,6 +28,7 @@ import com.xiaofo1022.orange9.modal.Client;
 import com.xiaofo1022.orange9.modal.ClientMessage;
 import com.xiaofo1022.orange9.modal.ClientOrder;
 import com.xiaofo1022.orange9.modal.Order;
+import com.xiaofo1022.orange9.modal.OrderNo;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
@@ -57,11 +58,12 @@ public class ClientController {
 	private void createClientMainModelMap(int clientId, int orderId, ModelMap modelMap) {
 		List<Order> orderList = orderDao.getOrderListByClient(clientId);
 		ClientOrder clientOrder = null;
-		List<Integer> orderIdList = null;
+		List<OrderNo> orderNoList = null;
 		if (orderList != null && orderList.size() > 0) {
-			orderIdList = new ArrayList<Integer>(orderList.size());
+			orderNoList = new ArrayList<OrderNo>(orderList.size());
 			for (Order order : orderList) {
-				orderIdList.add(order.getId());
+				OrderNo orderNo = new OrderNo(order.getId(), order.getOrderNo());
+				orderNoList.add(orderNo);
 			}
 			Order order = null;
 			if (orderId == 0) {
@@ -71,6 +73,7 @@ public class ClientController {
 			}
 			clientOrder = new ClientOrder();
 			clientOrder.setOrderId(order.getId());
+			clientOrder.setOrderNo(order.getOrderNo());
 			clientOrder.setStatus(order.getOrderStatus().getName());
 			clientOrder.setClientId(clientId);
 			if (order.getOrderGoods() != null) {
@@ -82,7 +85,7 @@ public class ClientController {
 			clientOrder.setOrderFixedImageDataList(orderPostProductionDao.getOrderFixedImageDataList(order.getId()));
 		}
 		modelMap.addAttribute("order", clientOrder);
-		modelMap.addAttribute("orderIdList", orderIdList);
+		modelMap.addAttribute("orderNoList", orderNoList);
 	}
 	
 	@RequestMapping(value = "/main/{clientId}/{orderId}", method = RequestMethod.GET)

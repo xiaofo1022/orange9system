@@ -73,7 +73,7 @@
 	
 	function getTransferHeader(data) {
 		return '<p class="model-label transfer-label">'
-			+ '单号：<a href="<c:url value="/order/orderDetail/' + data.orderId + '"/>" target="_blank">O9' + data.orderId + '</a><span id="time-label-' + data.id + '" class="ml10" style="color:#F0AD4E;">'
+			+ '单号：<a href="<c:url value="/order/orderDetail/' + data.orderId + '"/>" target="_blank">' + data.orderNo + '</a><span id="time-label-' + data.id + '" class="ml10" style="color:#F0AD4E;">'
 			+ '剩余时间：</span><span id="remain-time-' + data.id + '"></span></p>';
 	}
 	

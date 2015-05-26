@@ -10,6 +10,8 @@ import com.xiaofo1022.orange9.dao.common.JoinTable;
 public class Order {
 	@Column("ID")
 	private int id;
+	@Column(value="ID", isOrderNo=true)
+	private String orderNo;
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
 	@Column("UPDATE_DATETIME")
@@ -212,5 +214,11 @@ public class Order {
 	}
 	public void setInsertTime(long shootTime) {
 		this.shootTime = shootTime;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

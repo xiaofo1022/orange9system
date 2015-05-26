@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,7 @@ public class CommonDao {
 	
 	public static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 	public static SimpleDateFormat datetimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static DecimalFormat decimalFormat = new DecimalFormat("00000");
 	
 	public int insert(final String sql, final Object... args) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -71,6 +73,7 @@ public class CommonDao {
 							boolean isImage = column.isImage();
 							boolean isFormatDate = column.isFormatDate();
 							boolean isFormatDatetime = column.isFormatDatetime();
+							boolean isOrderNo = column.isOrderNo();
 							
 							try {
 								resultSet.findColumn(columnName);
@@ -98,6 +101,9 @@ public class CommonDao {
 									} else {
 										field.set(entity, Base64Util.getJpgHeader() + resultSet.getString(columnName));
 									}
+								} else if (isOrderNo) {
+									int id = resultSet.getInt(columnName);
+									field.set(entity, "O9" + decimalFormat.format(id));
 								} else {
 									field.set(entity, resultSet.getString(columnName));
 								}

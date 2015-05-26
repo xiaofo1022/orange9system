@@ -113,7 +113,7 @@
 	<div class="order-block">
 		<c:forEach items="${orderList}" var="order">
 			<div class="order-detail-block bd-blue">
-				<span>单号：<a href="<c:url value='/order/orderDetail/${order.id}'/>" target="_blank">#O9${order.id}</a></span>
+				<span>单号：<a href="<c:url value='/order/orderDetail/${order.id}'/>" target="_blank">${order.orderNo}</a></span>
 				<button class="btn btn-success" onclick="showConfirmGoodsWindow(${order.id})">收货</button>
 				<button class="btn btn-info" onclick="showDeliverGoodsWindow(${order.id})">发货</button>
 				<br/>

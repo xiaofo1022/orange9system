@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ClientOrder {
 	private int orderId;
+	private String orderNo;
 	private int clientId;
 	private String shootDateLabel;
 	private String shootHalf;
@@ -70,5 +71,11 @@ public class ClientOrder {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

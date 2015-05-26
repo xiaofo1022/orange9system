@@ -34,7 +34,7 @@
 				<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
 				<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
 				<p>
-					<a href="<c:url value='/order/orderDetail/${imageData.orderId}'/>" target="_blank">#O9${imageData.orderId}</a>
+					<a href="<c:url value='/order/orderDetail/${imageData.orderId}'/>" target="_blank">${imageData.orderNo}</a>
 					<a href='${user.picbaseurl}/downloadOriginalPicture/${imageData.orderId}/${imageData.fileName}'>下载</a>
 					<a onclick="completePostProduction(${imageData.id}, ${imageData.orderId}, '${imageData.fileName}')">完成</a>
 				</p>

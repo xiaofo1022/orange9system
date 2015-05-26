@@ -30,7 +30,7 @@
 	<c:forEach items="${orderVerifyList}" var="orderVerify">
 		<div class="order-block">
 			<p class="model-label transfer-label">
-				单号：<a href="<c:url value='/order/orderDetail/${orderVerify.orderId}'/>" target="_blank">O9${orderVerify.orderId}</a>
+				单号：<a href="<c:url value='/order/orderDetail/${orderVerify.orderId}'/>" target="_blank">${orderVerify.orderNo}</a>
 			</p>
 			<p class="model-label transfer-label">
 				已审核

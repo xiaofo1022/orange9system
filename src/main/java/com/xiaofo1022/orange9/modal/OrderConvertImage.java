@@ -10,6 +10,8 @@ public class OrderConvertImage {
 	private int id;
 	@Column("ORDER_ID")
 	private int orderId;
+	@Column(value="ORDER_ID", isOrderNo=true)
+	private String orderNo;
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
 	@Column("UPDATE_DATETIME")
@@ -81,5 +83,11 @@ public class OrderConvertImage {
 	}
 	public void setFileNames(String fileNames) {
 		this.fileNames = fileNames;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

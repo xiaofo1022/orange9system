@@ -27,19 +27,19 @@
 		<div class="panel panel-default">
 			<div class="panel-heading" role="tab" id="headingOne">
 				<h4 class="panel-title">
-					<select id="order-list" class="form-control" style="width:100px;display:inline;margin-right:10px;" onchange="changeOrder()">
-						<c:forEach items="${orderIdList}" var="orderId">
+					<select id="order-list" class="form-control" style="width:120px;display:inline;margin-right:10px;" onchange="changeOrder()">
+						<c:forEach items="${orderNoList}" var="orderNo">
 							<c:choose>
-								<c:when test="${orderId == order.orderId}">
-									<option value="${orderId}" selected>#O9${orderId}</option>
+								<c:when test="${orderNo.orderId == order.orderId}">
+									<option value="${orderNo.orderId}" selected>${orderNo.orderNo}</option>
 								</c:when>
 								<c:otherwise>
-									<option value="${orderId}">#O9${orderId}</option>
+									<option value="${orderNo.orderId}">${orderNo.orderNo}</option>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
 					</select>
-					#O9${order.orderId} 拍摄日期：${order.shootDateLabel} ${order.shootHalf}
+					${order.orderNo} 拍摄日期：${order.shootDateLabel} ${order.shootHalf}
 				</h4>
 			</div>
 			<div class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
