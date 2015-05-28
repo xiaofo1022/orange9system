@@ -30,7 +30,7 @@ public class OrderDao {
 		int id = commonDao.insert("INSERT INTO ORDERS (INSERT_DATETIME, UPDATE_DATETIME, SHOOT_DATE, CLIENT_ID, MODEL_NAME, BROKER_NAME, BROKER_PHONE, SHOOT_HALF, DRESSER_NAME, STYLIST_NAME, PHOTOGRAPHER_ID, ASSISTANT_ID, STATUS_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				now, now, order.getShootDate(), order.getClientId(), order.getModelName(), order.getBrokerName(), order.getBrokerPhone(), order.getShootHalf(), order.getDresserName(), order.getStylistName(), order.getPhotographerId(), order.getAssistantId(), OrderStatusConst.SHOOTING);
 		order.setId(id);
-		orderHistoryDao.addOrderHistory(order, OrderStatusConst.CREATE_ORDER);
+		orderHistoryDao.addOrderHistory(order, OrderStatusConst.CREATE_ORDER, null);
 	}
 	
 	public List<Order> getOrderList() {
@@ -49,9 +49,9 @@ public class OrderDao {
 		return commonDao.getFirst(Order.class, "SELECT * FROM ORDERS WHERE ID = ? AND ACTIVE = 1", orderId);
 	}
 	
-	public void updateOrderStatus(Order order, OrderStatus orderStatus) {
+	public void updateOrderStatus(Order order, OrderStatus orderStatus, String reason) {
 		commonDao.update("UPDATE ORDERS SET STATUS_ID = ?, UPDATE_DATETIME = ? WHERE ID = ?", orderStatus.getId(), new Date(), order.getId());
-		orderHistoryDao.addOrderHistory(order, OrderStatusConst.STATUS_CHANGE + orderStatus.getName());
+		orderHistoryDao.addOrderHistory(order, OrderStatusConst.STATUS_CHANGE + orderStatus.getName(), reason);
 	}
 	
 	public List<Order> getOrderListByStatus(int statusId) {

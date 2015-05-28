@@ -21,14 +21,14 @@ public class OrderHistoryDao {
 		Order order = orderDao.getOrderDetail(orderId);
 		if (order != null) {
 			order.setUserId(userId);
-			this.addOrderHistory(order, info);
+			this.addOrderHistory(order, info, null);
 		}
 	}
 	
-	public void addOrderHistory(Order order, String info) {
+	public void addOrderHistory(Order order, String info, String reason) {
 		Date now = new Date();
-		commonDao.insert("INSERT INTO ORDER_HISTORY (INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, OPERATOR_ID, INFO) VALUES (?, ?, ?, ?, ?)",
-				now, now, order.getId(), order.getUserId(), info);
+		commonDao.insert("INSERT INTO ORDER_HISTORY (INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, OPERATOR_ID, INFO, REMARK) VALUES (?, ?, ?, ?, ?, ?)",
+				now, now, order.getId(), order.getUserId(), info, reason);
 	}
 	
 	public List<OrderHistory> getOrderHistoryList(int orderId) {

@@ -32,6 +32,7 @@
 	<jsp:include page="system2uploadimage.jsp"/>
 	
 	<input type="hidden" id="user-id" value="${user.id}"/>
+	<input type="hidden" id="is-admin" value="${user.isAdmin}"/>
 </div>
 </div>
 <input type="hidden" id="limitMinutes" value="${limitMinutes}"/>
@@ -42,6 +43,7 @@
 <script>
 	var limitSecond = parseInt($("#limitMinutes").val()) * 60;
 	var userId = $("#user-id").val();
+	var notification = new Notification(userId, "<c:url value='/'/>");
 	
 	init();
 	
@@ -83,8 +85,17 @@
 		if (data.operator.id == userId) {
 			infoHtml += ('<button id="btn-transfer-' + data.id + '" class="btn btn-info ml10" onclick="openUploadImageWindow(' + data.id + ', ' + data.orderId + ')">上传</button>'
 				+ '<button id="btn-transfer-done-' + data.id + '" class="btn btn-success ml10" onclick="setTransferComplete(' + data.id + ', ' + data.orderId + ')">完成</button></p>');
+		} else {
+			var isAdmin = parseInt($("#is-admin").val());
+			if (isAdmin) {
+				infoHtml += '<button style="margin-left:10px;" class="btn btn-danger" onclick="urge(' + data.operator.id + ', \'' + data.orderNo + '\')">催一下</button>';
+			}
 		}
 		return infoHtml;
+	}
+	
+	function urge(receiverId, orderNo) {
+		notification.send(receiverId, orderNo, "上传原片");
 	}
 	
 	function getTransferBar(data) {

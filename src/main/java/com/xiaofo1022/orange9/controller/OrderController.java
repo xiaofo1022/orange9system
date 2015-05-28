@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +28,7 @@ import com.xiaofo1022.orange9.dao.OrderTransferDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
 import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.Order;
+import com.xiaofo1022.orange9.modal.OrderRollback;
 import com.xiaofo1022.orange9.modal.OrderStatus;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -110,11 +112,18 @@ public class OrderController {
 			@PathVariable int orderId, 
 			@PathVariable int orderStatusId, 
 			HttpServletRequest request) {
-		updateOrderStatusAction(orderId, orderStatusId, request);
+		updateOrderStatusAction(orderId, orderStatusId, null, request);
 		return new SuccessResponse("Update Order Status Success");
 	}
 	
-	private void updateOrderStatusAction(int orderId, int orderStatusId, HttpServletRequest request) {
+	@RequestMapping(value = "/orderStatusRollback", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse orderStatusRollback(@RequestBody OrderRollback orderRollback, HttpServletRequest request) {
+		updateOrderStatusAction(orderRollback.getOrderId(), orderRollback.getStatusId(), orderRollback.getReason(), request);
+		return new SuccessResponse("Update Order Status Success");
+	}
+	
+	private void updateOrderStatusAction(int orderId, int orderStatusId, String reason, HttpServletRequest request) {
 		Order order = orderDao.getOrderDetail(orderId);
 		OrderStatus orderStatus = orderStatusDao.getOrderStatus(orderStatusId);
 		User user = RequestUtil.getLoginUser(request);
@@ -122,7 +131,7 @@ public class OrderController {
 			order.setUserId(user.getId());
 		}
 		if (order != null && orderStatus != null) {
-			orderDao.updateOrderStatus(order, orderStatus);
+			orderDao.updateOrderStatus(order, orderStatus, reason);
 		}
 	}
 	
@@ -133,7 +142,7 @@ public class OrderController {
 			@PathVariable int userId, 
 			HttpServletRequest request) {
 		orderTransferDao.insertOrderTransfer(orderId, userId);
-		updateOrderStatusAction(orderId, OrderStatusConst.TRANSFER_IMAGE, request);
+		updateOrderStatusAction(orderId, OrderStatusConst.TRANSFER_IMAGE, null, request);
 		return new SuccessResponse("Set Order Transfer Success");
 	}
 }

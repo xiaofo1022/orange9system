@@ -19,13 +19,25 @@
 		</c:if>
 	</ul>
 </nav>
+<script src="<c:url value='/js/util/notification.js'/>"></script>
+<script src="<c:url value='/js/notification/thumbslider.js'/>"></script>
 <script>
-$.get("<c:url value='/order/getOrderStatusCountMap'/>", function(data, status) {
-	$(".nav-sidebar").each(function(){
-		var text = $(this).text();
-		if (data[text] != null && data[text] != undefined) {
-			$(this).text(text + "(" + data[text] + ")");
-		}
+	var sidenoti = new Notification("", "<c:url value='/'/>");
+	var thumbslider = new NotificationThumbslider();
+	
+	$.get("<c:url value='/order/getOrderStatusCountMap'/>", function(data, status) {
+		$(".nav-sidebar").each(function(){
+			var text = $(this).text();
+			if (data[text] != null && data[text] != undefined) {
+				$(this).text(text + "(" + data[text] + ")");
+			}
+		});
 	});
-});
+	
+	notificationCheck();
+	
+	function notificationCheck() {
+		sidenoti.get(thumbslider);
+		setTimeout(arguments.callee, 10000);
+	}
 </script>

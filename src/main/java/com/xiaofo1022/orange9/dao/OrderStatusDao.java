@@ -59,7 +59,7 @@ public class OrderStatusDao {
 				order.setUserId(user.getId());
 			}
 			OrderStatus orderStatus = this.getOrderStatus(statusId);
-			orderDao.updateOrderStatus(order, orderStatus);
+			orderDao.updateOrderStatus(order, orderStatus, null);
 		}
 	}
 }

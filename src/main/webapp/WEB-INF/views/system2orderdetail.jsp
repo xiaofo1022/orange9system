@@ -141,6 +141,7 @@
 			订单详情：
 			<input type="hidden" id="orderId" value="${orderDetail.id}"/>
 			<input type="hidden" id="clientId" value="${orderDetail.clientId}"/>
+			<input type="hidden" id="statusId" value="${orderDetail.statusId}"/>
 			<span>单号：<span class="oc-label">${orderDetail.orderNo}</span></span>
 			<span>拍摄日期：<span class="oc-label">${orderDetail.shootDateLabel}</span></span> 
 			<span>状态：</span> 
@@ -396,6 +397,10 @@
 						<span class="oc-label">${orderHistory.info}</span>
 						BY: 
 						<span class="oc-label">${orderHistory.user.name}</span>
+						<c:if test="${orderHistory.remark != null}">
+							备注:
+							<span class="oc-label">${orderHistory.remark}</span>
+						</c:if>
 					</p>
 				</c:forEach>
 			</div>
@@ -405,6 +410,23 @@
 	<jsp:include page="system2uploadimage.jsp"/>
 	
 	<input class="hidden" type="file" id="complete-post-production"/>
+	
+	<div id="statusRollbackModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">订单状态回滚原因</h4>
+				</div>
+				<div class="modal-body">
+					<textarea id="rollback-reason" class="form-control" rows="4" maxlength="100"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" onclick="setRollback()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
@@ -463,27 +485,58 @@
 		$("#" + nav.id + "-block").removeClass("hidden");
 	}
 	
-	function updateOrderStatus() {
+	function setRollback() {
+		var reason = $("#rollback-reason").val();
+		if (!reason) {
+			alert("请填写原因");
+			return;
+		}
 		var orderId = $("#orderId").val();
 		var statusId = $("#orderStatus").val();
+		AjaxUtil.post("<c:url value='/order/orderStatusRollback'/>", {orderId:orderId, statusId:statusId, reason:reason}, function(data, status) {
+			if (data.status == "success") {
+				location.reload(true);
+			} else {
+				console.log(data);
+			}
+		});
+	}
+	
+	function updateOrderStatus() {
+		var orderId = $("#orderId").val();
+		var currentStatusId = parseInt($("#statusId").val());
+		var statusId = parseInt($("#orderStatus").val());
 		var userId = $("#photographerId").val();
-		if (statusId == 2) {
-			$.post("<c:url value='/order/setOrderTransfer/" + orderId + "/" + userId + "'/>", null, function(data, status) {
-				if (data.status == "success") {
-					location.reload(true);
-				} else {
-					console.log(data);
-				}
-			});
+		
+		if (statusId < currentStatusId) {
+			$("#statusRollbackModal").modal("show");
 		} else {
-			$.post("<c:url value='/order/updateOrderStatus/" + orderId + "/" + statusId + "'/>", null, function(data, status) {
-				if (data.status == "success") {
-					location.reload(true);
-				} else {
-					console.log(data);
-				}
-			});
+			if (statusId == 2) {
+				setOrderTransfer(orderId, userId);
+			} else {
+				setOrderStatus(orderId, statusId);
+			}
 		}
+	}
+	
+	function setOrderStatus(orderId, statusId) {
+		$.post("<c:url value='/order/updateOrderStatus/" + orderId + "/" + statusId + "'/>", null, function(data, status) {
+			if (data.status == "success") {
+				location.reload(true);
+			} else {
+				console.log(data);
+			}
+		});
+	}
+	
+	function setOrderTransfer(orderId, userId) {
+		$.post("<c:url value='/order/setOrderTransfer/" + orderId + "/" + userId + "'/>", null, function(data, status) {
+			if (data.status == "success") {
+				location.reload(true);
+			} else {
+				console.log(data);
+			}
+		});
 	}
 	
 	function setVerifier() {
