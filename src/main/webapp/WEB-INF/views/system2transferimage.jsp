@@ -45,6 +45,10 @@
 	var userId = $("#user-id").val();
 	var notification = new Notification(userId, "<c:url value='/'/>");
 	
+	function urge(receiverId, orderNo, btnId) {
+		notification.send(receiverId, orderNo, "上传原片", btnId);
+	}
+	
 	init();
 	
 	function init() {
@@ -88,14 +92,10 @@
 		} else {
 			var isAdmin = parseInt($("#is-admin").val());
 			if (isAdmin) {
-				infoHtml += '<button style="margin-left:10px;" class="btn btn-danger" onclick="urge(' + data.operator.id + ', \'' + data.orderNo + '\')">催一下</button>';
+				infoHtml += '<button id="btn-urge-' + data.id + '" style="margin-left:10px;" class="btn btn-danger" onclick="urge(' + data.operator.id + ', \'' + data.orderNo + '\', this.id)">催一下</button>';
 			}
 		}
 		return infoHtml;
-	}
-	
-	function urge(receiverId, orderNo) {
-		notification.send(receiverId, orderNo, "上传原片");
 	}
 	
 	function getTransferBar(data) {

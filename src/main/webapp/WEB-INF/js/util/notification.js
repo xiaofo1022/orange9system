@@ -4,7 +4,7 @@ var Notification = function(senderId, baseUrl) {
 };
 
 Notification.prototype = {
-	send: function(receiverId, orderNo, action) {
+	send: function(receiverId, orderNo, action, buttonId) {
 		var canSend = false;
 		if (!this.lastSendTime) {
 			canSend = true;
@@ -16,9 +16,19 @@ Notification.prototype = {
 			}
 		}
 		if (canSend) {
-			var message = "订单" + orderNo + action + "快一点！";
+			var message = "";
+			if (orderNo) {
+				message = "订单" + orderNo + action + "快一点！";
+			} else {
+				message = action + "快一点！";
+			}
 			var sendData = {senderId:this.senderId, receiverId:receiverId, message:message};
 			this.lastSendTime = now;
+			if (buttonId) {
+				var button = $("#" + buttonId);
+				button.attr("disabled", "true");
+				button.text("已催");
+			}
 			$.ajax({  
 	            url: this.baseUrl + "notification/addNotification",  
 	            type: 'post',

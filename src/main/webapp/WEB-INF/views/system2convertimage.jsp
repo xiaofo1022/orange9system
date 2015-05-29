@@ -47,9 +47,16 @@
 				<c:choose>
 					<c:when test="${orderConvert.operatorId != 0}">
 						<img src="${orderConvert.operator.header}"/><span class="ml10">${orderConvert.operator.name}</span>
-						<c:if test="${orderConvert.operatorId == user.id}">
-							<button id="btn-convert-done-${orderConvert.id}" class="btn btn-success ml10" onclick="confirmConvertComplete(${orderConvert.orderId}, ${orderConvert.id})">完成</button>
-						</c:if>
+						<c:choose>
+							<c:when test="${orderConvert.operatorId == user.id}">
+								<button id="btn-convert-done-${orderConvert.id}" class="btn btn-success ml10" onclick="confirmConvertComplete(${orderConvert.orderId}, ${orderConvert.id})">完成</button>
+							</c:when>
+							<c:otherwise>
+								<c:if test="${user.isAdmin == 1}">
+									<button id="btn-urge-${orderConvert.id}" class="btn btn-danger" onclick="urge(${orderConvert.operatorId}, '${orderConvert.orderNo}', this.id)">催一下</button>
+								</c:if>
+							</c:otherwise>
+						</c:choose>
 					</c:when>
 					<c:otherwise>
 						<c:if test="${user.isAdmin == 1}">
@@ -93,12 +100,20 @@
 	</div>
 </div>
 </div>
+<input type="hidden" id="user-id" value="${user.id}"/>
 <input type="hidden" id="limitMinutes" value="${limitMinutes}"/>
 <input type="hidden" id="picbaseurl" value="${user.picbaseurl}"/>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/util/countDown.js'/>"></script>
 <script>
+	var userId = $("#user-id").val();
+	var notification = new Notification(userId, "<c:url value='/'/>");
+
+	function urge(receiverId, orderNo, btnId) {
+		notification.send(receiverId, orderNo, "导图", btnId);
+	}
+	
 	function showSetConvertWindow(orderId) {
 		$("#orderId").val(orderId);
 		$("#setConvertModal").modal("show");

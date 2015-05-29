@@ -16,6 +16,8 @@ public class OrderTransferImageData {
 	private String imageData;
 	@Column("ORDER_ID")
 	private int orderId;
+	@Column(value="ORDER_ID", isOrderNo=true)
+	private String orderNo;
 	@Column("FILE_NAME")
 	private String fileName;
 	@Column("IS_SELECTED")
@@ -76,5 +78,11 @@ public class OrderTransferImageData {
 	}
 	public void setUpdateDatetime(Date updateDatetime) {
 		this.updateDatetime = updateDatetime;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 }

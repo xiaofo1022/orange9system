@@ -40,6 +40,9 @@
 			<p class="model-label transfer-label">
 				设计师：
 				<img src="${fixSkin.operator.header}"/><span class="ml10">${fixSkin.operator.name}</span>
+				<c:if test="${user.isAdmin == 1}">
+					<button id="btn-urge-${fixSkin.id}" class="btn btn-danger" onclick="urge(${fixSkin.operator.id}, '', this.id)">催一下</button>
+				</c:if>
 			</p>
 			<div id="time-progress-bar-${fixSkin.id}" class="progress" style="margin-bottom:0;">
 				<div id="time-bar-${fixSkin.id}" class="progress-bar progress-bar-success" role="progressbar"
@@ -50,10 +53,18 @@
 	</c:forEach>
 </div>
 </div>
+<input type="hidden" id="user-id" value="${user.id}"/>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/util/countDown.js'/>"></script>
 <script>
+	var userId = $("#user-id").val();
+	var notification = new Notification(userId, "<c:url value='/'/>");
+	
+	function urge(receiverId, orderNo, btnId) {
+		notification.send(receiverId, orderNo, "修皮肤及褶皱", btnId);
+	}
+
 	$(".fix-start-time").each(function(index, element) {
 		if (element.value != 0) {
 			var id = element.id;
