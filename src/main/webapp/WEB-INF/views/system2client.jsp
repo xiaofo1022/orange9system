@@ -87,25 +87,23 @@
 		</div>
 	</div>
 	
-	<div class="order-block">
-		<c:forEach items="${clientList}" var="client">
-			<div class="order-detail-block bd-blue">
-				<span>名称：<span class="oc-label">${client.clientName}</span></span>
-				<span>店铺：<a href="http://${client.clientShopLink}" target="_blank">${client.clientShopName}</a></span>
-				<span>电话：<span class="oc-label">${client.clientPhone}</span></span>
-				<span>邮箱：<span class="oc-label">${client.clientEmail}</span></span>
-				<c:if test="${client.clientRemark != null && !client.clientRemark.equals('')}">
-					<br/>
-					<span>备注：<span class="oc-label">${client.clientRemark}</span></span>
-				</c:if>
+	<c:forEach items="${clientList}" var="client">
+		<div class="order-block">
+			<span>名称：<span class="oc-label">${client.clientName}</span></span>
+			<span>店铺：<a href="http://${client.clientShopLink}" target="_blank">${client.clientShopName}</a></span>
+			<span>电话：<span class="oc-label">${client.clientPhone}</span></span>
+			<span>邮箱：<span class="oc-label">${client.clientEmail}</span></span>
+			<c:if test="${client.clientRemark != null && !client.clientRemark.equals('')}">
 				<br/>
-				<button class="btn btn-danger btn-xs fright" onclick="deleteClient(${client.id})">删除</button>
-				<button class="btn btn-info btn-xs fright" style="margin-right:10px;"
-					onclick="showUpdateClientWindow(${client.id}, '${client.clientName}', '${client.clientPhone}', '${client.clientEmail}', '${client.clientShopName}', '${client.clientShopLink}', '${client.clientRemark}')">编辑</button>
-				<div class="clear"></div>
-			</div>
-		</c:forEach>
-	</div>
+				<span>备注：<span class="oc-label">${client.clientRemark}</span></span>
+			</c:if>
+			<br/>
+			<button class="btn btn-danger btn-xs fright" onclick="deleteClient(${client.id})">删除</button>
+			<button class="btn btn-info btn-xs fright" style="margin-right:10px;"
+				onclick="showUpdateClientWindow(${client.id}, '${client.clientName}', '${client.clientPhone}', '${client.clientEmail}', '${client.clientShopName}', '${client.clientShopLink}', '${client.clientRemark}')">编辑</button>
+			<div class="clear"></div>
+		</div>
+	</c:forEach>
 </div>
 </div>
 <script src="<c:url value='/js/svg/classie.js'/>"></script>

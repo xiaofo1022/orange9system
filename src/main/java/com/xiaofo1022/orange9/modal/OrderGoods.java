@@ -9,9 +9,11 @@ public class OrderGoods {
 	private int id;
 	@Column("ORDER_ID")
 	private int orderId;
+	@Column(value="ORDER_ID", isOrderNo=true)
+	private String orderNo;
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
-	@Column(value="INSERT_DATETIME", isFormatDatetime=true)
+	@Column(value="INSERT_DATETIME", isFormatDate=true)
 	private String insertDatetimeLabel;
 	@Column("UPDATE_DATETIME")
 	private Date updateDatetime;
@@ -43,6 +45,7 @@ public class OrderGoods {
 	private String remark;
 	private String expressNo;
 	private String expressCompany;
+	private int goodsMethod;
 	
 	public int getId() {
 		return id;
@@ -163,5 +166,17 @@ public class OrderGoods {
 	}
 	public void setAllCount(int allCount) {
 		this.allCount = allCount;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+	public int getGoodsMethod() {
+		return goodsMethod;
+	}
+	public void setGoodsMethod(int goodsMethod) {
+		this.goodsMethod = goodsMethod;
 	}
 }

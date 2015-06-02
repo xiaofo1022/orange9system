@@ -23,6 +23,7 @@ import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
 import com.xiaofo1022.orange9.thread.SaveTransferImageThread;
+import com.xiaofo1022.orange9.thread.TaskExecutor;
 import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
@@ -34,6 +35,8 @@ public class OrderTransferController {
 	private OrderDao orderDao;
 	@Autowired
 	private OrderStatusDao orderStatusDao;
+	@Autowired
+	private TaskExecutor taskExecutor;
 	
 	@RequestMapping(value = "/getOrderList", method = RequestMethod.GET)
 	@ResponseBody
@@ -59,8 +62,7 @@ public class OrderTransferController {
 		orderTransferDao.insertOrderTransferImageData(transferImageData);
 		String serverPath = request.getSession().getServletContext().getRealPath("/");
 		transferImageData.setServerPath(serverPath);
-		Thread thread = new Thread(new SaveTransferImageThread(transferImageData));
-		thread.start();
+		taskExecutor.execute(new SaveTransferImageThread(transferImageData));
 		return new SuccessResponse("Add Transfer Image Data Success");
 	}
 	

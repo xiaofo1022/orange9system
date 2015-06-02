@@ -12,6 +12,7 @@ import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.Broker;
 import com.xiaofo1022.orange9.modal.Name;
 import com.xiaofo1022.orange9.modal.Order;
+import com.xiaofo1022.orange9.modal.OrderNo;
 import com.xiaofo1022.orange9.modal.OrderStatus;
 import com.xiaofo1022.orange9.util.DatetimeUtil;
 
@@ -80,5 +81,9 @@ public class OrderDao {
 		} else {
 			return DatetimeUtil.getDatetimeDiff(order.getInsertDatetime(), new Date());
 		}
+	}
+	
+	public List<OrderNo> getOrderNoList() {
+		return commonDao.query(OrderNo.class, "SELECT ID FROM ORDERS ORDER BY ID");
 	}
 }

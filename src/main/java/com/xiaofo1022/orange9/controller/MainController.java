@@ -137,11 +137,8 @@ public class MainController {
 	
 	@RequestMapping(value="/orderGoods", method=RequestMethod.GET)
 	public String system2ordergoods(ModelMap modelMap) {
-		List<Order> orderList = orderDao.getOrderList();
-		for (Order order : orderList) {
-			order.setOrderGoodsList(orderGoodsDao.getOrderGoodsList(order.getId()));
-		}
-		modelMap.addAttribute("orderList", orderList);
+		modelMap.addAttribute("orderNoList", orderDao.getOrderNoList());
+		modelMap.addAttribute("orderGoodsList", orderGoodsDao.getOrderGoodsList());
 		return "system2ordergoods";
 	}
 	

@@ -49,6 +49,18 @@ div.hidden {
 	border-radius:0;
 }
 
+.receive-goods-btn {
+	position:absolute;
+	left:10px;
+	top:60px;
+}
+
+.deliver-goods-btn {
+	position:absolute;
+	left:10px;
+	top:100px;
+}
+
 .fleft {
 	float: left;
 }
@@ -193,3 +205,16 @@ a.logout {
 a.logout:hover {
 	cursor:pointer;
 }
+
+.gray-border {
+	border:1px solid #C4C4C4;
+}
+
+.clearfix:after { 
+    visibility: hidden; 
+    display: block; 
+    font-size: 0; 
+    content: ""; 
+    clear: both; 
+    height: 0; 
+} 

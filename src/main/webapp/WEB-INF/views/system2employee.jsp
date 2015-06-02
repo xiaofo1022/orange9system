@@ -12,6 +12,7 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/sidebar/component.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/progress/style.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/progress/number-pb.css'/>" />
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/crop/style.css'/>" />
 <script src="<c:url value='/js/jquery-1.11.2.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <script src="<c:url value='/js/jquery-ui.js'/>"></script>
@@ -20,10 +21,14 @@
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
 <script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
 <script src="<c:url value='/js/validation/validator.js'/>"></script>
+<script src="<c:url value='/js/crop/cropbox.js'/>"></script>
+<script src="<c:url value='/js/crop/init.js'/>"></script>
 </head>
 <body>
 <div id="st-container" class="st-container">
 <div class="st-pusher">
+	<jsp:include page="system2header.jsp" flush="true"/>
+	
 	<jsp:include page="system2sidebar.jsp" flush="true"/>
 	
 	<div id="st-trigger-effects">
@@ -32,11 +37,39 @@
 		</button>
 	</div>
 	
-	<div style="text-align:center;">
-		<p class="login-header"><span>ORANGE</span> 9 SYSTEM</p>
-	</div>
-	
 	<button class="btn btn-warning btn-add-employee" onclick="showAddWindow()">添加员工</button>
+	
+	<div id="uploadHeader" class="modal fade text-left" style="z-index:9999;" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" style="width:648px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">上传头像</h4>
+				</div>
+				<div class="modal-body clearfix">
+					<div class="imageBox">
+						<div class="thumbBox"></div>
+						<div class="spinner" style="display: none">Loading...</div>
+					</div>
+					<div class="action"> 
+						<div class="new-contentarea tc">
+							<a href="javascript:void(0)" class="upload-img">
+								<label for="upload-file">上传图像</label>
+							</a>
+							<input type="file" class="" name="upload-file" id="upload-file" />
+						</div>
+						<input type="button" id="btnCrop"  class="Btnsty_peyton" value="裁切">
+						<input type="button" id="btnZoomIn" class="Btnsty_peyton" value="+"  >
+						<input type="button" id="btnZoomOut" class="Btnsty_peyton" value="-" >
+					</div>
+					<div class="cropped"></div>
+				</div>
+				<div class="modal-footer">
+					<button id="btnUploadHeader" type="button" class="btn btn-primary" onclick="setHeaderSelected()">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 	<!-- Add Employee Modal -->
 	<div id="addEmployee" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
@@ -50,16 +83,17 @@
 					<sf:form id="addEmployeeForm" modelAttribute="employee" class="form-horizontal" method="post">
 						<input type="hidden" name="id" id="id"/>
 						<div id="fg-header" class="form-group">
-							<label class="col-sm-2 control-label" for="i-upload-header">上传头像</label>
-							<div class="col-sm-4">
+							<label class="col-sm-2 control-label">上传头像</label>
+							<div class="col-sm-8 clearfix">
 								<input type="hidden" name="header" id="header"/>
-								<input class="btn btn-primary" type="file" id="i-upload-header"/>
+								<img id="selected-header" style="width:128px;" src="<c:url value='/images/header/gray_blank.jpg'/>"/>
+								<button class="btn btn-primary" type="button" onclick="showUploadHeaderModal()">上传</button>
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label" for="i-name">称呼</label>
 							<div class="col-sm-4">
-								<input type="text" class="form-control" maxlength="5" name="name" id="name"/>
+								<input type="text" class="form-control" maxlength="50" name="name" id="name"/>
 							</div>
 						</div>
 						<div class="form-group">
@@ -150,7 +184,22 @@
 <script src="<c:url value='/js/util/base64.js'/>"></script>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
-	var headerBase64 = new Base64("i-upload-header", "header");
+	function setHeaderSelected() {
+		$("#uploadHeader").modal("hide");
+		var crop = $("#crop-header");
+		if (crop && crop.length > 0) {
+			var cropsrc = crop.attr("src");
+			$("#selected-header").attr("src", cropsrc);
+			var base64Data = cropsrc.split(",")[1];
+			$("#header").val(base64Data);
+		}
+	}
+
+	function showUploadHeaderModal() {
+		$("#uploadHeader").modal("show");
+	}
+
+	//var headerBase64 = new Base64("i-upload-header", "header");
 	var now = new Date();
 	
 	createCardYearMonthSelect();
@@ -322,7 +371,7 @@
 	function submitCallback(response) {
 		if (response.status == "success") {
 			$("#addEmployee").modal("hide");
-			getUserList();
+			location.reload(true);
 		} else {
 			alert(response.msg);
 		}

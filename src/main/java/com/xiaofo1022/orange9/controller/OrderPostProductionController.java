@@ -28,6 +28,7 @@ import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
 import com.xiaofo1022.orange9.thread.SaveTransferImageThread;
+import com.xiaofo1022.orange9.thread.TaskExecutor;
 import com.xiaofo1022.orange9.util.RequestUtil;
 import com.xiaofo1022.orange9.util.ZipUtil;
 
@@ -41,6 +42,8 @@ public class OrderPostProductionController {
 	private OrderHistoryDao orderHistoryDao;
 	@Autowired
 	private OrderStatusDao orderStatusDao;
+	@Autowired
+	private TaskExecutor taskExecutor;
 	
 	@RequestMapping(value = "/setFixSkinDone/{imageId}", method = RequestMethod.POST)
 	@ResponseBody
@@ -76,8 +79,7 @@ public class OrderPostProductionController {
 		transferImageData.setServerPath(serverPath);
 		SaveTransferImageThread imageThread = new SaveTransferImageThread(transferImageData);
 		imageThread.setIsFixedImage(true);
-		Thread thread = new Thread(imageThread);
-		thread.start();
+		taskExecutor.execute(imageThread);
 		return new SuccessResponse("Upload Fixed Image Data Success");
 	}
 	
@@ -90,8 +92,7 @@ public class OrderPostProductionController {
 		transferImageData.setServerPath(serverPath);
 		SaveTransferImageThread imageThread = new SaveTransferImageThread(transferImageData);
 		imageThread.setIsFixedImage(true);
-		Thread thread = new Thread(imageThread);
-		thread.start();
+		taskExecutor.execute(imageThread);
 		return new SuccessResponse("Reupload Fixed Image Data Success");
 	}
 	

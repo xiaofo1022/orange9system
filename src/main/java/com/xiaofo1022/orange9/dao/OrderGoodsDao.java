@@ -17,7 +17,7 @@ public class OrderGoodsDao {
 	public void insertReceiveOrderGoods(OrderGoods orderGoods) {
 		Date now = new Date();
 		commonDao.insert("INSERT INTO ORDER_GOODS (ORDER_ID, RECEIVE_EXPRESS_NO, RECEIVE_EXPRESS_COMPANY, INSERT_DATETIME, UPDATE_DATETIME, COAT_COUNT, PANTS_COUNT, JUMPSUITS_COUNT, SHOES_COUNT, BAG_COUNT, HAT_COUNT, OTHER_COUNT, REMARK) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-				orderGoods.getOrderId(), orderGoods.getExpressNo(), orderGoods.getExpressCompany(), now, now, orderGoods.getCoatCount(), orderGoods.getPantsCount(), orderGoods.getJumpsuitsCount(), orderGoods.getShoesCount(), orderGoods.getBagCount(), orderGoods.getHatCount(), orderGoods.getOtherCount(), orderGoods.getRemark());
+				orderGoods.getOrderId(), orderGoods.getExpressNo(), orderGoods.getExpressCompany(), orderGoods.getInsertDatetime(), now, orderGoods.getCoatCount(), orderGoods.getPantsCount(), orderGoods.getJumpsuitsCount(), orderGoods.getShoesCount(), orderGoods.getBagCount(), orderGoods.getHatCount(), orderGoods.getOtherCount(), orderGoods.getRemark());
 	}
 	
 	public void insertDeliverOrderGoods(OrderGoods orderGoods) {
@@ -66,6 +66,10 @@ public class OrderGoodsDao {
 	
 	public List<OrderGoods> getOrderGoodsList(int orderId) {
 		return commonDao.query(OrderGoods.class, "SELECT * FROM ORDER_GOODS WHERE ORDER_ID = ? ORDER BY ID DESC", orderId);
+	}
+	
+	public List<OrderGoods> getOrderGoodsList() {
+		return commonDao.query(OrderGoods.class, "SELECT * FROM ORDER_GOODS ORDER BY INSERT_DATETIME DESC");
 	}
 	
 	public void updateOrderGoodsId(int orderId, int orderGoodsId) {
