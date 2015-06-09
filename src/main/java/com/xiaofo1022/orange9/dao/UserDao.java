@@ -17,8 +17,8 @@ public class UserDao {
 	public void insertUser(User user) {
 		Date now = new Date();
 		int id = commonDao.insert(
-			"INSERT INTO USER (NAME, ROLE_ID, ACCOUNT, PASSWORD, SALARY, PERFORMANCE_PAY, HEADER, BOSS_ID, INSERT_DATETIME, UPDATE_DATETIME, PHONE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-			user.getName(), user.getRoleId(), user.getAccount(), user.getPassword(), user.getSalary(), user.getPerformancePay(), user.getHeader(), user.getBossId(), now, now, user.getPhone());
+			"INSERT INTO USER (NAME, ROLE_ID, ACCOUNT, PASSWORD, SALARY, PERFORMANCE_PAY, HEADER, BOSS_ID, INSERT_DATETIME, UPDATE_DATETIME, PHONE, IS_ADMIN) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+			user.getName(), user.getRoleId(), user.getAccount(), user.getPassword(), user.getSalary(), user.getPerformancePay(), user.getHeader(), user.getBossId(), now, now, user.getPhone(), user.getIsAdmin());
 		user.setId(id);
 	}
 	
@@ -51,8 +51,8 @@ public class UserDao {
 	}
 	
 	public void updateUser(User user) {
-		commonDao.update("UPDATE USER SET UPDATE_DATETIME = ?, NAME = ?, ROLE_ID = ?, PHONE = ?, SALARY = ?, PERFORMANCE_PAY = ? WHERE ID = ?",
-			new Date(), user.getName(), user.getRoleId(), user.getPhone(), user.getSalary(), user.getPerformancePay(), user.getId());
+		commonDao.update("UPDATE USER SET UPDATE_DATETIME = ?, NAME = ?, ROLE_ID = ?, PHONE = ?, SALARY = ?, PERFORMANCE_PAY = ?, IS_ADMIN = ? WHERE ID = ?",
+			new Date(), user.getName(), user.getRoleId(), user.getPhone(), user.getSalary(), user.getPerformancePay(), user.getIsAdmin(), user.getId());
 	}
 	
 	public void deleteUser(int userId) {

@@ -115,6 +115,13 @@
 								<input type="number" id="salary" name="salary" value="1500" min="1000" max="10000" step="100" class="form-control"/>
 							</div>
 						</div>
+						<div class="checkbox">
+							<label class="col-sm-2 control-label"></label>
+							<label style="padding-left:25px;">
+								<input type="checkbox" id="cb-admin" name="cb-admin" onclick="setAdminSelected()"/>管理员权限
+								<input type="hidden" id="isAdmin" name="isAdmin"/>
+							</label>
+						</div>
 						<input type="hidden" name="password" value="666666"/>
 					</sf:form>
 				</div>
@@ -184,6 +191,12 @@
 <script src="<c:url value='/js/util/base64.js'/>"></script>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
+	function setAdminSelected() {
+		var isSelected = $("#cb-admin")[0].checked;
+		var isAdmin = isSelected ? 1 : 0;
+		$("#isAdmin").val(isAdmin);
+	}
+
 	function setHeaderSelected() {
 		$("#uploadHeader").modal("hide");
 		var crop = $("#crop-header");
@@ -301,6 +314,11 @@
 			if (formNode) {
 				formNode.val(user[key]);
 			}
+		}
+		if (parseInt(user["isAdmin"]) == 1) {
+			$("#cb-admin").attr("checked", true);
+		} else {
+			$("#cb-admin").attr("checked", false);
 		}
 		$("#addEmployee").modal("show");
 	}
