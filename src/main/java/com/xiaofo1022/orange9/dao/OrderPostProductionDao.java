@@ -32,31 +32,17 @@ public class OrderPostProductionDao {
 	
 	//private static final int DESIGNER_MAX_IMAGE = 500;
 	
+	public void allotImageByOrder(int orderId) {
+		
+	}
+	
 	public void allotImage(int orderId) {
-		List<User> designerList = userDao.getUserListByRoleId(RoleConst.DISIGNER_ID);
-		if (designerList != null && designerList.size() > 0) {
-			List<OrderTransferImageData> imageList = orderTransferDao.getSelectedTransferImageDataList(orderId);
-			if (imageList != null && imageList.size() > 0) {
-				int avgImageCount = (int) imageList.size() / designerList.size();
-				if (avgImageCount == 0) {
-					avgImageCount = 1;
-				}
-				int addImageCount = 0;
-				int designerIndex = 0;
-				User designer = designerList.get(designerIndex);
-				Date now = new Date();
-				for (OrderTransferImageData imageData : imageList) {
-					this.insertPostProductionImage(OrderConst.TABLE_ORDER_FIX_SKIN, orderId, designer.getId(), imageData.getId(), now);
-					addImageCount++;
-					if (addImageCount == avgImageCount) {
-						addImageCount = 0;
-						designerIndex++;
-						if (designerIndex > designerList.size() - 1) {
-							designerIndex = designerList.size() - 1;
-						}
-						designer = designerList.get(designerIndex);
-					}
-				}
+		int idleUserId = this.getIdleUserId(OrderConst.TABLE_ORDER_FIX_SKIN);
+		List<OrderTransferImageData> imageList = orderTransferDao.getSelectedTransferImageDataList(orderId);
+		if (imageList != null && imageList.size() > 0) {
+			Date now = new Date();
+			for (OrderTransferImageData imageData : imageList) {
+				this.insertPostProductionImage(OrderConst.TABLE_ORDER_FIX_SKIN, orderId, idleUserId, imageData.getId(), now);
 			}
 		}
 	}
@@ -149,14 +135,19 @@ public class OrderPostProductionDao {
 		return fixSkinCount.getCnt() + fixBackgroundCount.getCnt() + cutLiquifyCount.getCnt();
 	}
 	
-	public int getIdleUserId() {
+	public int getUserPostCount(String tableName, int userId) {
+		Count count = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + tableName + " WHERE OPERATOR_ID = ? AND IS_DONE = 0", userId);
+		return count.getCnt();
+	}
+	
+	public int getIdleUserId(String tableName) {
 		List<User> designerList = userDao.getUserListByRoleId(RoleConst.DISIGNER_ID);
 		int minUserId = 0;
 		if (designerList != null && designerList.size() > 0) {
 			int minCount = 0;
 			for (int i = 0; i < designerList.size(); i++) {
 				User designer = designerList.get(i);
-				int count = this.getUserAllPostCount(designer.getId());
+				int count = this.getUserPostCount(tableName, designer.getId());
 				if (count < minCount || minCount == 0) {
 					minCount = count;
 					minUserId = designer.getId();
@@ -167,7 +158,7 @@ public class OrderPostProductionDao {
 	}
 	
 	public void allotPostProduction(String tableName, List<OrderPostProduction> postProductionList) {
-		int idleUserId = this.getIdleUserId();
+		int idleUserId = this.getIdleUserId(tableName);
 		if (idleUserId != 0) {
 			Date now = new Date();
 			for (OrderPostProduction postProduction : postProductionList) {

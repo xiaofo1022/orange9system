@@ -28,22 +28,24 @@
 		</button>
 	</div>
 	
-	<div id="blink1-block" class="detail-bottom-block post-pic-block">
-		<c:forEach items="${postProduction.imageDataList}" var="imageData">
-			<div class="post-pic-border">
-				<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
-				<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
-				<p>
-					<a href="<c:url value='/order/orderDetail/${imageData.orderId}'/>" target="_blank">${imageData.orderNo}</a>
-					<a href='${user.picbaseurl}/downloadOriginalPicture/${imageData.orderId}/${imageData.fileName}'>下载</a>
-					<a onclick="completePostProduction(${imageData.id}, ${imageData.orderId}, '${imageData.fileName}')">完成</a>
-				</p>
-				<div class="clear"></div>
-			</div>
-		</c:forEach>
-		<div class="clear"></div>
-	</div>
-	<input class="hidden" type="file" id="complete-post-production"/>
+	<c:forEach items="${postProductionList}" var="postProduction">
+		<div style="margin-left:20px;margin-top:10px;margin-bottom:-10px;">
+			单号：<a href="<c:url value='/order/orderDetail/${postProduction.orderId}'/>" target="_blank">${postProduction.orderNo}</a>
+			<button class="btn btn-info" onclick="downloadZip(${postProduction.orderId})">打包下载</button>
+			<button class="btn btn-success" onclick="completePostProduction(${postProduction.orderId})">批量上传</button>
+		</div>
+		<div id="blink1-block" class="detail-bottom-block post-pic-block">
+			<c:forEach items="${postProduction.imageDataList}" var="imageData">
+				<div class="post-pic-border">
+					<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+					<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
+					<div class="clear"></div>
+				</div>
+			</c:forEach>
+			<div class="clear"></div>
+		</div>
+	</c:forEach>
+	<input class="hidden" multiple="multiple" type="file" id="complete-post-production"/>
 	<input type="hidden" id="picbaseurl" value="${user.picbaseurl}"/>
 </div>
 </div>
@@ -51,42 +53,40 @@
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
-	var compId;
 	var compOrderId;
-	var compFileName;
-	var reader = new FileReader();
-	
-	reader.onload = function(event) {
-		var base64Data = event.target.result.split(",")[1];
-		AjaxUtil.post("<c:url value='/across/fixskin'/>", {orderId:compOrderId, fileName:compFileName, base64Data:base64Data}, function(data) {
-			if (data) {
-				$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + compId + "'/>", null, function(data, status) {
-					if (data.status == "success") {
-						location.reload(true);
-					}
-				});
-			}
-		});
-	};
 	
 	$("#complete-post-production").bind("change", function(event) {
-		var img = event.target.files[0];
-		if (!img) {
-			return;
+		var files = event.target.files;
+		for (var index in files) {
+			var file = files[index];
+			var frontName = file.name.split(".")[0];
+			var reader = new FileReader();
+			reader.frontName = frontName;
+			reader.onload = function(event) {
+				var base64Data = event.target.result.split(",")[1];
+				AjaxUtil.post("<c:url value='/across/fixskin'/>", {orderId:compOrderId, fileName:this.frontName, base64Data:base64Data}, function(data) {
+					if (data) {
+						/*
+						$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + compId + "'/>", null, function(data, status) {
+							if (data.status == "success") {
+								location.reload(true);
+							}
+						});
+						*/
+					}
+				});
+			};
+			reader.readAsDataURL(file);
 		}
-		var frontName = img.name.split(".")[0];
-		if (frontName != compFileName) {
-			alert("应选择图片" + compFileName + ".jpg");
-			return;
-		}
-		reader.readAsDataURL(img);
 	});
 	
-	function completePostProduction(id, orderId, fileName) {
-		compId = id;
+	function completePostProduction(orderId) {
 		compOrderId = orderId;
-		compFileName = fileName;
 		$("#complete-post-production").click();
+	}
+	
+	function downloadZip(orderId) {
+		window.open($("#picbaseurl").val() + "/downloadOriginalPicture/" + orderId);
 	}
 </script>
 </body>

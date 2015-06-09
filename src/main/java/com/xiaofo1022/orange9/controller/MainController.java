@@ -177,9 +177,7 @@ public class MainController {
 			modelMap.addAttribute("fixSkinList", postProductionList);
 			return "system2fixskin";
 		} else {
-			if (postProductionList != null && postProductionList.size() > 0) {
-				modelMap.addAttribute("postProduction", postProductionList.get(0));
-			}
+			modelMap.addAttribute("postProductionList", postProductionList);
 			return "system2designerfixskin";
 		}
 	}
