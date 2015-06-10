@@ -20,6 +20,12 @@ public class OrderTransferImage {
 	private int operatorId;
 	@Column("IS_DONE")
 	private int isDone;
+	@Column("ORDER_IMAGE_FIX_SKIN")
+	private int orderImageFixSkin;
+	@Column("ORDER_IMAGE_FIX_BACKGROUND")
+	private int orderImageFixBackground;
+	@Column("ORDER_IMAGE_CUT_LIQUIFY")
+	private int orderImageCutLiquify;
 	@JoinTable(tableName="USER", joinField="operatorId")
 	private User operator;
 	
@@ -70,5 +76,23 @@ public class OrderTransferImage {
 	}
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
+	}
+	public int getOrderImageFixSkin() {
+		return orderImageFixSkin;
+	}
+	public void setOrderImageFixSkin(int orderImageFixSkin) {
+		this.orderImageFixSkin = orderImageFixSkin;
+	}
+	public int getOrderImageFixBackground() {
+		return orderImageFixBackground;
+	}
+	public void setOrderImageFixBackground(int orderImageFixBackground) {
+		this.orderImageFixBackground = orderImageFixBackground;
+	}
+	public int getOrderImageCutLiquify() {
+		return orderImageCutLiquify;
+	}
+	public void setOrderImageCutLiquify(int orderImageCutLiquify) {
+		this.orderImageCutLiquify = orderImageCutLiquify;
 	}
 }

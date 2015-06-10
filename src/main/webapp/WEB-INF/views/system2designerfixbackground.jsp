@@ -34,6 +34,7 @@
 			<c:if test="${user.isAdmin == 1 || user.id == postProduction.operatorId}">
 				<button id="btn-confirm-${postProduction.orderId}" class="btn btn-info" onclick="downloadZip(${postProduction.orderId})">打包下载</button>
 				<button id="btn-upload-${postProduction.orderId}" class="btn btn-success" onclick="completePostProduction(${postProduction.orderId})">批量上传</button>
+				<button class="btn btn-warning" onclick="nextStep(${postProduction.orderId})">修图完成</button>
 			</c:if>
 		</div>
 		<div id="blink1-block" class="detail-bottom-block post-pic-block">
@@ -106,6 +107,14 @@
 	
 	function downloadZip(orderId) {
 		window.open("<c:url value='/picture//downloadFixSkinPicture/" + orderId + "'/>");
+	}
+	
+	function nextStep(orderId) {
+		$.post("<c:url value='/orderPostProduction/setFixBackgroundNextStep/" + orderId + "'/>", null, function(data, status) {
+			if (data.status == "success") {
+				location.reload(true);
+			}
+		});
 	}
 </script>
 </body>
