@@ -28,22 +28,26 @@
 		</button>
 	</div>
 	
-	<div id="blink1-block" class="detail-bottom-block post-pic-block">
-		<c:forEach items="${postProduction.imageDataList}" var="imageData">
-			<div class="post-pic-border">
-				<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
-				<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
-				<p>
-					<a href="<c:url value='/order/orderDetail/${imageData.orderId}'/>" target="_blank">${imageData.orderNo}</a>
-					<a href='${user.picbaseurl}/downloadFixBackgroundPicture/${imageData.orderId}/${imageData.fileName}'>下载</a>
-					<a onclick="completePostProduction(${imageData.id}, ${imageData.orderId}, '${imageData.fileName}')">完成</a>
-				</p>
-				<div class="clear"></div>
-			</div>
-		</c:forEach>
-		<div class="clear"></div>
-	</div>
-	<input class="hidden" type="file" id="complete-post-production"/>
+	<c:forEach items="${postProductionList}" var="postProduction">
+		<div style="margin-left:20px;margin-top:10px;margin-bottom:-10px;">
+			单号：<a href="<c:url value='/order/orderDetail/${postProduction.orderId}'/>" target="_blank">${postProduction.orderNo}</a>
+			<c:if test="${user.isAdmin == 1 || user.id == postProduction.operatorId}">
+				<button id="btn-confirm-${postProduction.orderId}" class="btn btn-info" onclick="downloadZip(${postProduction.orderId})">打包下载</button>
+				<button id="btn-upload-${postProduction.orderId}" class="btn btn-success" onclick="completePostProduction(${postProduction.orderId})">批量上传</button>
+			</c:if>
+		</div>
+		<div id="blink1-block" class="detail-bottom-block post-pic-block">
+			<c:forEach items="${postProduction.imageDataList}" var="imageData">
+				<div class="post-pic-border">
+					<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+					<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
+					<div class="clear"></div>
+				</div>
+			</c:forEach>
+			<div class="clear"></div>
+		</div>
+	</c:forEach>
+	<input class="hidden" multiple="multiple" type="file" id="complete-post-production"/>
 	<input type="hidden" id="picbaseurl" value="${user.picbaseurl}"/>
 </div>
 </div>
@@ -51,42 +55,57 @@
 <script src="<c:url value='/js/sidebar/sidebarEffects.js'/>"></script>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
-	var compId;
 	var compOrderId;
-	var compFileName;
-	var reader = new FileReader();
-	
-	reader.onload = function(event) {
-		var base64Data = event.target.result.split(",")[1];
-		AjaxUtil.post("<c:url value='/orderPostProduction/uploadFixedImage'/>", {orderId:compOrderId, fileName:compFileName, imageData:base64Data}, function(data) {
-			if (data.status == "success") {
-				$.post("<c:url value='/orderPostProduction/setCutLiquifyDone/" + compOrderId + "/" + compId + "'/>", null, function(data, status) {
-					if (data.status == "success") {
-						location.reload(true);
-					}
-				});
-			}
-		});
-	};
+	var uploadButtonId;
+	var confirmButtonId;
 	
 	$("#complete-post-production").bind("change", function(event) {
-		var img = event.target.files[0];
-		if (!img) {
-			return;
+		$("#" + uploadButtonId).attr("disabled", true);
+		$("#" + confirmButtonId).attr("disabled", true);
+		$("#" + uploadButtonId).text("上传中...");
+		$("#" + confirmButtonId).text("上传中...");
+		var orderId = compOrderId;
+		var files = event.target.files;
+		var completeCount = 0;
+		for (var index in files) {
+			var file = files[index];
+			if (file != null && file.name != null && file.name != undefined) {
+				var frontName = file.name.split(".")[0];
+				var reader = new FileReader();
+				reader.frontName = frontName;
+				reader.onload = function(event) {
+					var base64Data = event.target.result.split(",")[1];
+					var frontName = this.frontName;
+					AjaxUtil.post("<c:url value='/orderPostProduction/uploadFixedImage'/>", {orderId:orderId, fileName:this.frontName, imageData:base64Data}, function(data) {
+						if (data) {
+							$.post("<c:url value='/orderPostProduction/setCutLiquifyDone/" + orderId + "/" + frontName + "'/>", null, function(data, status) {
+								if (data.status == "success") {
+									completeCount++;
+									if (completeCount == files.length) {
+										location.reload(true);
+									}
+								}
+							});
+						}
+					});
+				};
+				try {
+					reader.readAsDataURL(file);
+				} catch (exp) {
+				}
+			}
 		}
-		var frontName = img.name.split(".")[0];
-		if (frontName != compFileName) {
-			alert("应选择图片" + compFileName + ".jpg");
-			return;
-		}
-		reader.readAsDataURL(img);
 	});
 	
-	function completePostProduction(id, orderId, fileName) {
-		compId = id;
+	function completePostProduction(orderId) {
 		compOrderId = orderId;
-		compFileName = fileName;
+		uploadButtonId = "btn-upload-" + orderId;
+		confirmButtonId = "btn-confirm-" + orderId;
 		$("#complete-post-production").click();
+	}
+	
+	function downloadZip(orderId) {
+		window.open("<c:url value='/picture/downloadFixBackgroundPicture/" + orderId + "'/>");
 	}
 </script>
 </body>

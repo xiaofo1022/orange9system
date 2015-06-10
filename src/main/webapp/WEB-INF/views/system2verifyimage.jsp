@@ -39,19 +39,9 @@
 				<span style="color:#D9534F;">${orderVerify.deniedCount}</span>
 				待审核
 				<span style="color:#31B0D5;">${orderVerify.verifyCount}</span>
-				<c:choose>
-					<c:when test="${orderVerify.operatorId != 0}">
-						<img src="${orderVerify.operator.header}"/><span class="ml10">${orderVerify.operator.name}</span>
-						<c:if test="${orderVerify.operatorId == user.id}">
-							<button class="btn btn-info ml10" onclick="startVerify(${orderVerify.orderId})">开始审核</button>
-						</c:if>
-					</c:when>
-					<c:otherwise>
-						<c:if test="${user.isAdmin == 1}">
-							<button class="btn btn-info" onclick="showSetVerifierWindow(${orderVerify.orderId})">指定</button>
-						</c:if>
-					</c:otherwise>
-				</c:choose>
+				<c:if test="${user.isAdmin == 1}">
+					<button class="btn btn-info ml10" onclick="startVerify(${orderVerify.orderId})">开始审核</button>
+				</c:if>
 			</p>
 		</div>
 	</c:forEach>

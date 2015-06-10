@@ -92,3 +92,15 @@
 #zoom .picture-selected {
 	border:3px solid #F0AD4E;
 }
+
+#zoom .picture-button {
+	position:absolute;
+	top:10px;
+	right:15px;
+	font-size:30px;
+	color:#D1D1D1;
+}
+
+#zoom .picture-button-selected {
+	color:#F0AD4E;
+}

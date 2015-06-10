@@ -370,7 +370,7 @@
 		} else {
 			colHtml += "下午：";
 		}
-		colHtml += ("<a href='<c:url value='/order/orderDetail/" + data.id + "'/>'>" + data.orderNo + "</a></p>");
+		colHtml += ("<a href='<c:url value='/order/orderDetail/" + data.id + "'/>' target='_blank'>" + data.orderNo + "</a></p>");
 		colHtml += ("<p>状态：<span style='color:#5CB85C;'>[" + data.orderStatus.name + "]</span></p>");
 		if (data.photographer) {
 			colHtml += ("<p>摄影师：<img src='" + data.photographer.header + "'/>" + data.photographer.name + "</p>");

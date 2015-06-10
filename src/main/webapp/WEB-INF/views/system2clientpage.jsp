@@ -40,6 +40,16 @@
 						</c:forEach>
 					</select>
 					${order.orderNo} 拍摄日期：${order.shootDateLabel} ${order.shootHalf}
+					<c:choose>
+						<c:when test="${order.status.equals('完成')}">
+							<button class="btn btn-info" onclick="downloadZip(${order.orderId})">打包下载</button>
+						</c:when>
+						<c:otherwise>
+							<c:if test="${order.status.equals('等待客户选片')}">
+								<button class="btn btn-success" onclick="submitSelectedPictures()">选片完成</button>
+							</c:if>
+						</c:otherwise>
+					</c:choose>
 				</h4>
 			</div>
 			<div class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
@@ -62,9 +72,6 @@
 					<c:choose>
 						<c:when test="${order.status.equals('完成')}">
 							<div id="blink2-block" class="detail-bottom-block">
-								<div>
-									<a href="<c:url value='/orderPostProduction/getFixedImageZipPackage/${order.orderId}'/>" target="_blank">打包下载</a>
-								</div>
 								<c:forEach items="${order.orderFixedImageDataList}" var="imageData">
 									<div class="pic-block photo-frame gallery">
 										<a id="client-pic-fixed-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>">
@@ -99,7 +106,7 @@
 					</c:choose>
 					<div id="blink3-block" class="detail-bottom-block hidden">
 						<div id="message-block"></div>
-						<textarea id="client-message" rows="4" class="form-control"></textarea>
+						<textarea id="client-message" rows="4" class="form-control" style="margin-top:10px;"></textarea>
 						<button class="btn btn-warning fright" style="margin-top:10px;" onclick="addMessage()">留言</button>
 					</div>
 	      		</div>
@@ -129,8 +136,9 @@
 		var img = overlay.next();
 		var imgId = img.attr("id").replace("client-pic-", "");
 		var clientLabel = $("#client-pic-label-" + imgId);
-		if (overlay.hasClass("picture-selected")) {
-			overlay.removeClass("picture-selected");
+		var selectButton = $("#select-button");
+		if (selectButton.hasClass("picture-button-selected")) {
+			selectButton.removeClass("picture-button-selected");
 			removeSelectedPicture(imgId);
 			clientLabel.html("(" + imgId + ")");
 		} else {
@@ -140,12 +148,12 @@
 					isConfirmOverSelect = result;
 				}
 				if (isConfirmOverSelect) {
-					overlay.addClass("picture-selected");
+					selectButton.addClass("picture-button-selected");
 					selectedPictureIdList.push(imgId);
 					CHOSEN_MAX++;
 				}
 			} else {
-				overlay.addClass("picture-selected");
+				selectButton.addClass("picture-button-selected");
 				selectedPictureIdList.push(imgId);
 			}
 			clientLabel.html(clientLabel.text() + selectedLabel);
@@ -236,6 +244,10 @@
 	function changeOrder() {
 		var selectedOrderId = $("#order-list").val();
 		location.assign("<c:url value='/client/main/" + $("#clientId").val() + "/" + selectedOrderId + "'/>");
+	}
+	
+	function downloadZip(orderId) {
+		window.open("<c:url value='/orderPostProduction/getFixedImageZipPackage/" + orderId + "'/>");
 	}
 </script>
 </body>

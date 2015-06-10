@@ -35,52 +35,6 @@
 		</button>
 	</div>
 	
-	<div id="setConvertModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">要指定谁来导图呢？</h4>
-				</div>
-				<div class="modal-body">	
-					<div style="width:200px;">
-						<select id="convertorSelect" class="form-control">
-							<c:forEach items="${userList}" var="user">
-								<option value="${user.id}">${user.name}</option>
-							</c:forEach>
-						</select>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button id="btnSetTransfer" type="button" class="btn btn-primary" onclick="setConvert()">确定</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div id="setVerifyModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">要指定谁来审图呢？</h4>
-				</div>
-				<div class="modal-body">	
-					<div style="width:200px;">
-						<select id="verifySelect" class="form-control">
-							<c:forEach items="${userList}" var="user">
-								<option value="${user.id}">${user.name}</option>
-							</c:forEach>
-						</select>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button id="btnSetTransfer" type="button" class="btn btn-primary" onclick="setVerifier()">确定</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	
 	<div id="orderGoodsModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -242,32 +196,6 @@
 		</div>
 		<div class="order-detail-block bd-blue">
 			后期情况：
-			<span>导图：
-				<c:choose>
-					<c:when test="${orderDetail.orderStatus.name.equals('导图')}">
-						<c:choose>
-							<c:when test="${orderConvert == null}">
-								<c:if test="${user.isAdmin == 1}">
-									<button class="btn btn-info" onclick="showSetConvertWindow()">指定</button>
-								</c:if>
-							</c:when>
-							<c:otherwise>
-								<img src="${orderConvert.operator.header}"/><span class="oc-label">${orderConvert.operator.name}</span>
-							</c:otherwise>
-						</c:choose>
-					</c:when>
-					<c:otherwise>
-						<c:choose>
-							<c:when test="${orderConvert == null}">
-								<span class="oc-label">未开始</span>
-							</c:when>
-							<c:otherwise>
-								<img src="${orderConvert.operator.header}"/><span class="oc-label">${orderConvert.operator.name}</span>
-							</c:otherwise>
-						</c:choose>
-					</c:otherwise>
-				</c:choose>
-			</span>
 			<span>修皮肤及褶皱：
 				<c:choose>
 					<c:when test="${orderFixSkinList != null && orderFixSkinList.size() > 0}">
@@ -301,33 +229,6 @@
 					</c:when>
 					<c:otherwise>
 						<span class="oc-label">未开始</span>
-					</c:otherwise>
-				</c:choose>
-			</span>
-			<br/>
-			<span class="p-newrow">审图：
-				<c:choose>
-					<c:when test="${orderDetail.orderStatus.name.equals('等待审核')}">
-						<c:choose>
-							<c:when test="${orderVerifier == null}">
-								<c:if test="${user.isAdmin == 1}">
-									<button class="btn btn-info" onclick="showSetVerifierWindow()">指定</button>
-								</c:if>
-							</c:when>
-							<c:otherwise>
-								<img src="${orderVerifier.operator.header}"/><span class="oc-label">${orderVerifier.operator.name}</span>
-							</c:otherwise>
-						</c:choose>
-					</c:when>
-					<c:otherwise>
-						<c:choose>
-							<c:when test="${orderVerifier == null}">
-								<span class="oc-label">未开始</span>
-							</c:when>
-							<c:otherwise>
-								<img src="${orderVerifier.operator.header}"/><span class="oc-label">${orderVerifier.operator.name}</span>
-							</c:otherwise>
-						</c:choose>
 					</c:otherwise>
 				</c:choose>
 			</span>

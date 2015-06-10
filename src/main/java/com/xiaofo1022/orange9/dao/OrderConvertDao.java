@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.xiaofo1022.orange9.common.OrderStatusConst;
+import com.xiaofo1022.orange9.controller.PictureController;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderConvertImage;
@@ -18,6 +21,8 @@ public class OrderConvertDao {
 	private CommonDao commonDao;
 	@Autowired
 	private OrderTransferDao orderTransferDao;
+	@Autowired
+	private PictureController pictureController;
 	
 	public void insertOrderConvert(int orderId, int userId) {
 		Date now = new Date();
@@ -29,7 +34,7 @@ public class OrderConvertDao {
 		return commonDao.getFirst(OrderConvertImage.class, "SELECT * FROM ORDER_CONVERT_IMAGE WHERE ORDER_ID = ? AND IS_DONE = 0", orderId);
 	}
 	
-	public List<OrderConvertImage> getOrderConvertList() {
+	public List<OrderConvertImage> getOrderConvertList(HttpServletRequest request) {
 		List<OrderConvertImage> resultList = null;
 		List<Order> orderList = commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE STATUS_ID = ?", OrderStatusConst.CONVERT_IMAGE);
 		if (orderList != null && orderList.size() > 0) {
@@ -40,7 +45,7 @@ public class OrderConvertDao {
 					orderConvert = new OrderConvertImage();
 					orderConvert.setOrderId(order.getId());
 				} else {
-					orderConvert.setFileNames(orderTransferDao.getTransferImageNames(order.getId()));
+					orderConvert.setFileNames(pictureController.getUnuploadOriginalPictureName(order.getId(), request));
 				}
 				resultList.add(orderConvert);
 			}

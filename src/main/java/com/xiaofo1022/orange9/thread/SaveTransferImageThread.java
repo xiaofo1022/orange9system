@@ -43,17 +43,19 @@ public class SaveTransferImageThread implements Runnable {
 			BufferedInputStream fileIn = new BufferedInputStream(new ByteArrayInputStream(getImageBytes(transferImageData.getImageData())));
 			byte[] buf = new byte[1024];
 			File file = new File(dir + "\\" + transferImageData.getId() + ".jpg");
-			BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
-			while (true) {
-				int bytesIn = fileIn.read(buf, 0, 1024);
-				if (bytesIn == -1) {
-					break;
-				} else {
-					fileOut.write(buf, 0, bytesIn);
+			if (file != null && !file.exists()) {
+				BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
+				while (true) {
+					int bytesIn = fileIn.read(buf, 0, 1024);
+					if (bytesIn == -1) {
+						break;
+					} else {
+						fileOut.write(buf, 0, bytesIn);
+					}
 				}
+				fileOut.flush();
+				fileOut.close();
 			}
-			fileOut.flush();
-			fileOut.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -162,8 +162,8 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/convertImage", method=RequestMethod.GET)
-	public String system2convertimage(ModelMap modelMap) {
-		modelMap.addAttribute("orderConvertList", orderConvertDao.getOrderConvertList());
+	public String system2convertimage(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("orderConvertList", orderConvertDao.getOrderConvertList(request));
 		modelMap.addAttribute("userList", userDao.getUserList());
 		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.CONVERT_ID).getLimitMinutes());
 		return "system2convertimage";
@@ -173,43 +173,24 @@ public class MainController {
 	public String system2fixskin(HttpServletRequest request, ModelMap modelMap) {
 		int userId = RequestUtil.getLoginUserId(request);
 		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_SKIN, userId);
-		if (userId == 0) {
-			modelMap.addAttribute("fixSkinList", postProductionList);
-			return "system2fixskin";
-		} else {
-			modelMap.addAttribute("postProductionList", postProductionList);
-			return "system2designerfixskin";
-		}
+		modelMap.addAttribute("postProductionList", postProductionList);
+		return "system2designerfixskin";
 	}
 	
 	@RequestMapping(value="/fixBackground", method=RequestMethod.GET)
 	public String system2fixbackground(HttpServletRequest request, ModelMap modelMap) {
 		int userId = RequestUtil.getLoginUserId(request);
 		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_BACKGROUND, userId);
-		if (userId == 0) {
-			modelMap.addAttribute("postProductionList", postProductionList);
-			return "system2fixbackground";
-		} else {
-			if (postProductionList != null && postProductionList.size() > 0) {
-				modelMap.addAttribute("postProduction", postProductionList.get(0));
-			}
-			return "system2designerfixbackground";
-		}
+		modelMap.addAttribute("postProductionList", postProductionList);
+		return "system2designerfixbackground";
 	}
 	
 	@RequestMapping(value="/cutLiquify", method=RequestMethod.GET)
 	public String system2cutliquify(HttpServletRequest request, ModelMap modelMap) {
 		int userId = RequestUtil.getLoginUserId(request);
 		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY, userId);
-		if (userId == 0) {
-			modelMap.addAttribute("postProductionList", postProductionList);
-			return "system2cutliquify";
-		} else {
-			if (postProductionList != null && postProductionList.size() > 0) {
-				modelMap.addAttribute("postProduction", postProductionList.get(0));
-			}
-			return "system2designercutliquify";
-		}
+		modelMap.addAttribute("postProductionList", postProductionList);
+		return "system2designercutliquify";
 	}
 	
 	@RequestMapping(value="/verifyImage", method=RequestMethod.GET)

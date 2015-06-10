@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.OrderStatusConst;
+import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderTransferDao;
@@ -28,6 +30,7 @@ import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
 @RequestMapping("/orderTransfer")
+@Transactional
 public class OrderTransferController {
 	@Autowired
 	private OrderTransferDao orderTransferDao;
@@ -35,6 +38,8 @@ public class OrderTransferController {
 	private OrderDao orderDao;
 	@Autowired
 	private OrderStatusDao orderStatusDao;
+	@Autowired
+	private OrderConvertDao orderConvertDao;
 	@Autowired
 	private TaskExecutor taskExecutor;
 	
@@ -82,6 +87,7 @@ public class OrderTransferController {
 				orderTransferDao.setTransferImageSelected(id);
 			}
 		}
+		orderConvertDao.insertOrderConvert(orderId, 0);
 		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
 		return new SuccessResponse("Set Transfer Image Selected Success");
 	}
