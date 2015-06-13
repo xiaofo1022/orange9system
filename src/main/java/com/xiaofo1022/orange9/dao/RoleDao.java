@@ -16,4 +16,8 @@ public class RoleDao {
 	public List<Role> getRoleList() {
 		return commonDao.query(Role.class, "SELECT * FROM ROLE WHERE IS_SHOW = 1");
 	}
+	
+	public Role getRole(int roleId) {
+		return commonDao.getFirst(Role.class, "SELECT * FROM ROLE WHERE ID = ?", roleId);
+	}
 }

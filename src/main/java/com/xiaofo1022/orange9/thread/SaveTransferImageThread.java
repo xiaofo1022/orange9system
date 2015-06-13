@@ -43,7 +43,8 @@ public class SaveTransferImageThread implements Runnable {
 			BufferedInputStream fileIn = new BufferedInputStream(new ByteArrayInputStream(getImageBytes(transferImageData.getImageData())));
 			byte[] buf = new byte[1024];
 			File file = new File(dir + "\\" + transferImageData.getId() + ".jpg");
-			if (file != null && !file.exists()) {
+			// TODO Need to check repeat pic
+			if (file != null) {
 				BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
 				while (true) {
 					int bytesIn = fileIn.read(buf, 0, 1024);

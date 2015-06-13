@@ -1,5 +1,6 @@
 package com.xiaofo1022.orange9.modal;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +50,9 @@ public class User {
 	@SuppressWarnings("unused")
 	private int leaveCount;
 	private String picbaseurl;
+	private String loginTime;
+	
+	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public int getId() {
 		return id;
@@ -212,5 +216,11 @@ public class User {
 	}
 	public void setPicbaseurl(String picbaseurl) {
 		this.picbaseurl = picbaseurl;
+	}
+	public String getLoginTime() {
+		return loginTime;
+	}
+	public void setLoginTime(Date loginTime) {
+		this.loginTime = sdf.format(loginTime);
 	}
 }

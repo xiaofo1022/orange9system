@@ -1,6 +1,7 @@
 package com.xiaofo1022.orange9.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,9 @@ import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderGoodsDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderTimeLimitDao;
+import com.xiaofo1022.orange9.dao.OrderTransferDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
+import com.xiaofo1022.orange9.dao.RoleDao;
 import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.ClockIn;
 import com.xiaofo1022.orange9.modal.Login;
@@ -66,10 +69,16 @@ public class MainController {
 	private OrderVerifyDao orderVerifyDao;
 	@Autowired
 	private OrderGoodsDao orderGoodsDao;
+	@Autowired
+	private OrderTransferDao orderTransferDao;
+	@Autowired
+	private RoleDao roleDao;
+	@Autowired
+	private UserController userController;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String index() {
-		return "login";
+		return "lufter/login";
 	}
 	
 	@RequestMapping(value="/logout", method=RequestMethod.GET)
@@ -104,6 +113,8 @@ public class MainController {
 			return new FailureResponse(Message.LOGIN_FAILURE);
 		} else {
 			user.setPicbaseurl(GlobalData.getInstance().getPicbaseurl());
+			user.setLoginTime(new Date());
+			user.setRole(roleDao.getRole(user.getRoleId()));
 			HttpSession session = request.getSession(true);
 			session.setAttribute("user", user);
 			if (user.getRoleId() == RoleConst.CLIENT_ID) {
@@ -115,8 +126,9 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/employee", method=RequestMethod.GET)
-	public String system() {
-		return "system2employee";
+	public String employee(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("userDetailList", userController.getUserDetailList(request));
+		return "lufter/employeemanage";
 	}
 	
 	@RequestMapping(value="/orderSummary", method=RequestMethod.GET)
@@ -132,33 +144,40 @@ public class MainController {
 		modelMap.addAttribute("dresserNameList", orderDao.getDresserNameList());
 		modelMap.addAttribute("stylistNameList", orderDao.getStylistNameList());
 		modelMap.addAttribute("brokerList", orderDao.getBrokerList());
-		return "system2ordersummary";
+		return "lufter/main";
 	}
 	
 	@RequestMapping(value="/orderGoods", method=RequestMethod.GET)
 	public String system2ordergoods(ModelMap modelMap) {
 		modelMap.addAttribute("orderNoList", orderDao.getOrderNoList());
 		modelMap.addAttribute("orderGoodsList", orderGoodsDao.getOrderGoodsList());
-		return "system2ordergoods";
+		return "lufter/goodsmanage";
 	}
 	
 	@RequestMapping(value="/client", method=RequestMethod.GET)
 	public String client(ModelMap modelMap) {
 		modelMap.addAttribute("clientList", clientDao.getClientList());
-		return "system2client";
+		return "lufter/clientmanage";
 	}
 	
 	@RequestMapping(value="/shooting", method=RequestMethod.GET)
 	public String system2shoot(ModelMap modelMap) {
 		modelMap.addAttribute("orderShootList", orderDao.getOrderListByStatus(OrderStatusConst.SHOOTING));
 		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.SHOOT_ID).getLimitMinutes());
-		return "system2shoot";
+		return "lufter/ordershooting";
 	}
 	
 	@RequestMapping(value="/transferImage", method=RequestMethod.GET)
 	public String system2transferimage(ModelMap modelMap) {
 		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.TRANSFER_ID).getLimitMinutes());
-		return "system2transferimage";
+		modelMap.addAttribute("orderTransferList", orderTransferDao.getOrderTransferImageList());
+		return "lufter/orderuploadoriginal";
+	}
+	
+	@RequestMapping(value="/clientWaiting", method=RequestMethod.GET)
+	public String system2clientwaiting(ModelMap map) {
+		map.addAttribute("orderList", orderDao.getOrderListByStatus(OrderStatusConst.WAITING_FOR_CLIENT_CHOSE));
+		return "lufter/orderclientchosen";
 	}
 	
 	@RequestMapping(value="/convertImage", method=RequestMethod.GET)
@@ -166,7 +185,7 @@ public class MainController {
 		modelMap.addAttribute("orderConvertList", orderConvertDao.getOrderConvertList(request));
 		modelMap.addAttribute("userList", userDao.getUserList());
 		modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.CONVERT_ID).getLimitMinutes());
-		return "system2convertimage";
+		return "lufter/orderconvertimage";
 	}
 	
 	@RequestMapping(value="/fixSkin", method=RequestMethod.GET)
@@ -174,7 +193,7 @@ public class MainController {
 		int userId = RequestUtil.getLoginUserId(request);
 		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_SKIN, userId);
 		modelMap.addAttribute("postProductionList", postProductionList);
-		return "system2designerfixskin";
+		return "lufter/orderfixskin";
 	}
 	
 	@RequestMapping(value="/fixBackground", method=RequestMethod.GET)
@@ -182,7 +201,7 @@ public class MainController {
 		int userId = RequestUtil.getLoginUserId(request);
 		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_BACKGROUND, userId);
 		modelMap.addAttribute("postProductionList", postProductionList);
-		return "system2designerfixbackground";
+		return "lufter/orderfixbackground";
 	}
 	
 	@RequestMapping(value="/cutLiquify", method=RequestMethod.GET)
@@ -190,7 +209,7 @@ public class MainController {
 		int userId = RequestUtil.getLoginUserId(request);
 		List<OrderPostProduction> postProductionList = orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY, userId);
 		modelMap.addAttribute("postProductionList", postProductionList);
-		return "system2designercutliquify";
+		return "lufter/ordercutliquify";
 	}
 	
 	@RequestMapping(value="/verifyImage", method=RequestMethod.GET)
@@ -231,17 +250,6 @@ public class MainController {
 		}
 		modelMap.addAttribute("userList", userDao.getUserList());
 		modelMap.addAttribute("orderVerifyList", orderVerifyList);
-		return "system2verifyimage";
-	}
-	
-	@RequestMapping(value="/clientWaiting", method=RequestMethod.GET)
-	public String system2clientwaiting(ModelMap map) {
-		map.addAttribute("orderList", orderDao.getOrderListByStatus(OrderStatusConst.WAITING_FOR_CLIENT_CHOSE));
-		return "system2clientwaiting";
-	}
-	
-	@RequestMapping(value="/picframe", method=RequestMethod.GET)
-	public String system2picframe(ModelMap map) {
-		return "system2picframe";
+		return "lufter/orderverify";
 	}
 }

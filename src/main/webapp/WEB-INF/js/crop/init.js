@@ -19,14 +19,14 @@ $(window).load(function() {
 		var img = cropper.getDataURL();
 		$('.cropped').html('');
 		$('.cropped').append('<img src="' + img + '" align="absmiddle" '
-			+ 'style="width:64px;margin-top:4px;border-radius:64px;'
-			+ 'box-shadow:0px 0px 12px #7E7E7E;" ><p>64px*64px</p>');
+			+ 'style="width:64px;margin-top:4px;border-radius:1px;'
+			+ 'box-shadow:0px 0px 2px #7E7E7E;" ><p>64px*64px</p>');
 		$('.cropped').append('<img id="crop-header" src="' + img + '" align="absmiddle" '
-			+ 'style="width:128px;margin-top:4px;border-radius:128px;'
-			+ 'box-shadow:0px 0px 12px #7E7E7E;"><p>128px*128px</p>');
+			+ 'style="width:128px;margin-top:4px;border-radius:1px;'
+			+ 'box-shadow:0px 0px 2px #7E7E7E;"><p>128px*128px</p>');
 		$('.cropped').append('<img src="' + img + '" align="absmiddle" '
-			+ 'style="width:180px;margin-top:4px;border-radius:180px;'
-			+ 'box-shadow:0px 0px 12px #7E7E7E;"><p>180px*180px</p>');
+			+ 'style="width:180px;margin-top:4px;border-radius:1px;'
+			+ 'box-shadow:0px 0px 2px #7E7E7E;"><p>180px*180px</p>');
 	})
 	$('#btnZoomIn').on('click', function(){
 		cropper.zoomIn();

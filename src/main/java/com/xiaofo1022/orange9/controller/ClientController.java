@@ -52,7 +52,7 @@ public class ClientController {
 	@RequestMapping(value = "/main/{clientId}", method = RequestMethod.GET)
 	public String main(@PathVariable int clientId, ModelMap modelMap) {
 		this.createClientMainModelMap(clientId, 0, modelMap);
-		return "system2clientpage";
+		return "lufter/clientpage";
 	}
 	
 	private void createClientMainModelMap(int clientId, int orderId, ModelMap modelMap) {
@@ -91,7 +91,7 @@ public class ClientController {
 	@RequestMapping(value = "/main/{clientId}/{orderId}", method = RequestMethod.GET)
 	public String main(@PathVariable int clientId, @PathVariable int orderId, ModelMap modelMap) {
 		this.createClientMainModelMap(clientId, orderId, modelMap);
-		return "system2clientpage";
+		return "lufter/clientpage";
 	}
 	
 	@RequestMapping(value = "/addClient", method = RequestMethod.POST)

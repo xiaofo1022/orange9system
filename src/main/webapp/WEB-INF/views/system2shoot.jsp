@@ -41,7 +41,7 @@
 			<p class="model-label transfer-label">
 				摄影师：
 				<img src="${orderShoot.photographer.header}"/><span class="ml10">${orderConvert.photographer.name}</span>
-				<c:if test="${ orderShoot.photographer.id == user.id}">
+				<c:if test="${orderShoot.photographer.id == user.id}">
 					<button id="btn-convert-done-${orderShoot.id}" class="btn btn-success ml10" onclick="confirmShootComplete(${orderShoot.id}, ${orderShoot.photographerId})">完成</button>
 				</c:if>
 			</p>

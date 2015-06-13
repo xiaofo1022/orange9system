@@ -105,7 +105,7 @@ public class OrderPostProductionDao {
 	public List<OrderPostProduction> getPostProductionGroupList(String tableName, int userId) {
 		String sql = "SELECT ID, ORDER_ID, OPERATOR_ID, INSERT_DATETIME, UPDATE_DATETIME FROM " + tableName + " WHERE IS_DONE = 0";
 		if (userId != 0) {
-			sql += " WHERE OPERATOR_ID = " + userId;
+			sql += " AND OPERATOR_ID = " + userId;
 		}
 		sql += " GROUP BY ORDER_ID, OPERATOR_ID";
 		return commonDao.query(OrderPostProduction.class, sql);
@@ -163,7 +163,7 @@ public class OrderPostProductionDao {
 	}
 	
 	public int getUserPostCount(String tableName, int userId) {
-		Count count = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + tableName + " WHERE OPERATOR_ID = ? AND IS_DONE = 0", userId);
+		Count count = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + tableName + " WHERE OPERATOR_ID = ?", userId);
 		return count.getCnt();
 	}
 	
@@ -171,11 +171,11 @@ public class OrderPostProductionDao {
 		List<User> designerList = userDao.getUserListByRoleId(RoleConst.DISIGNER_ID);
 		int minUserId = 0;
 		if (designerList != null && designerList.size() > 0) {
-			int minCount = 0;
+			int minCount = -1;
 			for (int i = 0; i < designerList.size(); i++) {
 				User designer = designerList.get(i);
 				int count = this.getUserPostCount(tableName, designer.getId());
-				if (count < minCount || minCount == 0) {
+				if (count < minCount || minCount == -1) {
 					minCount = count;
 					minUserId = designer.getId();
 				}
@@ -255,7 +255,6 @@ public class OrderPostProductionDao {
 		if (originalCount.getCnt() == fixedCount.getCnt()) {
 			return true;
 		} else {
-			System.out.println("fixedCount: " + fixedCount.getCnt() + " originalCount: " + originalCount.getCnt());
 			return false;
 		}
 	}

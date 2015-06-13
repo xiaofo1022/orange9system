@@ -1,0 +1,388 @@
+/*
+ * Override Bootstrap's default container.
+ */
+
+@media (min-width: 1200px) {
+  .container {
+    width: 970px;
+  }
+}
+
+/*
+ * Masthead for nav
+ */
+
+.logo {
+	color:#FFF;
+	font-size:48px;
+	margin-right:60px;
+}
+ 
+.blog-masthead {
+  background-color: #24292C;
+  margin-bottom: 40px;
+}
+
+/* Nav links */
+.blog-nav-item {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  color: #999;
+}
+.blog-nav-item:hover,
+.blog-nav-item:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Active state gets a caret at the bottom */
+.blog-nav .active {
+  color: #fff;
+}
+.blog-nav .active:after {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -5px;
+  vertical-align: middle;
+  content: " ";
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid;
+  border-left: 5px solid transparent;
+}
+
+
+/*
+ * Blog name and description
+ */
+
+.blog-header {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.blog-title {
+  margin-top: 30px;
+  margin-bottom: 0;
+  font-size: 60px;
+  font-weight: normal;
+}
+.blog-description {
+  font-size: 20px;
+  color: #999;
+}
+
+
+/*
+ * Main column and sidebar layout
+ */
+
+.blog-main {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  width: 626px;
+}
+
+.fleft {
+	float: left;
+}
+
+.fright {
+	float: right;
+}
+
+.clearfix:after { 
+    visibility: hidden; 
+    display: block; 
+    font-size: 0; 
+    content: ""; 
+    clear: both; 
+    height: 0; 
+} 
+
+.max-width {
+	width: 100%;
+}
+
+.ml10 {
+	margin-left: 10px;
+}
+
+.ml0 {
+	margin-left: 0;
+}
+
+.hidden {
+	display:none;
+}
+
+/* Sidebar modules for boxing content */
+.sidebar-module {
+  margin: 0 -15px 15px;
+  background-color: #F3F3F3;
+  border: 1px solid #E3E3E5;
+  border-bottom: 0;
+  box-shadow: 1px 1px 3px rgba(209, 209, 210, 1.0);
+}
+
+.whover:hover {
+  background-color: #FFF;
+  cursor: pointer;
+}
+
+.self-info {
+	height: 50px;
+	width: 190px;
+	padding: 5px;
+	border-bottom: 1px solid #E3E3E5;
+}
+
+.sidebar-module p {
+	margin: 0;
+}
+
+.self-header-info img {
+	width: 100%;
+	height: 100%;
+}
+
+.self-header-info {
+	width: 50px;
+	height: 50px;
+	border-right: 1px solid #E3E3E5;
+}
+
+.order-link {
+	position: relative;
+	padding: 7px;
+	padding-left: 20px;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #E3E3E5;
+	height: 40px;
+	width: 100%;
+}
+
+.order-link  p {
+	float: left;
+	width: 180px;
+}
+
+.order-link-nav {
+	position: absolute;
+	font-size: 6px;
+	left: 4px;
+	top: 11px;
+}
+
+.order-link  span {
+	color: #888;
+}
+
+/* Pagination */
+.pager {
+  margin-bottom: 60px;
+  text-align: left;
+}
+.pager > li > a {
+  width: 140px;
+  padding: 10px 20px;
+  text-align: center;
+  border-radius: 30px;
+}
+
+
+/*
+ * Blog posts
+ */
+
+.blog-post {
+  margin-bottom: 60px;
+}
+.blog-post-title {
+  margin-bottom: 5px;
+  font-size: 40px;
+}
+.blog-post-meta {
+  margin-bottom: 20px;
+  color: #999;
+}
+
+
+/*
+ * Footer
+ */
+
+.blog-footer {
+  padding: 40px 0;
+  color: #999;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-top: 1px solid #e5e5e5;
+}
+.blog-footer p:last-child {
+  margin-bottom: 0;
+}
+
+/* Order Style */
+.data-block {
+	width:100%;
+	min-height:100px;
+	border:1px solid E5E5E7;
+	box-shadow: 1px 1px 3px rgba(209, 209, 210, 1.0);
+	margin-bottom: 20px;
+	background-color:#FFF;
+	font-size:14px;
+	padding:10px;
+}
+
+.data-block h1,h2,h3,h4,h5,h6 {
+	margin:0;
+}
+
+.data-info {
+	padding:10px;
+	box-shadow: 1px 1px 3px rgba(209, 209, 210, 1.0);
+	color:#FFF;
+	margin:5px;
+	float:left;
+	font-weight:bold;
+}
+
+.data-title {
+	padding:10px;
+	box-shadow: 1px 1px 3px rgba(209, 209, 210, 1.0);
+	color:#FFF;
+	margin:5px;
+	font-weight:bold;
+}
+
+.font-lg {
+	font-size:18px;
+	padding-top:13px;
+	padding-bottom:13px;
+}
+
+.data-title img{
+	width: 40px;
+}
+
+.data-info img{
+	width: 30px;
+}
+
+.taobao-bc {
+	background-color:#FF4100;
+}
+
+.taobao-color {
+	color:#FF4100;
+}
+
+.taobao-bc a {
+	color:#FFF;
+}
+
+.cm-bc {
+	background-color:#0085D0;
+}
+
+.netease-bc {
+	background-color:#D90000;
+}
+
+.netease-color {
+	color:#D90000;
+}
+
+.facebook-bc {
+	background-color:#3B589C;
+}
+
+.sf-bc {
+	background-color:#2E2E2E;
+}
+
+.lofter-bc {
+	background-color:#CDCED2;
+}
+
+.twitter-bc {
+	background-color:#1AB2E8;
+}
+
+.progress-bc {
+	background-color:#3D8D88;
+}
+
+.progress-color {
+	color:#3D8D88;
+}
+
+.blank-bc {
+	background-color:#FFF;
+	color:#2E2E2E;
+}
+
+.golden-bc {
+	background-color:#F0AD4E;
+}
+
+.golden-color {
+	color:#F4DFCC;
+}
+
+.order-detail-header {
+	padding-top:6px;
+	padding-bottom:5px;
+}
+
+.btn-data-info {
+	height:41px;
+	margin-top:5px;
+}
+
+.pic-block {
+	margin-top:10px;
+	margin-right:10px;
+	float:left;
+}
+
+.pic-block img {
+	width:125px;
+}
+
+.pic-client-block {
+	margin-top:10px;
+	margin-right:10px;
+	float:left;
+}
+
+.pic-client-block img {
+	width:212px;
+}
+
+.select-order-status {
+	width:140px;
+	display:inline;
+	margin-left:5px;
+}
+
+.card-chart {
+	width: 600px;
+	height: 400px;
+	margin-left: -30px;
+	margin-top: 20px;
+	margin-bottom: -40px;
+}
+
+.verify-image {
+	text-align: center;
+}
+.verify-image img {
+	max-width: 800px;
+}

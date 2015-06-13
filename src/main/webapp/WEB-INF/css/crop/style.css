@@ -59,8 +59,8 @@
   font-size: 20px;
   color: #FFFFFF;
   margin:0px 2px;
-  background-color: #f38e81;
-  border-radius: 3px;
+  background-color: #337AB7;
+  border-radius: 1px;
   text-decoration: none;
   cursor: pointer;
   box-shadow: 0px 0px 5px #B0B0B0;
@@ -93,7 +93,7 @@
 	filter:alpha(opacity=0);
 	z-index:2;
 }
-a.upload-img{
+a.upload-img {
 	width:165px;
 	display: inline-block;
 	margin-bottom: 10px;
@@ -101,15 +101,15 @@ a.upload-img{
 	line-height: 57px;
 	font-size: 20px;
 	color: #FFFFFF;
-	background-color: #f38e81;
-	border-radius: 3px;
+	background-color: #337AB7;
+	border-radius: 1px;
 	text-decoration:none;
-	cursor:pointer;
 	border: 0px #fff solid;
 	box-shadow: 0px 0px 5px #B0B0B0;
 }
-a.upload-img:hover{
+a.upload-img:hover {
 	background-color: #ec7e70;
+	cursor: pointer;
 }
 
 .tc{text-align:center;}

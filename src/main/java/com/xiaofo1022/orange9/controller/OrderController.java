@@ -103,7 +103,7 @@ public class OrderController {
 			modelMap.addAttribute("orderVerifier", orderVerifyDao.getOrderVerifyImage(orderId));
 			modelMap.addAttribute("userList", userDao.getUserList());
 		}
-		return "system2orderdetail";
+		return "lufter/orderdetail";
 	}
 	
 	@RequestMapping(value = "/updateOrderStatus/{orderId}/{orderStatusId}", method = RequestMethod.POST)
