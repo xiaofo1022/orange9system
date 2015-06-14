@@ -329,7 +329,7 @@
 	}
 	
 	function getDateColHtml(data) {
-		return getInfoBlock("<a href='<c:url value='/order/orderDetail/" + data.id + "'/>' target='_blank'>" + data.shootHalf + data.orderNo + " </a><br/>[" + data.orderStatus.name + "]");
+		return getInfoBlock(data.shootHalf + "<a href='<c:url value='/order/orderDetail/" + data.id + "'/>' target='_blank'>" + " " + data.orderNo + " </a><br/>[" + data.orderStatus.name + "]");
 	}
 	
 	function getInfoBlock(info) {

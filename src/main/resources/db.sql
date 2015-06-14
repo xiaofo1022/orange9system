@@ -58,6 +58,7 @@ CREATE TABLE orange9.orders (
 	CONSTRAINT order_PK PRIMARY KEY (ID)
 )
 ENGINE=InnoDB;
+ALTER TABLE orange9.orders ADD OWNER_ID INT;
 
 CREATE TABLE orange9.order_goods (
 	ID INT NOT NULL AUTO_INCREMENT,
@@ -97,6 +98,7 @@ CREATE TABLE orange9.client (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8
 COLLATE=utf8_general_ci;
+ALTER TABLE orange9.client ADD OWNER_ID INT;
 
 CREATE TABLE orange9.order_history (
 	ID INT NOT NULL AUTO_INCREMENT,
