@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.xiaofo1022.orange9.core.ImageCompresser;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 
 import sun.misc.BASE64Decoder;
@@ -24,10 +25,11 @@ public class SaveTransferImageThread implements Runnable {
 	}
 	
 	public void run() {
-		saveHeaderImageToDisk(this.transferImageData);
+		String imageDir = this.saveImageToDisk(this.transferImageData);
+		this.saveCompressImageToDisk(imageDir, this.transferImageData.getFileName());
 	}
 	
-	private void saveHeaderImageToDisk(OrderTransferImageData transferImageData) {
+	private String saveImageToDisk(OrderTransferImageData transferImageData) {
 		try {
 			String baseDir = transferImageData.getServerPath(); 
 			if (isFixedImage) {
@@ -58,9 +60,11 @@ public class SaveTransferImageThread implements Runnable {
 				fileOut.close();
 				fileIn.close();
 			}
+			return dir;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return "";
 	}
 	
 	private byte[] getImageBytes(String byteString) {
@@ -77,5 +81,10 @@ public class SaveTransferImageThread implements Runnable {
 			e.printStackTrace();
 		}
 		return b;
+	}
+	
+	private void saveCompressImageToDisk(String imageDir, String fileName) {
+		ImageCompresser compresser = new ImageCompresser();
+		compresser.compressJpg(imageDir + "\\" + fileName + ".jpg", imageDir + "\\compress");
 	}
 }

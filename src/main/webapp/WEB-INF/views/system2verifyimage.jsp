@@ -46,29 +46,6 @@
 		</div>
 	</c:forEach>
 	
-	<div id="setVerifyModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">要指定谁来审图呢？</h4>
-				</div>
-				<div class="modal-body">	
-					<div style="width:200px;">
-						<select id="verifySelect" class="form-control">
-							<c:forEach items="${userList}" var="user">
-								<option value="${user.id}">${user.name}</option>
-							</c:forEach>
-						</select>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" onclick="setVerifier()">确定</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	
 	<div id="verifyModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -125,32 +102,15 @@
 		$("#denial-reason").val("");
 	});
 	
-	function showSetVerifierWindow(orderId) {
-		$("#orderId").val(orderId);
-		$("#setVerifyModal").modal("show");
-	}
-	
 	function showDenialWindow() {
 		$("#denialModal").modal("show");
-	}
-	
-	function setVerifier() {
-		var orderId = $("#orderId").val();
-		var userId = $("#verifySelect").val();
-		$.post("<c:url value='/orderVerify/setOrderVerifier/" + orderId + "/" + userId + "'/>", null, function(data, status) {
-			if (data.status == "success") {
-				location.reload(true);
-			} else {
-				console.log(data);
-			}
-		});
 	}
 	
 	function getVerifyImage(orderId) {
 		$.get("<c:url value='/orderVerify/getVerifyImageData/" + orderId + "'/>", function(data, status) {
 			if (data && data.id != 0) {
 				$("#fixed-image-id").val(data.id);
-				$("#verifyImageContainer").html("<img src='<c:url value='/pictures/fixed/" + data.orderId + "/" + data.id + ".jpg'/>'/>");
+				$("#verifyImageContainer").html("<img src='<c:url value='/pictures/fixed/" + data.orderId + "/compress/" + data.fileName + ".jpg'/>'/>");
 			} else {
 				$("#verifyModal").modal("hide");
 			}

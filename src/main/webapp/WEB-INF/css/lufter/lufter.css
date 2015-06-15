@@ -387,7 +387,13 @@
 .verify-image {
 	text-align: center;
 }
+
 .verify-image img {
 	max-width: 800px;
 	max-height: 600px;
+}
+
+.performance-bar {
+	min-width: 60px;
+	max-width: 405px;
 }

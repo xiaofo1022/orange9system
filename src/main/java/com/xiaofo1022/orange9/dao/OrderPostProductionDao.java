@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.xiaofo1022.orange9.common.OrderConst;
+import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
@@ -97,7 +98,7 @@ public class OrderPostProductionDao {
 	}
 	
 	public int getIdleUserId(String tableName, int bossId) {
-		List<User> designerList = userDao.getUserListByRoleId(RoleConst.DISIGNER_ID, bossId);
+		List<User> designerList = userDao.getUserListByRoleId(RoleConst.DESIGNER_ID, bossId);
 		int minUserId = 0;
 		if (designerList != null && designerList.size() > 0) {
 			int minCount = -1;
@@ -125,6 +126,16 @@ public class OrderPostProductionDao {
 		int id = commonDao.insert("INSERT INTO ORDER_FIXED_IMAGE_DATA (INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?)",
 			now, now, transferImageData.getOrderId(), transferImageData.getFileName());
 		transferImageData.setId(id);
+	}
+	
+	public boolean isExistFixedImageData(int orderId, String fileName) {
+		Count count = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_FIXED_IMAGE_DATA WHERE ORDER_ID = ? AND FILE_NAME = ?",
+				orderId, fileName);
+		if (count != null && count.getCnt() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public List<OrderFixedImageData> getOrderFixedImageDataList(int orderId) {
@@ -162,6 +173,11 @@ public class OrderPostProductionDao {
 	
 	public Count getAllPostProductionDoneCount(int userId, String tableName, String columnName, String startDate, String endDate) {
 		return commonDao.getFirst(Count.class, "SELECT COUNT(A.ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA A LEFT JOIN " + tableName + " B ON A.ORDER_ID = B.ORDER_ID WHERE OPERATOR_ID = ? AND " + columnName + " = 1 AND B.INSERT_DATETIME BETWEEN '" + startDate + " 00:00:00' AND '" + endDate + " 23:59:59'", userId);
+	}
+	
+	public Count getOrderPostProductionDoneCount(int userId, String columnName, String startDate, String endDate) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDERS WHERE STATUS_ID = ? AND " + columnName + " = ? AND INSERT_DATETIME BETWEEN '" + startDate + " 00:00:00' AND '" + endDate + " 23:59:59'",
+				OrderStatusConst.COMPLETE, userId);
 	}
 	
 	public boolean isAllPictureFixed(int orderId) {

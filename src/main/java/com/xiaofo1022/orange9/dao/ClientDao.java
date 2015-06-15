@@ -17,8 +17,8 @@ public class ClientDao {
 	
 	public void insertClient(Client client) {
 		Date now = new Date();
-		int id = commonDao.insert("INSERT INTO CLIENT (INSERT_DATETIME, UPDATE_DATETIME, NAME, PHONE, EMAIL, SHOP_NAME, SHOP_LINK, REMARK, OWNER_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-			now, now, client.getClientName(), client.getClientPhone(), client.getClientEmail(), client.getClientShopName(), client.getClientShopLink(), client.getClientRemark(), client.getOwnerId());
+		int id = commonDao.insert("INSERT INTO CLIENT (INSERT_DATETIME, UPDATE_DATETIME, NAME, PHONE, EMAIL, SHOP_NAME, SHOP_LINK, REMARK, OWNER_ID, ACCOUNT_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+			now, now, client.getClientName(), client.getClientPhone(), client.getClientEmail(), client.getClientShopName(), client.getClientShopLink(), client.getClientRemark(), client.getOwnerId(), client.getAccountId());
 		client.setId(id);
 	}
 	

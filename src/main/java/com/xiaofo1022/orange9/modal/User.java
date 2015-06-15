@@ -40,8 +40,6 @@ public class User {
 	private List<ClockIn> normalClockInList = new ArrayList<ClockIn>();
 	private List<ClockIn> delayClockInList = new ArrayList<ClockIn>();
 	private List<ClockIn> leaveClockInList = new ArrayList<ClockIn>();
-	private int monthPostProduction;
-	private int monthDonePostProduction;
 	private float performance;
 	@SuppressWarnings("unused")
 	private int normalCount;
@@ -51,6 +49,10 @@ public class User {
 	private int leaveCount;
 	private String picbaseurl;
 	private String loginTime;
+	private int monthDoneFixSkin;
+	private int monthDoneFixBackground;
+	private int monthDoneCutLiquify;
+	private int monthDonePostProduction;
 	
 	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
@@ -156,12 +158,6 @@ public class User {
 	public void setLeaveClockInList(List<ClockIn> leaveClockInList) {
 		this.leaveClockInList = leaveClockInList;
 	}
-	public int getMonthPostProduction() {
-		return monthPostProduction;
-	}
-	public void setMonthPostProduction(int monthPostProduction) {
-		this.monthPostProduction = monthPostProduction;
-	}
 	public int getMonthDonePostProduction() {
 		return monthDonePostProduction;
 	}
@@ -222,5 +218,23 @@ public class User {
 	}
 	public void setLoginTime(Date loginTime) {
 		this.loginTime = sdf.format(loginTime);
+	}
+	public int getMonthDoneFixSkin() {
+		return monthDoneFixSkin;
+	}
+	public void setMonthDoneFixSkin(int monthDoneFixSkin) {
+		this.monthDoneFixSkin = monthDoneFixSkin;
+	}
+	public int getMonthDoneFixBackground() {
+		return monthDoneFixBackground;
+	}
+	public void setMonthDoneFixBackground(int monthDoneFixBackground) {
+		this.monthDoneFixBackground = monthDoneFixBackground;
+	}
+	public int getMonthDoneCutLiquify() {
+		return monthDoneCutLiquify;
+	}
+	public void setMonthDoneCutLiquify(int monthDoneCutLiquify) {
+		this.monthDoneCutLiquify = monthDoneCutLiquify;
 	}
 }

@@ -125,7 +125,7 @@
 		$.get("<c:url value='/orderVerify/getVerifyImageData/" + orderId + "'/>", function(data, status) {
 			if (data && data.id != 0) {
 				$("#fixed-image-id").val(data.id);
-				$("#verifyImageContainer").html("<img src='<c:url value='/pictures/fixed/" + data.orderId + "/" + data.id + ".jpg'/>'/>");
+				$("#verifyImageContainer").html("<img src='<c:url value='/pictures/fixed/" + data.orderId + "/compress/" + data.fileName + ".jpg'/>'/>");
 			} else {
 				$("#verifyModal").modal("hide");
 			}

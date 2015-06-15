@@ -96,17 +96,35 @@ public class UserController {
 	
 	private void createUserPerformance(User user, String startDate, String endDate) {
 		List<Performance> performanceList = performanceDao.getPerformanceList();
-		Count fixSkinCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, startDate, endDate);
-		Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, OrderConst.COLUMN_FIXED_SKIN, startDate, endDate);
-		Count fixBackgroundCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, startDate, endDate);
-		Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND, startDate, endDate);
-		Count cutLiquifyCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, startDate, endDate);
-		Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY, startDate, endDate);
-		user.setMonthPostProduction(fixSkinCount.getCnt() + fixBackgroundCount.getCnt() + cutLiquifyCount.getCnt());
-		user.setMonthDonePostProduction(fixSkinDoneCount.getCnt() + fixBackgroundDoneCount.getCnt() + cutLiquifyDoneCount.getCnt());
-		user.addPerformance(performanceList.get(0).getBaseCount(), fixSkinDoneCount.getCnt(), performanceList.get(0).getPush());
-		user.addPerformance(performanceList.get(1).getBaseCount(), fixBackgroundDoneCount.getCnt(), performanceList.get(1).getPush());
-		user.addPerformance(performanceList.get(2).getBaseCount(), cutLiquifyDoneCount.getCnt(), performanceList.get(2).getPush());
+		
+		if (user.getRoleId() == RoleConst.PHOTOGRAPHER_ID) {
+			
+			Performance performance = performanceList.get(3);
+			Count doneCount = orderPostProductionDao.getOrderPostProductionDoneCount(user.getId(), RoleConst.COLUMN_PHOTOGRAPHER, startDate, endDate);
+			user.setMonthDonePostProduction(doneCount.getCnt());
+			user.addPerformance(performance.getBaseCount(), doneCount.getCnt(), performance.getPush());
+			
+		} else if (user.getRoleId() == RoleConst.ASSISTANT_ID) {
+			
+			Performance performance = performanceList.get(4);
+			Count doneCount = orderPostProductionDao.getOrderPostProductionDoneCount(user.getId(), RoleConst.COLUMN_ASSISTANT, startDate, endDate);
+			user.setMonthDonePostProduction(doneCount.getCnt());
+			user.addPerformance(performance.getBaseCount(), doneCount.getCnt(), performance.getPush());
+			
+		} else if (user.getRoleId() == RoleConst.DESIGNER_ID) {
+			Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, OrderConst.COLUMN_FIXED_SKIN, startDate, endDate);
+			Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND, startDate, endDate);
+			Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY, startDate, endDate);
+			
+			user.setMonthDoneFixSkin(fixSkinDoneCount.getCnt());
+			user.setMonthDoneFixBackground(fixBackgroundDoneCount.getCnt());
+			user.setMonthDoneCutLiquify(cutLiquifyDoneCount.getCnt());
+			user.setMonthDonePostProduction(fixSkinDoneCount.getCnt() + fixBackgroundDoneCount.getCnt() + cutLiquifyDoneCount.getCnt());
+			
+			user.addPerformance(performanceList.get(0).getBaseCount(), fixSkinDoneCount.getCnt(), performanceList.get(0).getPush());
+			user.addPerformance(performanceList.get(1).getBaseCount(), fixBackgroundDoneCount.getCnt(), performanceList.get(1).getPush());
+			user.addPerformance(performanceList.get(2).getBaseCount(), cutLiquifyDoneCount.getCnt(), performanceList.get(2).getPush());
+		}
 	}
 	
 	private void createUserClockIn(User user, String startDate, String endDate) {

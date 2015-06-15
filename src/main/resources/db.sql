@@ -10,7 +10,7 @@ ENGINE=InnoDB;
 INSERT INTO orange9.role (ID,NAME,NAME_CN,IS_SHOW) VALUES 
 (1,'BOSS','老板',0)
 ,(2,'PHOTOGRAPHER','摄影师',1)
-,(3,'DISIGNER','设计师',1)
+,(3,'DESIGNER','设计师',1)
 ,(4,'ASSISTANT','助理',1)
 ,(5,'CLIENT','客户',0)
 ;
@@ -303,6 +303,8 @@ INSERT INTO orange9.performance (ID,POST_TYPE,BASE_COUNT,PUSH_PER_IMAGE) VALUES
 (1,'FIX_SKIN',300,0.2)
 ,(2,'FIX_BACKGROUND',300,0.2)
 ,(3,'CUT_LIQUIFY',300,0.3)
+,(4,'PHOTOGRAPHER',10,0.5)
+,(5,'ASSISTANT',10,0.4)
 ;
 
 CREATE TABLE orange9.client_message (

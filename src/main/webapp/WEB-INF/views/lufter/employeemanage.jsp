@@ -173,7 +173,13 @@
 				</div>
 				<div class="clearfix">
 					<div class="data-info progress-bc">本月绩效 <span class="golden-color">[${userDetail.performance}元]</span></div>
-					<div class="data-info progress-bc" style="width:240px;">${userDetail.monthPostProduction}单</div>
+					<div class="data-info progress-bc performance-bar" style="width:${userDetail.monthDonePostProduction}px;">
+						${userDetail.monthDonePostProduction}
+						<c:choose>
+							<c:when test="${userDetail.role.name.equals('DESIGNER')}">张</c:when>
+							<c:otherwise>单</c:otherwise>
+						</c:choose>
+					</div>
 				</div>
 				<div class="clearfix">
 					<div class="data-info blank-bc">

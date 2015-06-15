@@ -116,7 +116,9 @@ public class OrderPostProductionController {
 	@ResponseBody
 	public CommonResponse uploadFixedImage(@RequestBody OrderTransferImageData transferImageData, BindingResult bindingResult, HttpServletRequest request) {
 		if (postProductionDao.isSelectedPicture(transferImageData.getOrderId(), transferImageData.getFileName())) {
-			postProductionDao.insertOrderFixedImageData(transferImageData);
+			if (!postProductionDao.isExistFixedImageData(transferImageData.getOrderId(), transferImageData.getFileName())) {
+				postProductionDao.insertOrderFixedImageData(transferImageData);
+			}
 			String serverPath = request.getSession().getServletContext().getRealPath("/");
 			transferImageData.setServerPath(serverPath);
 			SaveTransferImageThread imageThread = new SaveTransferImageThread(transferImageData);

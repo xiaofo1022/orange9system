@@ -50,14 +50,23 @@ public class PictureController {
 		return "Fuck you and have a nice day!";
 	}
 	
+	public void clearOriginalPictures(int orderId, String path, HttpServletRequest request) {
+		String serverPath = this.getNormalPicturePath(request, orderId, path);
+		this.clearPictures(serverPath);
+	}
+	
 	public void clearPreStepPictures(int orderId, String path, HttpServletRequest request) {
-		String serverPath = this.getServerPath(request, orderId, path);
+		String serverPath = this.getPostPicturePath(request, orderId, path);
+		this.clearPictures(serverPath);
+	}
+	
+	private void clearPictures(String serverPath) {
 		File fileDir = new File(serverPath);
 		if (fileDir != null && fileDir.exists() && fileDir.isDirectory()) {
 			File[] files = fileDir.listFiles();
 			if (files != null && files.length > 0) {
 				for (File pic : files) {
-					if (pic != null) {
+					if (pic != null && !pic.isDirectory()) {
 						System.out.println(pic.getName() + " delete: " + pic.delete());
 					}
 				}
@@ -70,7 +79,7 @@ public class PictureController {
 	@ResponseBody
 	public Result checkConvertImage(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		String serverPath = this.getServerPath(request, orderId, OrderConst.PATH_ORIGINAL);
+		String serverPath = this.getPostPicturePath(request, orderId, OrderConst.PATH_ORIGINAL);
 		File fileDir = new File(serverPath);
 		if (!fileDir.exists() && !fileDir.isDirectory()) {
 			fileDir.mkdirs();
@@ -87,7 +96,7 @@ public class PictureController {
 	
 	public String getUnuploadOriginalPictureName(int orderId, HttpServletRequest request) {
 		String result = "";
-		String serverPath = this.getServerPath(request, orderId, OrderConst.PATH_ORIGINAL);
+		String serverPath = this.getPostPicturePath(request, orderId, OrderConst.PATH_ORIGINAL);
 		File fileDir = new File(serverPath);
 		if (!fileDir.exists() && !fileDir.isDirectory()) {
 			fileDir.mkdirs();
@@ -114,9 +123,15 @@ public class PictureController {
 		return result;
 	}
 	
-	private String getServerPath(HttpServletRequest request, int orderId, String path) {
+	private String getPostPicturePath(HttpServletRequest request, int orderId, String path) {
 		String serverPath = request.getSession().getServletContext().getRealPath("/");
 		serverPath += "\\WEB-INF\\pictures\\post\\" + path + "\\" + orderId;
+		return serverPath;
+	}
+	
+	private String getNormalPicturePath(HttpServletRequest request, int orderId, String path) {
+		String serverPath = request.getSession().getServletContext().getRealPath("/");
+		serverPath += "\\WEB-INF\\pictures\\" + path + "\\" + orderId;
 		return serverPath;
 	}
 	
@@ -172,19 +187,19 @@ public class PictureController {
 	
 	@RequestMapping(value = "/downloadOriginalPicture/{orderId}", method = RequestMethod.GET)
 	public void downloadOriginalPicture(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
-		String serverPath = this.getServerPath(request, orderId, OrderConst.PATH_ORIGINAL);
+		String serverPath = this.getPostPicturePath(request, orderId, OrderConst.PATH_ORIGINAL);
 		this.downloadZipFile(orderId, serverPath, response);
 	}
 	
 	@RequestMapping(value = "/downloadFixSkinPicture/{orderId}", method = RequestMethod.GET)
 	public void downloadFixSkinPicture(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
-		String serverPath = this.getServerPath(request, orderId, OrderConst.PATH_FIX_SKIN);
+		String serverPath = this.getPostPicturePath(request, orderId, OrderConst.PATH_FIX_SKIN);
 		this.downloadZipFile(orderId, serverPath, response);
 	}
 	
 	@RequestMapping(value = "/downloadFixBackgroundPicture/{orderId}", method = RequestMethod.GET)
 	public void downloadFixBackgroundPicture(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
-		String serverPath = this.getServerPath(request, orderId, OrderConst.PATH_FIX_BACKGROUND);
+		String serverPath = this.getPostPicturePath(request, orderId, OrderConst.PATH_FIX_BACKGROUND);
 		this.downloadZipFile(orderId, serverPath, response);
 	}
 	
@@ -221,7 +236,7 @@ public class PictureController {
 	@RequestMapping(value = "/saveOriginalPicture", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean saveOriginalPicture(@RequestBody PictureData pictureData, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
-		String serverPath = this.getServerPath(request, pictureData.getOrderId(), OrderConst.PATH_ORIGINAL);
+		String serverPath = this.getPostPicturePath(request, pictureData.getOrderId(), OrderConst.PATH_ORIGINAL);
 		try {
 			if (postProductionDao.isSelectedPicture(pictureData.getOrderId(), pictureData.getFileName())) {
 				this.savePictureToDisk(serverPath, pictureData.getFileName(), pictureData.getBase64Data());
@@ -236,7 +251,7 @@ public class PictureController {
 	@RequestMapping(value = "/saveFixSkinPicture", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean saveFixSkinPicture(@RequestBody PictureData pictureData, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
-		String serverPath = this.getServerPath(request, pictureData.getOrderId(), OrderConst.PATH_FIX_SKIN);
+		String serverPath = this.getPostPicturePath(request, pictureData.getOrderId(), OrderConst.PATH_FIX_SKIN);
 		try {
 			if (postProductionDao.isSelectedPicture(pictureData.getOrderId(), pictureData.getFileName())) {
 				this.savePictureToDisk(serverPath, pictureData.getFileName(), pictureData.getBase64Data());
@@ -251,7 +266,7 @@ public class PictureController {
 	@RequestMapping(value = "/saveFixBackgroundPicture", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean saveFixBackgroundPicture(@RequestBody PictureData pictureData, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
-		String serverPath = this.getServerPath(request, pictureData.getOrderId(), OrderConst.PATH_FIX_BACKGROUND);
+		String serverPath = this.getPostPicturePath(request, pictureData.getOrderId(), OrderConst.PATH_FIX_BACKGROUND);
 		try {
 			if (postProductionDao.isSelectedPicture(pictureData.getOrderId(), pictureData.getFileName())) {
 				this.savePictureToDisk(serverPath, pictureData.getFileName(), pictureData.getBase64Data());
@@ -266,7 +281,7 @@ public class PictureController {
 	@RequestMapping(value = "/saveCutLiquifyPicture", method = RequestMethod.POST)
 	@ResponseBody
 	public boolean saveCutLiquifyPicture(@RequestBody PictureData pictureData, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
-		String serverPath = this.getServerPath(request, pictureData.getOrderId(), OrderConst.PATH_CUT_LIQUIFY);
+		String serverPath = this.getPostPicturePath(request, pictureData.getOrderId(), OrderConst.PATH_CUT_LIQUIFY);
 		try {
 			if (postProductionDao.isSelectedPicture(pictureData.getOrderId(), pictureData.getFileName())) {
 				this.savePictureToDisk(serverPath, pictureData.getFileName(), pictureData.getBase64Data());
@@ -280,10 +295,21 @@ public class PictureController {
 	
 	private void savePictureToDisk(String serverPath, String fileName, String base64Data) throws Exception {
 		File fileDir = new File(serverPath);
+		
 		if (!fileDir.exists() && !fileDir.isDirectory()) {
 			fileDir.mkdirs();
 		}
-		File file = new File(serverPath + "\\" + fileName + ".jpg");
+		
+		try {
+			String fileFullName = serverPath + "\\" + fileName + ".jpg";
+			this.savePictureAction(fileFullName, base64Data);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void savePictureAction(String fileFullName, String base64Data) throws Exception {
+		File file = new File(fileFullName);
 		BufferedInputStream fileIn = new BufferedInputStream(new ByteArrayInputStream(getImageBytes(base64Data)));
 		FileOutputStream fos = new FileOutputStream(file);
 		BufferedOutputStream fileOut = new BufferedOutputStream(fos);

@@ -76,11 +76,11 @@
 					</ul>
 					<c:choose>
 						<c:when test="${order.status.equals('完成')}">
-							<div id="blink2-block" class="detail-bottom-block">
+							<div id="blink2-block" class="detail-bottom-block pic-blink-block">
 								<c:forEach items="${order.orderFixedImageDataList}" var="imageData">
 									<div class="pic-client-block photo-frame gallery">
-										<a id="client-pic-fixed-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.fileName}.jpg'/>">
-											<img src="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.fileName}.jpg'/>"/>
+										<a id="client-pic-fixed-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>">
+											<img src="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>"/>
 										</a>
 										<p id="client-pic-fixed-label-${imageData.id}">(${imageData.fileName})</p>
 									</div>
@@ -88,11 +88,11 @@
 							</div>
 						</c:when>
 						<c:otherwise>
-							<div id="blink1-block" class="detail-bottom-block">
+							<div id="blink1-block" class="detail-bottom-block pic-blink-block">
 								<c:forEach items="${order.orderTransferImageDataList}" var="imageData">
 									<div class="pic-client-block photo-frame gallery">
-										<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/original/${imageData.orderId}/${imageData.fileName}.jpg'/>">
-											<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.fileName}.jpg'/>"/>
+										<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/original/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>">
+											<img src="<c:url value='/pictures/original/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>"/>
 										</a>
 										<c:choose>
 											<c:when test="${imageData.isSelected == 1}">
@@ -216,6 +216,20 @@
 		$(".detail-bottom-nav").removeClass("active");
 		navheader.parent().addClass("active");
 		$("#" + nav.id + "-block").removeClass("hidden");
+	}
+	
+	getSelectedImageList();
+	
+	function getSelectedImageList() {
+		$.get("<c:url value='/client/getSelectedTransferImageDataList/" + $("#orderId").val() + "'/>", function(list) {
+			if (list) {
+				for (var i in list) {
+					var data = list[i];
+					selectedPictureIdList.push(data.id);
+				}
+				setChosenLabel();
+			}
+		});
 	}
 	
 	getMessage();

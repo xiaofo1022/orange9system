@@ -70,7 +70,9 @@ public class OrderTransferController {
 	@RequestMapping(value = "/uploadTransferImage", method = RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse addOrderTransferImageData(@RequestBody OrderTransferImageData transferImageData, BindingResult bindingResult, HttpServletRequest request) {
-		orderTransferDao.insertOrderTransferImageData(transferImageData);
+		if (!orderTransferDao.isExistTransferImageData(transferImageData.getOrderId(), transferImageData.getFileName())) {
+			orderTransferDao.insertOrderTransferImageData(transferImageData);
+		}
 		String serverPath = request.getSession().getServletContext().getRealPath("/");
 		transferImageData.setServerPath(serverPath);
 		taskExecutor.execute(new SaveTransferImageThread(transferImageData));

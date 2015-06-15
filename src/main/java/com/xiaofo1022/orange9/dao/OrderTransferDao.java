@@ -62,6 +62,16 @@ public class OrderTransferDao {
 		transferImageData.setId(id);
 	}
 	
+	public boolean isExistTransferImageData(int orderId, String fileName) {
+		Count count = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND FILE_NAME = ?",
+				orderId, fileName);
+		if (count != null && count.getCnt() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void setTransferImageIsDone(int tansferId, int isDone) {
 		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE SET IS_DONE = ?, UPDATE_DATETIME = ? WHERE ID = ?", isDone, new Date(), tansferId);
 	}

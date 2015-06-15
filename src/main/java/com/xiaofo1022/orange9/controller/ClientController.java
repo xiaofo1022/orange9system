@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
+import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.dao.ClientDao;
@@ -33,6 +34,7 @@ import com.xiaofo1022.orange9.modal.ClientMessage;
 import com.xiaofo1022.orange9.modal.ClientOrder;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderNo;
+import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
@@ -97,6 +99,12 @@ public class ClientController {
 		}
 		modelMap.addAttribute("order", clientOrder);
 		modelMap.addAttribute("orderNoList", orderNoList);
+	}
+	
+	@RequestMapping(value = "/getSelectedTransferImageDataList/{orderId}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<OrderTransferImageData> getSelectedTransferImageDataList(@PathVariable int orderId) {
+		return orderTransferDao.getSelectedTransferImageDataList(orderId);
 	}
 	
 	@RequestMapping(value = "/main/{clientId}/{orderId}", method = RequestMethod.GET)
@@ -192,8 +200,11 @@ public class ClientController {
 				orderTransferDao.setTransferImageSelected(id);
 			}
 		}
-		orderConvertDao.insertOrderConvert(orderId, 0);
+		if (!orderConvertDao.isExistConvertRecord(orderId)) {
+			orderConvertDao.insertOrderConvert(orderId, 0);
+		}
 		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
+		pictureController.clearOriginalPictures(orderId, OrderConst.PATH_ORIGINAL, request);
 		return new SuccessResponse("Set Transfer Image Selected Success");
 	}
 	

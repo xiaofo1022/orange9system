@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.controller.PictureController;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
+import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderConvertImage;
 
@@ -28,6 +29,15 @@ public class OrderConvertDao {
 		Date now = new Date();
 		commonDao.insert("INSERT INTO ORDER_CONVERT_IMAGE (ORDER_ID, INSERT_DATETIME, UPDATE_DATETIME, OPERATOR_ID) VALUES (?, ?, ?, ?)", 
 				orderId, now, now, userId);
+	}
+	
+	public boolean isExistConvertRecord(int orderId) {
+		Count count = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_CONVERT_IMAGE WHERE ORDER_ID = ?", orderId);
+		if (count != null && count.getCnt() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public OrderConvertImage getOrderConvert(int orderId) {

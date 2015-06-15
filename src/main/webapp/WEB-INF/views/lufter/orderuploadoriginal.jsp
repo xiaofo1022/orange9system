@@ -20,8 +20,6 @@
 	<jsp:param name="page" value=""/>
 </jsp:include>
 	
-<jsp:include page="uploadimagemodal.jsp"/>
-	
 <input type="hidden" id="user-id" value="${user.id}"/>
 <input type="hidden" id="is-admin" value="${user.isAdmin}"/>
 <input type="hidden" id="limitMinutes" value="${limitMinutes}"/>
@@ -35,7 +33,7 @@
 				<input type="hidden" id="${orderTransfer.id}" class="convert-time" value="${orderTransfer.insertDatetime.getTime()}"/>
 				<div class="clearfix">
 					<div class="data-info lofter-bc">
-					单号 <a href="<c:url value='/order/orderDetail/${orderTransfer.id}'/>" target="_blank">${orderTransfer.orderNo}</a>
+					单号 <a href="<c:url value='/order/orderDetail/${orderTransfer.orderId}'/>" target="_blank">${orderTransfer.orderNo}</a>
 					</div>
 					<div class="data-info lofter-bc">
 						<span id="time-label-${orderTransfer.id}">剩余时间</span> 
@@ -45,8 +43,8 @@
 				<div class="clearfix">
 					<div class="data-info facebook-bc order-detail-header">摄影师 ${orderTransfer.operator.name} <img src="${orderTransfer.operator.header}"/></div>
 					<div class="data-info facebook-bc">已上传 ${orderTransfer.imageDataCount} 张</div>
-					<button class="btn btn-info btn-data-info" onclick="openUploadImageWindow(${orderTransfer.id}, ${orderTransfer.orderId})">上传</button>
-					<button class="btn btn-success btn-data-info" onclick="setTransferComplete(${orderTransfer.id}, ${orderTransfer.orderId})">完成</button>
+					<button id="btn-upload-${orderTransfer.orderId}" class="btn btn-info btn-data-info" onclick="completePostProduction(${orderTransfer.id}, ${orderTransfer.orderId})">上传</button>
+					<button id="btn-confirm-${orderTransfer.orderId}" class="btn btn-success btn-data-info" onclick="setTransferComplete(${orderTransfer.id}, ${orderTransfer.orderId})">完成</button>
 				</div>
 				<div id="time-progress-bar-${orderTransfer.id}" class="progress" style="margin-bottom:0;">
 					<div id="time-bar-${orderTransfer.id}" class="progress-bar progress-bar-success" role="progressbar"
@@ -60,10 +58,12 @@
 	<jsp:include page="panel.jsp" flush="true">
 		<jsp:param name="link" value="uploadoriginal"/>
 	</jsp:include>
+	
+	<input class="hidden" multiple="multiple" type="file" id="complete-post-production"/>
 </div>
 </div>
 <script src="<c:url value='/js/util/countDown.js'/>"></script>
-<script src="<c:url value='/js/util/transferUploader.js'/>"></script>
+<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
 	var limitSecond = parseInt($("#limitMinutes").val()) * 60;
 	
@@ -81,11 +81,53 @@
 		});
 	}
 	
-	function openUploadImageWindow(orderTransferId, orderId) {
-		$("#orderTransferImageId").val(orderTransferId);
-		$("#orderId").val(orderId);
-		$("#uploadImagesModal").modal("show");
+	var compOrderId;
+	var compTransferId;
+	var uploadButtonId;
+	var confirmButtonId;
+	
+	function completePostProduction(transferId, orderId) {
+		compTransferId = transferId;
+		compOrderId = orderId;
+		uploadButtonId = "btn-upload-" + orderId;
+		confirmButtonId = "btn-confirm-" + orderId;
+		$("#complete-post-production").click();
 	}
+	
+	$("#complete-post-production").bind("change", function(event) {
+		$("#" + uploadButtonId).attr("disabled", true);
+		$("#" + confirmButtonId).attr("disabled", true);
+		$("#" + uploadButtonId).text("上传中...");
+		$("#" + confirmButtonId).text("上传中...");
+		var orderId = compOrderId;
+		var transferId = compTransferId;
+		var files = event.target.files;
+		var completeCount = 0;
+		for (var index in files) {
+			var file = files[index];
+			if (file != null && file.name != null && file.name != undefined) {
+				var frontName = file.name.split(".")[0];
+				var reader = new FileReader();
+				reader.frontName = frontName;
+				reader.onload = function(event) {
+					var base64Data = event.target.result.split(",")[1];
+					var frontName = this.frontName;
+					AjaxUtil.post("<c:url value='/orderTransfer/uploadTransferImage'/>", {orderTransferImageId:transferId, orderId:orderId, fileName:this.frontName, imageData:base64Data}, function(data) {
+						if (data) {
+							completeCount++;
+							if (completeCount == files.length) {
+								location.reload(true);
+							}
+						}
+					});
+				};
+				try {
+					reader.readAsDataURL(file);
+				} catch (exp) {
+				}
+			}
+		}
+	});
 	
 	function setTransferComplete(orderTransferId, orderId) {
 		$.get("<c:url value='/orderTransfer/getTransferImageCount/" + orderId + "'/>", function(data) {

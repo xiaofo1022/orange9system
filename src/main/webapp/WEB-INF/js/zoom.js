@@ -73,7 +73,7 @@
 	
 	function openPrevious() {
 		var prev = openedImage.parent('div').prev();
-		if (prev.length == 0 || prev.hasClass("clear")) {
+		if (prev.length == 0) {
 			prev = $('#blink1-block div:last-child').prev();
 		}
 		prev.find('a').trigger('click');
@@ -81,7 +81,7 @@
 	
 	function openNext() {
 		var next = openedImage.parent('div').next();
-		if (next.length == 0 || next.hasClass("clear")) {
+		if (next.length == 0) {
 			next = $('#blink1-block div:first-child');
 		}
 		next.children('a').trigger('click');

@@ -39,12 +39,7 @@
 					</c:if>
 				</div>
 				<div class="clearfix">
-					<c:forEach items="${postProduction.imageDataList}" var="imageData">
-						<div class="pic-block">
-							<img src="<c:url value='/pictures/post/original/${imageData.orderId}/${imageData.fileName}.jpg'/>"/>
-							<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
-						</div>
-					</c:forEach>
+					<div class="data-info facebook-bc" style="margin-left:0;">图片 ${postProduction.fileNames}</div>
 				</div>
 			</div>
 		</c:forEach>
