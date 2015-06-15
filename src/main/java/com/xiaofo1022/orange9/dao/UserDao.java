@@ -43,11 +43,15 @@ public class UserDao {
 	}
 	
 	public List<User> getUserList(int bossId) {
-		return commonDao.query(User.class, "SELECT * FROM USER WHERE BOSS_ID = ? AND ACTIVE = 1", bossId);
+		return commonDao.query(User.class, "SELECT A.* FROM USER A LEFT JOIN ROLE B ON A.ROLE_ID = B.ID WHERE A.ACTIVE = 1 AND B.IS_SHOW = 1 AND A.BOSS_ID = ?", bossId);
 	}
 	
-	public List<User> getUserListByRoleId(int roleId) {
-		return commonDao.query(User.class, "SELECT * FROM USER WHERE ROLE_ID = ? AND ACTIVE = 1", roleId);
+	public List<User> getBossList() {
+		return commonDao.query(User.class, "SELECT A.* FROM USER A LEFT JOIN ROLE B ON A.ROLE_ID = B.ID WHERE A.ACTIVE = 1 AND B.IS_SHOW = 1 AND A.BOSS_ID = A.ID");
+	}
+	
+	public List<User> getUserListByRoleId(int roleId, int bossId) {
+		return commonDao.query(User.class, "SELECT * FROM USER WHERE ROLE_ID = ? AND BOSS_ID = ? AND ACTIVE = 1", roleId, bossId);
 	}
 	
 	public void updateUser(User user) {
@@ -61,5 +65,9 @@ public class UserDao {
 	
 	public void updatePassword(int userId, String password) {
 		commonDao.update("UPDATE USER SET PASSWORD = ? WHERE ID = ?", password, userId);
+	}
+	
+	public void controlYourself(User user) {
+		commonDao.update("UPDATE USER SET BOSS_ID = ? WHERE ID = ?", user.getId(), user.getId());
 	}
 }

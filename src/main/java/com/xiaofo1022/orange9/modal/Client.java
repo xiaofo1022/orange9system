@@ -17,6 +17,10 @@ public class Client {
 	private String clientShopLink;
 	@Column("REMARK")
 	private String clientRemark;
+	@Column("OWNER_ID")
+	private int ownerId;
+	@Column("ACCOUNT_ID")
+	private int accountId;
 	
 	public int getId() {
 		return id;
@@ -59,5 +63,17 @@ public class Client {
 	}
 	public void setClientRemark(String clientRemark) {
 		this.clientRemark = clientRemark;
+	}
+	public int getOwnerId() {
+		return ownerId;
+	}
+	public void setOwnerId(int ownerId) {
+		this.ownerId = ownerId;
+	}
+	public int getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(int accountId) {
+		this.accountId = accountId;
 	}
 }

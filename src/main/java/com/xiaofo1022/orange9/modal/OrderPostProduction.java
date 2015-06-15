@@ -21,8 +21,6 @@ public class OrderPostProduction {
 	private int operatorId;
 	@Column("IS_DONE")
 	private int isDone;
-	@Column("IMAGE_ID")
-	private int imageId;
 	@JoinTable(tableName="USER", joinField="operatorId")
 	private User operator;
 	@SuppressWarnings("unused")
@@ -90,12 +88,6 @@ public class OrderPostProduction {
 	}
 	public void setFileNames(String fileNames) {
 		this.fileNames = fileNames;
-	}
-	public int getImageId() {
-		return imageId;
-	}
-	public void setImageId(int imageId) {
-		this.imageId = imageId;
 	}
 	public int getImageCount() {
 		return imageCount;

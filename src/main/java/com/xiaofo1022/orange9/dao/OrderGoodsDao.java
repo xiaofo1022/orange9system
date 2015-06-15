@@ -64,12 +64,8 @@ public class OrderGoodsDao {
 				new Date(), orderGoods.getCoatCount(), orderGoods.getPantsCount(), orderGoods.getJumpsuitsCount(), orderGoods.getShoesCount(), orderGoods.getBagCount(), orderGoods.getHatCount(), orderGoods.getOtherCount(), orderGoods.getOrderId());
 	}
 	
-	public List<OrderGoods> getOrderGoodsList(int orderId) {
-		return commonDao.query(OrderGoods.class, "SELECT * FROM ORDER_GOODS WHERE ORDER_ID = ? ORDER BY ID DESC", orderId);
-	}
-	
-	public List<OrderGoods> getOrderGoodsList() {
-		return commonDao.query(OrderGoods.class, "SELECT * FROM ORDER_GOODS ORDER BY INSERT_DATETIME DESC");
+	public List<OrderGoods> getOrderGoodsList(int ownerId) {
+		return commonDao.query(OrderGoods.class, "SELECT A.* FROM ORDER_GOODS A LEFT JOIN ORDERS B ON A.ORDER_ID = B.ID WHERE B.OWNER_ID = ? ORDER BY INSERT_DATETIME DESC", ownerId);
 	}
 	
 	public void updateOrderGoodsId(int orderId, int orderGoodsId) {

@@ -44,6 +44,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="data-info facebook-bc order-detail-header">摄影师 ${orderTransfer.operator.name} <img src="${orderTransfer.operator.header}"/></div>
+					<div class="data-info facebook-bc">已上传 ${orderTransfer.imageDataCount} 张</div>
 					<button class="btn btn-info btn-data-info" onclick="openUploadImageWindow(${orderTransfer.id}, ${orderTransfer.orderId})">上传</button>
 					<button class="btn btn-success btn-data-info" onclick="setTransferComplete(${orderTransfer.id}, ${orderTransfer.orderId})">完成</button>
 				</div>

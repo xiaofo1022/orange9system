@@ -42,10 +42,9 @@ public class SaveTransferImageThread implements Runnable {
 			}
 			BufferedInputStream fileIn = new BufferedInputStream(new ByteArrayInputStream(getImageBytes(transferImageData.getImageData())));
 			byte[] buf = new byte[1024];
-			File file = new File(dir + "\\" + transferImageData.getId() + ".jpg");
-			// TODO Need to check repeat pic
-			if (file != null) {
-				BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
+			File file = new File(dir + "\\" + transferImageData.getFileName() + ".jpg");
+			BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));
+			try {
 				while (true) {
 					int bytesIn = fileIn.read(buf, 0, 1024);
 					if (bytesIn == -1) {
@@ -54,8 +53,10 @@ public class SaveTransferImageThread implements Runnable {
 						fileOut.write(buf, 0, bytesIn);
 					}
 				}
+			} finally {
 				fileOut.flush();
 				fileOut.close();
+				fileIn.close();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

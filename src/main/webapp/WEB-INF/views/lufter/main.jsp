@@ -342,7 +342,7 @@
 				$("#photographerId").html("");
 				$("#assistantId").html("");
 				var photographerHtml = "";
-				var assistantHtml = "";
+				var assistantHtml = "<option>请选择 </option>";
 				for (var i in list) {
 					var data = list[i];
 					var option = "<option value='" + data.id + "'>" + data.name + "</option>";

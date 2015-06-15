@@ -336,6 +336,10 @@
 	color:#F4DFCC;
 }
 
+.success-color {
+	color:#5CB85C;
+}
+
 .order-detail-header {
 	padding-top:6px;
 	padding-bottom:5px;
@@ -385,4 +389,5 @@
 }
 .verify-image img {
 	max-width: 800px;
+	max-height: 600px;
 }

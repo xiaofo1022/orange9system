@@ -38,16 +38,12 @@
 		$("#btn-upload").text("开始上传");
 	}
 	
-	$("#uploadImagesModal").on("hide.bs.modal", function(event) {
-		if ($("#btn-upload").attr("disabled")) {
-			event.preventDefault();
-			return;
-		}
-	});
-	
-	$("#uploadImagesModal").on("hidden.bs.modal", function() {
+	$("#uploadImagesModal").on("hidden.bs.modal", function(event) {
 		if (!$("#btn-upload").attr("disabled")) {
+			event.preventDefault();
 			emptyUploadContainer();
+			location.reload(true);
+			return;
 		}
 	});
 	

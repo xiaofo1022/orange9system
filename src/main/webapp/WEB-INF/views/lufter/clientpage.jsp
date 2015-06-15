@@ -79,8 +79,8 @@
 							<div id="blink2-block" class="detail-bottom-block">
 								<c:forEach items="${order.orderFixedImageDataList}" var="imageData">
 									<div class="pic-client-block photo-frame gallery">
-										<a id="client-pic-fixed-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>">
-											<img src="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+										<a id="client-pic-fixed-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.fileName}.jpg'/>">
+											<img src="<c:url value='/pictures/fixed/${imageData.orderId}/${imageData.fileName}.jpg'/>"/>
 										</a>
 										<p id="client-pic-fixed-label-${imageData.id}">(${imageData.fileName})</p>
 									</div>
@@ -91,12 +91,12 @@
 							<div id="blink1-block" class="detail-bottom-block">
 								<c:forEach items="${order.orderTransferImageDataList}" var="imageData">
 									<div class="pic-client-block photo-frame gallery">
-										<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>">
-											<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.id}.jpg'/>"/>
+										<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/original/${imageData.orderId}/${imageData.fileName}.jpg'/>">
+											<img src="<c:url value='/pictures/original/${imageData.orderId}/${imageData.fileName}.jpg'/>"/>
 										</a>
 										<c:choose>
 											<c:when test="${imageData.isSelected == 1}">
-												<p id="client-pic-label-${imageData.id}">(${imageData.fileName})<span class='taobao-color'>已选</span></p>
+												<p id="client-pic-label-${imageData.id}">(${imageData.fileName})<span class='success-color'>已选</span></p>
 											</c:when>
 											<c:otherwise>
 												<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
@@ -131,7 +131,7 @@
 	var selectedPictureIdList = [];
 	var CHOSEN_MAX = parseInt($("#allOrderGoodsCount").val()) * 8;
 	var isConfirmOverSelect = false;
-	var selectedLabel = "<span class='taobao-color'>已选</span>";
+	var selectedLabel = "<span class='success-color'>已选</span>";
 	
 	function clientPictureSelected(event) {
 		var overlay = $(event.currentTarget);
@@ -196,7 +196,7 @@
 		if (result) {
 			$('#zoom .close').click();
 			$.ajax({  
-	            url: "<c:url value='/orderTransfer/setTransferImageSelected/" + $("#orderId").val() + "'/>",  
+	            url: "<c:url value='/client/setTransferImageSelected/" + $("#orderId").val() + "'/>",  
 	            type: 'post',
 	            contentType: 'application/json',
 	            data: JSON.stringify(selectedPictureIdList),  
@@ -249,7 +249,7 @@
 	}
 	
 	function downloadZip(orderId) {
-		window.open("<c:url value='/orderPostProduction/getFixedImageZipPackage/" + orderId + "'/>");
+		window.open("<c:url value='/client/getFixedImageZipPackage/" + orderId + "'/>");
 	}
 </script>
 </body>

@@ -30,8 +30,17 @@ public class OrderTransferDao {
 		return commonDao.getFirst(OrderTransferImage.class, "SELECT * FROM ORDER_TRANSFER_IMAGE WHERE ID = ?", orderTransferId);
 	}
 	
-	public List<OrderTransferImage> getOrderTransferImageList() {
-		return commonDao.query(OrderTransferImage.class, "SELECT * FROM ORDER_TRANSFER_IMAGE WHERE IS_DONE = 0 ORDER BY INSERT_DATETIME DESC");
+	public List<OrderTransferImage> getOrderTransferImageList(int ownerId) {
+		List<OrderTransferImage> transferList = commonDao.query(OrderTransferImage.class, "SELECT A.* FROM ORDER_TRANSFER_IMAGE A LEFT JOIN ORDERS B ON A.ORDER_ID = B.ID WHERE A.IS_DONE = 0 AND B.OWNER_ID = ? ORDER BY A.INSERT_DATETIME DESC", ownerId);
+		if (transferList != null && transferList.size() > 0) {
+			for (OrderTransferImage transfer : transferList) {
+				Count count = this.getTransferImageDataCount(transfer.getOrderId());
+				if (count != null) {
+					transfer.setImageDataCount(count.getCnt());
+				}
+			}
+		}
+		return transferList;
 	}
 	
 	public List<OrderTransferImageData> getTransferImageDataListByOrder(int orderId) {

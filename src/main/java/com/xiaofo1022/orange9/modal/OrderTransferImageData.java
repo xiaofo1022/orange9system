@@ -22,6 +22,12 @@ public class OrderTransferImageData {
 	private String fileName;
 	@Column("IS_SELECTED")
 	private int isSelected;
+	@Column("IS_FIXED_SKIN")
+	private int isFixedSkin;
+	@Column("IS_FIXED_BACKGROUND")
+	private int isFixedBackground;
+	@Column("IS_CUT_LIQUIFY")
+	private int isCutLiquify;
 	
 	private String serverPath;
 	
@@ -84,5 +90,23 @@ public class OrderTransferImageData {
 	}
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
+	}
+	public int getIsFixedSkin() {
+		return isFixedSkin;
+	}
+	public void setIsFixedSkin(int isFixedSkin) {
+		this.isFixedSkin = isFixedSkin;
+	}
+	public int getIsFixedBackground() {
+		return isFixedBackground;
+	}
+	public void setIsFixedBackground(int isFixedBackground) {
+		this.isFixedBackground = isFixedBackground;
+	}
+	public int getIsCutLiquify() {
+		return isCutLiquify;
+	}
+	public void setIsCutLiquify(int isCutLiquify) {
+		this.isCutLiquify = isCutLiquify;
 	}
 }

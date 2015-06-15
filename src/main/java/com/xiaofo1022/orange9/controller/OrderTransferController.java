@@ -22,6 +22,7 @@ import com.xiaofo1022.orange9.dao.OrderTransferDao;
 import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.OrderTransferImage;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
+import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
 import com.xiaofo1022.orange9.thread.SaveTransferImageThread;
@@ -45,8 +46,13 @@ public class OrderTransferController {
 	
 	@RequestMapping(value = "/getOrderList", method = RequestMethod.GET)
 	@ResponseBody
-	public List<OrderTransferImage> getOrderTransferImageList() {
-		return orderTransferDao.getOrderTransferImageList();
+	public List<OrderTransferImage> getOrderTransferImageList(HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			return orderTransferDao.getOrderTransferImageList(loginUser.getBossId());
+		} else {
+			return null;
+		}
 	}
 	
 	@RequestMapping(value = "/getTransferImageList/{orderId}", method = RequestMethod.GET)
@@ -74,7 +80,7 @@ public class OrderTransferController {
 	@RequestMapping(value = "/setTransferImageIsDone/{orderId}/{tansferId}", method = RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse setTransferImageIsDone(@PathVariable int orderId, @PathVariable int tansferId, HttpServletRequest request) {
-		orderTransferDao.setTransferImageIsDone(tansferId, OrderStatusConst.ORDER_TRANSFER_IMAGE_DONE);
+		orderTransferDao.setTransferImageIsDone(tansferId, OrderStatusConst.IS_DONE);
 		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.WAITING_FOR_CLIENT_CHOSE);
 		return new SuccessResponse("Set Transfer Image Is Done Success");
 	}

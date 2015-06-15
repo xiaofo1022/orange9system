@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
+import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.dao.ClientDao;
+import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
+import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderTransferDao;
 import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.Client;
@@ -33,6 +37,7 @@ import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
+import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
 @RequestMapping("/client")
@@ -48,6 +53,12 @@ public class ClientController {
 	private OrderTransferDao orderTransferDao;
 	@Autowired
 	private OrderPostProductionDao orderPostProductionDao;
+	@Autowired
+	private OrderStatusDao orderStatusDao;
+	@Autowired
+	private OrderConvertDao orderConvertDao;
+	@Autowired
+	private PictureController pictureController;
 	
 	@RequestMapping(value = "/main/{clientId}", method = RequestMethod.GET)
 	public String main(@PathVariable int clientId, ModelMap modelMap) {
@@ -100,14 +111,19 @@ public class ClientController {
 		if (userDao.getUserByPhone(client.getClientPhone()) != null) {
 			return new FailureResponse(Message.EXIST_USER_PHONE);
 		}
-		clientDao.insertClient(client);
-		User user = new User();
-		user.setName(client.getClientName());
-		user.setRoleId(RoleConst.CLIENT_ID);
-		user.setPassword(RoleConst.DEFAULT_PASSWORD);
-		user.setPhone(client.getClientPhone());
-		user.setBossId(client.getId());
-		userDao.insertUser(user);
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			User user = new User();
+			user.setName(client.getClientName());
+			user.setRoleId(RoleConst.CLIENT_ID);
+			user.setPassword(RoleConst.DEFAULT_PASSWORD);
+			user.setPhone(client.getClientPhone());
+			user.setBossId(loginUser.getBossId());
+			userDao.insertUser(user);
+			client.setAccountId(user.getId());
+			client.setOwnerId(loginUser.getBossId());
+			clientDao.insertClient(client);
+		}
 		return new SuccessResponse("Add Client Success");
 	}
 	
@@ -146,8 +162,13 @@ public class ClientController {
 	
 	@RequestMapping(value = "/getClientList", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Client> getClientList() {
-		return clientDao.getClientList();
+	public List<Client> getClientList(HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			return clientDao.getClientList(loginUser.getBossId());
+		} else {
+			return null;
+		}
 	}
 	
 	@RequestMapping(value = "/addClientMessage", method = RequestMethod.POST)
@@ -161,5 +182,23 @@ public class ClientController {
 	@ResponseBody
 	public List<ClientMessage> getClientMessageList(@PathVariable int clientId, @PathVariable int orderId) {
 		return clientDao.getClientMessageList(clientId, orderId);
+	}
+	
+	@RequestMapping(value = "/setTransferImageSelected/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse setTransferImageSelected(@RequestBody List<Integer> transferImgIdList, BindingResult bindingResult, @PathVariable int orderId, HttpServletRequest request) {
+		if (transferImgIdList != null) {
+			for (Integer id : transferImgIdList) {
+				orderTransferDao.setTransferImageSelected(id);
+			}
+		}
+		orderConvertDao.insertOrderConvert(orderId, 0);
+		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
+		return new SuccessResponse("Set Transfer Image Selected Success");
+	}
+	
+	@RequestMapping(value = "/getFixedImageZipPackage/{orderId}", method = RequestMethod.GET)
+	public void getFixedImageZipPackage(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
+		pictureController.getFixedImageZipPackage(orderId, request, response);
 	}
 }

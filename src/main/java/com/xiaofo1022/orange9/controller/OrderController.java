@@ -62,8 +62,9 @@ public class OrderController {
 		User user = RequestUtil.getLoginUser(request);
 		if (user != null) {
 			order.setUserId(user.getId());
+			order.setOwnerId(user.getBossId());
+			orderDao.insertOrder(order);
 		}
-		orderDao.insertOrder(order);
 		return new SuccessResponse("Add Order Success");
 	}
 	
@@ -75,15 +76,24 @@ public class OrderController {
 	
 	@RequestMapping(value = "/getOrderListByDate/{startDate}/{endDate}", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Order> getOrderListByDate(@PathVariable String startDate, @PathVariable String endDate) {
-		return orderDao.getOrderListByDate(startDate, endDate);
+	public List<Order> getOrderListByDate(@PathVariable String startDate, @PathVariable String endDate, HttpServletRequest request) {
+		User user = RequestUtil.getLoginUser(request);
+		if (user != null) {
+			return orderDao.getOrderListByDate(startDate, endDate, user.getBossId());
+		} else {
+			return null;
+		}
 	}
 	
 	@RequestMapping(value = "/getOrderStatusCountMap", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Integer> getOrderStatusCountMap(HttpServletRequest request) {
-		int userId = RequestUtil.getLoginUserId(request);
-		return orderStatusDao.getOrderStatusCountMap(userId);
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			return orderStatusDao.getOrderStatusCountMap(loginUser.getId(), loginUser.getBossId());
+		} else {
+			return null;
+		}
 	}
 	
 	@RequestMapping(value="/orderDetail/{orderId}", method=RequestMethod.GET)
@@ -95,9 +105,9 @@ public class OrderController {
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
 			modelMap.addAttribute("orderConvert", orderConvertDao.getOrderConvert(orderId));
-			modelMap.addAttribute("orderFixSkinList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_FIX_SKIN, orderId));
-			modelMap.addAttribute("orderFixBackgroundList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId));
-			modelMap.addAttribute("orderCutLiquifyList", orderPostProductionDao.getPostProductionListByOrder(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId));
+			modelMap.addAttribute("orderFixSkin", orderPostProductionDao.getPostProductionByOrder(OrderConst.TABLE_ORDER_FIX_SKIN, orderId));
+			modelMap.addAttribute("orderFixBackground", orderPostProductionDao.getPostProductionByOrder(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId));
+			modelMap.addAttribute("orderCutLiquify", orderPostProductionDao.getPostProductionByOrder(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId));
 			modelMap.addAttribute("orderTransferImageDataList", orderTransferDao.getTransferImageDataListByOrder(orderId));
 			modelMap.addAttribute("orderFixedImageDataList", orderPostProductionDao.getOrderFixedImageDataList(orderId));
 			modelMap.addAttribute("orderVerifier", orderVerifyDao.getOrderVerifyImage(orderId));

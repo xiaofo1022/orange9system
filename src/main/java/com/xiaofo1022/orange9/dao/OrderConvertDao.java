@@ -34,9 +34,9 @@ public class OrderConvertDao {
 		return commonDao.getFirst(OrderConvertImage.class, "SELECT * FROM ORDER_CONVERT_IMAGE WHERE ORDER_ID = ? AND IS_DONE = 0", orderId);
 	}
 	
-	public List<OrderConvertImage> getOrderConvertList(HttpServletRequest request) {
+	public List<OrderConvertImage> getOrderConvertList(HttpServletRequest request, int ownerId) {
 		List<OrderConvertImage> resultList = null;
-		List<Order> orderList = commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE STATUS_ID = ?", OrderStatusConst.CONVERT_IMAGE);
+		List<Order> orderList = commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE STATUS_ID = ? AND OWNER_ID = ?", OrderStatusConst.CONVERT_IMAGE, ownerId);
 		if (orderList != null && orderList.size() > 0) {
 			resultList = new ArrayList<OrderConvertImage>(orderList.size());
 			for (Order order : orderList) {

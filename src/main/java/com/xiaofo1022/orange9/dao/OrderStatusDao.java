@@ -32,24 +32,21 @@ public class OrderStatusDao {
 		return commonDao.getFirst(OrderStatus.class, "SELECT * FROM ORDER_STATUS WHERE ID = ?", statusId);
 	}
 	
-	public Map<String, Integer> getOrderStatusCountMap(int userId) {
+	public Map<String, Integer> getOrderStatusCountMap(int userId, int bossId) {
 		List<OrderStatus> orderStatusList = this.getOrderStatusList();
 		Map<String, Integer> statusCountMap = new HashMap<String, Integer>();
 		for (OrderStatus orderStatus : orderStatusList) {
-			OrderStatusCount orderStatusCount = this.getOrderStatusCount(orderStatus.getId());
+			OrderStatusCount orderStatusCount = this.getOrderStatusCount(orderStatus.getId(), bossId);
 			statusCountMap.put(orderStatus.getName(), orderStatusCount == null ? 0 : orderStatusCount.getStatusCount());
 		}
-		OrderStatusCount fixSkinCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_SKIN, userId);
-		statusCountMap.put(OrderStatusConst.FIX_SKIN, fixSkinCount == null ? 0 : fixSkinCount.getStatusCount());
-		OrderStatusCount fixBackgroundCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_BACKGROUND, userId);
-		statusCountMap.put(OrderStatusConst.FIX_BACKGROUND, fixBackgroundCount == null ? 0 : fixBackgroundCount.getStatusCount());
-		OrderStatusCount cutLiquifyCount = orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_CUT_LIQUIFY, userId);
-		statusCountMap.put(OrderStatusConst.CUT_LIQUIFY, cutLiquifyCount == null ? 0 : cutLiquifyCount.getStatusCount());
+		statusCountMap.put(OrderStatusConst.FIX_SKIN, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_SKIN, bossId));
+		statusCountMap.put(OrderStatusConst.FIX_BACKGROUND, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_BACKGROUND, bossId));
+		statusCountMap.put(OrderStatusConst.CUT_LIQUIFY, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_CUT_LIQUIFY, bossId));
 		return statusCountMap;
 	}
 	
-	public OrderStatusCount getOrderStatusCount(int statusId) {
-		return commonDao.getFirst(OrderStatusCount.class, "SELECT COUNT(ID) AS STATUS_COUNT FROM ORDERS WHERE STATUS_ID = ?", statusId);
+	public OrderStatusCount getOrderStatusCount(int statusId, int ownerId) {
+		return commonDao.getFirst(OrderStatusCount.class, "SELECT COUNT(ID) AS STATUS_COUNT FROM ORDERS WHERE STATUS_ID = ? AND OWNER_ID = ?", statusId, ownerId);
 	}
 	
 	public void updateOrderStatus(int orderId, User user, int statusId) {

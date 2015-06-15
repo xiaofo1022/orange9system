@@ -20,9 +20,6 @@
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
 <script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
 <script src="<c:url value='/js/validation/validator.js'/>"></script>
-<script src="<c:url value='/js/zoom.js'/>"></script>
-<script src="<c:url value='/js/util/transferUploader.js'/>"></script>
-<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <body>
 <jsp:include page="header.jsp" flush="true">
 	<jsp:param name="page" value=""/>
@@ -208,10 +205,8 @@
 				<div class="data-info progress-bc order-detail-header">
 					修皮肤
 					<c:choose>
-						<c:when test="${orderFixSkinList != null && orderFixSkinList.size() > 0}">
-							<c:forEach items="${orderFixSkinList}" var="orderFixSkin">
-								${orderFixSkin.operator.name} <img style="height:30px;" src="${orderFixSkin.operator.header}"/>
-							</c:forEach>
+						<c:when test="${orderFixSkin != null}">
+							${orderFixSkin.operator.name} <img style="height:30px;" src="${orderFixSkin.operator.header}"/>
 						</c:when>
 						<c:otherwise>
 							未开始
@@ -221,10 +216,8 @@
 				<div class="data-info progress-bc order-detail-header">
 					修背景
 					<c:choose>
-						<c:when test="${orderFixBackgroundList != null && orderFixBackgroundList.size() > 0}">
-							<c:forEach items="${orderFixBackgroundList}" var="orderFixBackground">
-								${orderFixBackground.operator.name} <img style="height:30px;" src="${orderFixBackground.operator.header}"/>
-							</c:forEach>
+						<c:when test="${orderFixBackground != null}">
+							${orderFixBackground.operator.name} <img style="height:30px;" src="${orderFixBackground.operator.header}"/>
 						</c:when>
 						<c:otherwise>
 							未开始
@@ -234,10 +227,8 @@
 				<div class="data-info progress-bc order-detail-header">
 					裁图液化
 					<c:choose>
-						<c:when test="${orderCutLiquifyList != null && orderCutLiquifyList.size() > 0}">
-							<c:forEach items="${orderCutLiquifyList}" var="orderCutLiquify">
-								${orderCutLiquify.operator.name} <img src="${orderCutLiquify.operator.header}"/>
-							</c:forEach>
+						<c:when test="${orderCutLiquify != null}">
+							${orderCutLiquify.operator.name} <img style="height:30px;" src="${orderCutLiquify.operator.header}"/>
 						</c:when>
 						<c:otherwise>
 							未开始
@@ -322,6 +313,9 @@
 	<jsp:include page="panel.jsp" flush="true"/>
 </div>
 </div>
+<script src="<c:url value='/js/zoom.js'/>"></script>
+<script src="<c:url value='/js/util/transferUploader.js'/>"></script>
+<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
 	var compId;
 	var compOrderId;

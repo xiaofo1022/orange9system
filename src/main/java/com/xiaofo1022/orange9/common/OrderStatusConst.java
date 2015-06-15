@@ -6,9 +6,8 @@ public class OrderStatusConst {
 	public static final String FIX_SKIN = "修皮肤及褶皱";
 	public static final String FIX_BACKGROUND = "修背景";
 	public static final String CUT_LIQUIFY = "裁图液化";
-	public static final int ORDER_TRANSFER_IMAGE_DONE = 1;
+	public static final int IS_DONE = 1;
 	public static final int SHOOTING = 1;
-	public static final int SHOOTING_COMPLETE = 2;
 	public static final int TRANSFER_IMAGE = 2;
 	public static final int WAITING_FOR_CLIENT_CHOSE = 3;
 	public static final int CONVERT_IMAGE = 4;

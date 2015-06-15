@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
 import com.xiaofo1022.orange9.common.OrderConst;
+import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.dao.ClockInDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.PerformanceDao;
@@ -56,6 +57,9 @@ public class UserController {
 			user.setBossId(loginUser.getId());
 		}
 		userDao.insertUser(user);
+		if (loginUser != null && loginUser.getRoleId() == RoleConst.BOSS_ID) {
+			userDao.controlYourself(user);
+		}
 		return new SuccessResponse("Add User Success");
 	}
 	
@@ -64,7 +68,7 @@ public class UserController {
 	public List<User> getUserList(HttpServletRequest request) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
-			return userDao.getUserList();
+			return userDao.getUserList(loginUser.getBossId());
 		}
 		return null;
 	}
@@ -74,7 +78,12 @@ public class UserController {
 	public List<User> getUserDetailList(HttpServletRequest request) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
-			List<User> userList = userDao.getUserList();
+			List<User> userList = null;
+			if (loginUser.getRoleId() == RoleConst.BOSS_ID) {
+				userList = userDao.getBossList();
+			} else {
+				userList = userDao.getUserList(loginUser.getBossId());
+			}
 			String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate(new Date());
 			for (User user : userList) {
 				this.createUserClockIn(user, queryMonth[0], queryMonth[1]);
@@ -88,11 +97,11 @@ public class UserController {
 	private void createUserPerformance(User user, String startDate, String endDate) {
 		List<Performance> performanceList = performanceDao.getPerformanceList();
 		Count fixSkinCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, startDate, endDate);
-		Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, startDate, endDate);
+		Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, OrderConst.COLUMN_FIXED_SKIN, startDate, endDate);
 		Count fixBackgroundCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, startDate, endDate);
-		Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, startDate, endDate);
+		Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND, startDate, endDate);
 		Count cutLiquifyCount = orderPostProductionDao.getAllPostProductionCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, startDate, endDate);
-		Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, startDate, endDate);
+		Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY, startDate, endDate);
 		user.setMonthPostProduction(fixSkinCount.getCnt() + fixBackgroundCount.getCnt() + cutLiquifyCount.getCnt());
 		user.setMonthDonePostProduction(fixSkinDoneCount.getCnt() + fixBackgroundDoneCount.getCnt() + cutLiquifyDoneCount.getCnt());
 		user.addPerformance(performanceList.get(0).getBaseCount(), fixSkinDoneCount.getCnt(), performanceList.get(0).getPush());

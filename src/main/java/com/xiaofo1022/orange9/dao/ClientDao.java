@@ -17,8 +17,8 @@ public class ClientDao {
 	
 	public void insertClient(Client client) {
 		Date now = new Date();
-		int id = commonDao.insert("INSERT INTO CLIENT (INSERT_DATETIME, UPDATE_DATETIME, NAME, PHONE, EMAIL, SHOP_NAME, SHOP_LINK, REMARK) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
-			now, now, client.getClientName(), client.getClientPhone(), client.getClientEmail(), client.getClientShopName(), client.getClientShopLink(), client.getClientRemark());
+		int id = commonDao.insert("INSERT INTO CLIENT (INSERT_DATETIME, UPDATE_DATETIME, NAME, PHONE, EMAIL, SHOP_NAME, SHOP_LINK, REMARK, OWNER_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+			now, now, client.getClientName(), client.getClientPhone(), client.getClientEmail(), client.getClientShopName(), client.getClientShopLink(), client.getClientRemark(), client.getOwnerId());
 		client.setId(id);
 	}
 	
@@ -31,8 +31,8 @@ public class ClientDao {
 		commonDao.update("UPDATE CLIENT SET ACTIVE = 0 WHERE ID = ?", clientId);
 	}
 	
-	public List<Client> getClientList() {
-		return commonDao.query(Client.class, "SELECT * FROM CLIENT WHERE ACTIVE = 1 ORDER BY NAME");
+	public List<Client> getClientList(int ownerId) {
+		return commonDao.query(Client.class, "SELECT * FROM CLIENT WHERE ACTIVE = 1 AND OWNER_ID = ? ORDER BY NAME", ownerId);
 	}
 	
 	public Client getClient(int id) {
@@ -48,5 +48,14 @@ public class ClientDao {
 	
 	public List<ClientMessage> getClientMessageList(int clientId, int orderId) {
 		return commonDao.query(ClientMessage.class, "SELECT * FROM CLIENT_MESSAGE WHERE CLIENT_ID = ? AND ORDER_ID = ? ORDER BY INSERT_DATETIME DESC", clientId, orderId);
+	}
+	
+	public int getClientIdByAccountId(int accountId) {
+		int clientId = 0;
+		Client client = commonDao.getFirst(Client.class, "SELECT * FROM CLIENT WHERE ACCOUNT_ID = ?", accountId);
+		if (client != null) {
+			clientId = client.getId();
+		}
+		return clientId;
 	}
 }

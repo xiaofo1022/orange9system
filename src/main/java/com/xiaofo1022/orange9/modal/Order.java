@@ -42,6 +42,8 @@ public class Order {
 	private int assistantId;
 	@Column("STATUS_ID")
 	private int statusId;
+	@Column("OWNER_ID")
+	private int ownerId;
 	private int userId;
 	@JoinTable(tableName="ORDER_STATUS", joinField="statusId")
 	private OrderStatus orderStatus;
@@ -220,5 +222,11 @@ public class Order {
 	}
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
+	}
+	public int getOwnerId() {
+		return ownerId;
+	}
+	public void setOwnerId(int ownerId) {
+		this.ownerId = ownerId;
 	}
 }

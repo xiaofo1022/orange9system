@@ -1,9 +1,5 @@
 package com.xiaofo1022.orange9.controller;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,15 +19,13 @@ import com.xiaofo1022.orange9.dao.OrderHistoryDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
-import com.xiaofo1022.orange9.modal.OrderFixedImageData;
-import com.xiaofo1022.orange9.modal.OrderPostProduction;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
+import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
 import com.xiaofo1022.orange9.thread.SaveTransferImageThread;
 import com.xiaofo1022.orange9.thread.TaskExecutor;
 import com.xiaofo1022.orange9.util.RequestUtil;
-import com.xiaofo1022.orange9.util.ZipUtil;
 
 @Controller
 @RequestMapping("/orderPostProduction")
@@ -47,23 +41,28 @@ public class OrderPostProductionController {
 	private OrderVerifyDao orderVerifyDao;
 	@Autowired
 	private TaskExecutor taskExecutor;
+	@Autowired
+	private PictureController pictureController;
 	
 	@RequestMapping(value = "/setFixSkinDone/{orderId}/{fileName}", method = RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse setFixSkinDone(@PathVariable int orderId, @PathVariable String fileName) {
 		// TODO If Chinese character, use json.
-		postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_FIX_SKIN, orderId, fileName);
+		if (postProductionDao.isSelectedPicture(orderId, fileName)) {
+			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_FIXED_SKIN, orderId, fileName);
+		}
 		return new SuccessResponse("Set Fix Skin Done Success");
 	}
 	
 	@RequestMapping(value = "/setFixSkinNextStep/{orderId}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setFixSkinNextStep(@PathVariable int orderId) {
-		if (postProductionDao.isAllPictureFixed(orderId, OrderConst.TABLE_ORDER_FIX_SKIN)) {
-			postProductionDao.updateTransferImagePostStatus(orderId, OrderConst.TABLE_ORDER_FIX_SKIN);
-			if (!postProductionDao.isExistPostList(orderId, OrderConst.TABLE_ORDER_FIX_BACKGROUND)) {
-				List<OrderPostProduction> postProductionDoneList = postProductionDao.getPostProductionListByOrderId(OrderConst.TABLE_ORDER_FIX_SKIN, orderId);
-				postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_FIX_BACKGROUND, postProductionDoneList);
+	public CommonResponse setFixSkinNextStep(@PathVariable int orderId, HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			if (postProductionDao.isAllPictureFixed(orderId, OrderConst.COLUMN_FIXED_SKIN)) {
+				postProductionDao.setPostProductionDone(orderId, OrderConst.TABLE_ORDER_FIX_SKIN);
+				postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId, loginUser.getBossId());
+				pictureController.clearPreStepPictures(orderId, OrderConst.PATH_ORIGINAL, request);
 			}
 		}
 		return new SuccessResponse("Set Fix Skin Next Step Success");
@@ -72,18 +71,21 @@ public class OrderPostProductionController {
 	@RequestMapping(value = "/setFixBackgroundDone/{orderId}/{fileName}", method = RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse setFixBackgroundDone(@PathVariable int orderId, @PathVariable String fileName) {
-		postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId, fileName);
+		if (postProductionDao.isSelectedPicture(orderId, fileName)) {
+			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_FIXED_BACKGROUND, orderId, fileName);
+		}
 		return new SuccessResponse("Set Fix Background Done Success");
 	}
 	
 	@RequestMapping(value = "/setFixBackgroundNextStep/{orderId}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setFixBackgroundNextStep(@PathVariable int orderId) {
-		if (postProductionDao.isAllPictureFixed(orderId, OrderConst.TABLE_ORDER_FIX_BACKGROUND)) {
-			postProductionDao.updateTransferImagePostStatus(orderId, OrderConst.TABLE_ORDER_FIX_BACKGROUND);
-			if (!postProductionDao.isExistPostList(orderId, OrderConst.TABLE_ORDER_CUT_LIQUIFY)) {
-				List<OrderPostProduction> postProductionDoneList = postProductionDao.getPostProductionListByOrderId(OrderConst.TABLE_ORDER_FIX_SKIN, orderId);
-				postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_CUT_LIQUIFY, postProductionDoneList);
+	public CommonResponse setFixBackgroundNextStep(@PathVariable int orderId, HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			if (postProductionDao.isAllPictureFixed(orderId, OrderConst.COLUMN_FIXED_BACKGROUND)) {
+				postProductionDao.setPostProductionDone(orderId, OrderConst.TABLE_ORDER_FIX_BACKGROUND);
+				postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId, loginUser.getBossId());
+				pictureController.clearPreStepPictures(orderId, OrderConst.PATH_FIX_SKIN, request);
 			}
 		}
 		return new SuccessResponse("Set Fix Background Next Step Success");
@@ -92,7 +94,9 @@ public class OrderPostProductionController {
 	@RequestMapping(value = "/setCutLiquifyDone/{orderId}/{fileName}", method = RequestMethod.POST)
 	@ResponseBody
 	public CommonResponse setCutLiquifyDone(@PathVariable int orderId, @PathVariable String fileName, HttpServletRequest request) {
-		postProductionDao.setPostProductionDone(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId, fileName);
+		if (postProductionDao.isSelectedPicture(orderId, fileName)) {
+			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_CUT_LIQUIFY, orderId, fileName);
+		}
 		return new SuccessResponse("Set Cut Liquify Done Success");
 	}
 	
@@ -100,7 +104,8 @@ public class OrderPostProductionController {
 	@ResponseBody
 	public CommonResponse setCutLiquifyNextStep(@PathVariable int orderId, HttpServletRequest request) {
 		if (postProductionDao.isAllPictureFixed(orderId)) {
-			postProductionDao.updateTransferImagePostStatus(orderId, OrderConst.TABLE_ORDER_CUT_LIQUIFY);
+			postProductionDao.setPostProductionDone(orderId, OrderConst.TABLE_ORDER_CUT_LIQUIFY);
+			pictureController.clearPreStepPictures(orderId, OrderConst.PATH_FIX_BACKGROUND, request);
 			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.WAIT_FOR_VERIFY);
 			orderVerifyDao.insertOrderVerifyImage(orderId, 0);
 		}
@@ -136,15 +141,6 @@ public class OrderPostProductionController {
 	
 	@RequestMapping(value = "/getFixedImageZipPackage/{orderId}", method = RequestMethod.GET)
 	public void getFixedImageZipPackage(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
-		List<OrderFixedImageData> imageList = postProductionDao.getOrderFixedImageDataList(orderId);
-		if (imageList != null && imageList.size() > 0) {
-			String serverPath = request.getSession().getServletContext().getRealPath("/");
-			String fixedPath = serverPath + "\\WEB-INF\\pictures\\fixed\\";
-			List<File> fileList = new ArrayList<File>(imageList.size());
-			for (OrderFixedImageData imageData : imageList) {
-				fileList.add(new File(fixedPath + "\\" + imageData.getOrderId() + "\\" + imageData.getId() + ".jpg"));
-			}
-			ZipUtil.downloadZipFile(fileList, response);
-		}
+		pictureController.getFixedImageZipPackage(orderId, request, response);
 	}
 }

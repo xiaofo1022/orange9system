@@ -14,6 +14,7 @@ import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
+import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
 import com.xiaofo1022.orange9.util.RequestUtil;
@@ -45,9 +46,12 @@ public class OrderConvertController {
 			@PathVariable int orderId, 
 			@PathVariable int convertId, 
 			HttpServletRequest request) {
-		orderConvertDao.setOrderConvertDone(convertId);
-		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.POST_PRODUCTION);
-		orderPostProductionDao.allotImage(orderId);
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			orderConvertDao.setOrderConvertDone(convertId);
+			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.POST_PRODUCTION);
+			orderPostProductionDao.allotImage(orderId, loginUser.getBossId());
+		}
 		return new SuccessResponse("Set Order Convert Done Success");
 	}
 }
