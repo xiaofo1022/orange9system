@@ -39,6 +39,10 @@ public class ClientDao {
 		return commonDao.getFirst(Client.class, "SELECT * FROM CLIENT WHERE ID = ?", id);
 	}
 	
+	public Client getClientByOrder(int orderId) {
+		return commonDao.getFirst(Client.class, "SELECT A.* FROM CLIENT A LEFT JOIN ORDERS B ON B.CLIENT_ID = A.ID WHERE B.ID = ?", orderId);
+	}
+	
 	public void insertClientMessage(ClientMessage clientMessage) {
 		Date now = new Date();
 		int id = commonDao.insert("INSERT INTO CLIENT_MESSAGE (INSERT_DATETIME, UPDATE_DATETIME, CLIENT_ID, ORDER_ID, MESSAGE) VALUES (?, ?, ?, ?, ?)",

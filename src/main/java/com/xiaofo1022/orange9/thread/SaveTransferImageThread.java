@@ -42,7 +42,7 @@ public class SaveTransferImageThread implements Runnable {
 			if (!fileDir.exists() && !fileDir.isDirectory()) {
 				fileDir.mkdirs();
 			}
-			BufferedInputStream fileIn = new BufferedInputStream(new ByteArrayInputStream(getImageBytes(transferImageData.getImageData())));
+			BufferedInputStream fileIn = new BufferedInputStream(new ByteArrayInputStream(getImageBytes(transferImageData.getBase64Data())));
 			byte[] buf = new byte[1024];
 			File file = new File(dir + "\\" + transferImageData.getFileName() + ".jpg");
 			BufferedOutputStream fileOut = new BufferedOutputStream(new FileOutputStream(file));

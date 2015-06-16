@@ -15,6 +15,7 @@
 <link href="<c:url value='/css/lufter/upload.css'/>" rel="stylesheet"/>
 <script src="<c:url value='/js/jquery.min.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
+<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <body>
 <jsp:include page="header.jsp" flush="true">
 	<jsp:param name="page" value=""/>
@@ -23,7 +24,7 @@
 <input type="hidden" id="user-id" value="${user.id}"/>
 <input type="hidden" id="is-admin" value="${user.isAdmin}"/>
 <input type="hidden" id="limitMinutes" value="${limitMinutes}"/>
-	
+
 <div class="container">
 <div class="row">
 
@@ -59,11 +60,10 @@
 		<jsp:param name="link" value="uploadoriginal"/>
 	</jsp:include>
 	
-	<input class="hidden" multiple="multiple" type="file" id="complete-post-production"/>
+	<jsp:include page="uploadimagemodal.jsp" flush="true"/>
 </div>
 </div>
 <script src="<c:url value='/js/util/countDown.js'/>"></script>
-<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
 	var limitSecond = parseInt($("#limitMinutes").val()) * 60;
 	
@@ -81,53 +81,19 @@
 		});
 	}
 	
-	var compOrderId;
 	var compTransferId;
-	var uploadButtonId;
-	var confirmButtonId;
+	
+	$("#uploadImagesModal").on("hide.bs.modal", function(e) {
+		e.preventDefault();
+		return;
+	});
 	
 	function completePostProduction(transferId, orderId) {
 		compTransferId = transferId;
 		compOrderId = orderId;
-		uploadButtonId = "btn-upload-" + orderId;
-		confirmButtonId = "btn-confirm-" + orderId;
+		uploadUrl = "<c:url value='/orderTransfer/uploadTransferImage'/>";
 		$("#complete-post-production").click();
 	}
-	
-	$("#complete-post-production").bind("change", function(event) {
-		$("#" + uploadButtonId).attr("disabled", true);
-		$("#" + confirmButtonId).attr("disabled", true);
-		$("#" + uploadButtonId).text("上传中...");
-		$("#" + confirmButtonId).text("上传中...");
-		var orderId = compOrderId;
-		var transferId = compTransferId;
-		var files = event.target.files;
-		var completeCount = 0;
-		for (var index in files) {
-			var file = files[index];
-			if (file != null && file.name != null && file.name != undefined) {
-				var frontName = file.name.split(".")[0];
-				var reader = new FileReader();
-				reader.frontName = frontName;
-				reader.onload = function(event) {
-					var base64Data = event.target.result.split(",")[1];
-					var frontName = this.frontName;
-					AjaxUtil.post("<c:url value='/orderTransfer/uploadTransferImage'/>", {orderTransferImageId:transferId, orderId:orderId, fileName:this.frontName, imageData:base64Data}, function(data) {
-						if (data) {
-							completeCount++;
-							if (completeCount == files.length) {
-								location.reload(true);
-							}
-						}
-					});
-				};
-				try {
-					reader.readAsDataURL(file);
-				} catch (exp) {
-				}
-			}
-		}
-	});
 	
 	function setTransferComplete(orderTransferId, orderId) {
 		$.get("<c:url value='/orderTransfer/getTransferImageCount/" + orderId + "'/>", function(data) {

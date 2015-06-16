@@ -13,7 +13,7 @@ public class OrderTransferImageData {
 	private Date insertDatetime;
 	@Column("UPDATE_DATETIME")
 	private Date updateDatetime;
-	private String imageData;
+	private String base64Data;
 	@Column("ORDER_ID")
 	private int orderId;
 	@Column(value="ORDER_ID", isOrderNo=true)
@@ -49,11 +49,11 @@ public class OrderTransferImageData {
 	public void setInsertDatetime(Date insertDatetime) {
 		this.insertDatetime = insertDatetime;
 	}
-	public String getImageData() {
-		return imageData;
+	public String getBase64Data() {
+		return base64Data;
 	}
-	public void setImageData(String imageData) {
-		this.imageData = imageData;
+	public void setBase64Data(String base64Data) {
+		this.base64Data = base64Data;
 	}
 	public int getOrderId() {
 		return orderId;

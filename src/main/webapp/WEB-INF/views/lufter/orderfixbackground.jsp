@@ -14,6 +14,7 @@
 <link href="<c:url value='/css/lufter/lufter.css'/>" rel="stylesheet"/>
 <script src="<c:url value='/js/jquery.min.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
+<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <body>
 <jsp:include page="header.jsp" flush="true">
 	<jsp:param name="page" value=""/>
@@ -43,75 +44,35 @@
 				</div>
 			</div>
 		</c:forEach>
-		<input class="hidden" multiple="multiple" type="file" id="complete-post-production"/>
 	</div>
 	
 	<jsp:include page="panel.jsp" flush="true">
 		<jsp:param name="link" value="fixbackground"/>
 	</jsp:include>
+	
+	<jsp:include page="uploadimagemodal.jsp" flush="true"/>
 </div>
 </div>
-<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
-	var compOrderId;
-	var uploadButtonId;
-	var confirmButtonId;
-	
-	$("#complete-post-production").bind("change", function(event) {
-		$("#" + uploadButtonId).attr("disabled", true);
-		$("#" + confirmButtonId).attr("disabled", true);
-		$("#" + uploadButtonId).text("上传中...");
-		$("#" + confirmButtonId).text("上传中...");
-		var orderId = compOrderId;
-		var files = event.target.files;
-		var completeCount = 0;
-		for (var index in files) {
-			var file = files[index];
-			if (file != null && file.name != null && file.name != undefined) {
-				var frontName = file.name.split(".")[0];
-				var reader = new FileReader();
-				reader.frontName = frontName;
-				reader.onload = function(event) {
-					var base64Data = event.target.result.split(",")[1];
-					var frontName = this.frontName;
-					AjaxUtil.post("<c:url value='/picture/saveFixBackgroundPicture'/>", {orderId:orderId, fileName:this.frontName, base64Data:base64Data}, function(data) {
-						if (data) {
-							$.post("<c:url value='/orderPostProduction/setFixBackgroundDone/" + orderId + "/" + frontName + "'/>", null, function(data, status) {
-								if (data.status == "success") {
-									completeCount++;
-									if (completeCount == files.length) {
-										location.reload(true);
-									}
-								}
-							});
-						}
-					});
-				};
-				try {
-					reader.readAsDataURL(file);
-				} catch (exp) {
-				}
-			}
-		}
-	});
-	
 	function completePostProduction(orderId) {
 		compOrderId = orderId;
-		uploadButtonId = "btn-upload-" + orderId;
-		confirmButtonId = "btn-confirm-" + orderId;
+		uploadUrl = "<c:url value='/picture/saveFixBackgroundPicture'/>";
 		$("#complete-post-production").click();
 	}
 	
 	function downloadZip(orderId) {
-		window.open("<c:url value='/picture//downloadFixSkinPicture/" + orderId + "'/>");
+		window.open("<c:url value='/picture/downloadFixSkinPicture/" + orderId + "'/>");
 	}
 	
 	function nextStep(orderId) {
-		$.post("<c:url value='/orderPostProduction/setFixBackgroundNextStep/" + orderId + "'/>", null, function(data, status) {
-			if (data.status == "success") {
-				location.reload(true);
-			}
-		});
+		var result = confirm("是否确认完成修背景？");
+		if (result) {
+			$.post("<c:url value='/orderPostProduction/setFixBackgroundNextStep/" + orderId + "'/>", null, function(data, status) {
+				if (data.status == "success") {
+					location.reload(true);
+				}
+			});
+		}
 	}
 </script>
 </body>

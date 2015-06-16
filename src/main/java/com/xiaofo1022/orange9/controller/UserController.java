@@ -162,6 +162,9 @@ public class UserController {
 				String[] queryMonth = DatetimeUtil.getMonthStartAndEndDate(calendar.getTime());
 				this.createUserPerformance(user, queryMonth[0], queryMonth[1]);
 				performanceChart.addPerformance(user.getMonthDonePostProduction());
+				performanceChart.addFixSkin(user.getMonthDoneFixSkin());
+				performanceChart.addFixBackground(user.getMonthDoneFixBackground());
+				performanceChart.addCutLiquify(user.getMonthDoneCutLiquify());
 			}
 		}
 		return performanceChart;

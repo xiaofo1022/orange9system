@@ -57,8 +57,8 @@ public class OrderTransferDao {
 	
 	public void insertOrderTransferImageData(OrderTransferImageData transferImageData) {
 		Date now = new Date();
-		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (ORDER_TRANSFER_IMAGE_ID, INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?, ?)",
-			transferImageData.getOrderTransferImageId(), now, now, transferImageData.getOrderId(), transferImageData.getFileName());
+		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?)",
+			now, now, transferImageData.getOrderId(), transferImageData.getFileName());
 		transferImageData.setId(id);
 	}
 	

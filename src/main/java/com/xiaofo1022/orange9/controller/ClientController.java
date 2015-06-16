@@ -39,6 +39,8 @@ import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
+import com.xiaofo1022.orange9.thread.ClearDiskThread;
+import com.xiaofo1022.orange9.thread.TaskExecutor;
 import com.xiaofo1022.orange9.util.RequestUtil;
 
 @Controller
@@ -61,6 +63,8 @@ public class ClientController {
 	private OrderConvertDao orderConvertDao;
 	@Autowired
 	private PictureController pictureController;
+	@Autowired
+	private TaskExecutor taskExecutor;
 	
 	@RequestMapping(value = "/main/{clientId}", method = RequestMethod.GET)
 	public String main(@PathVariable int clientId, ModelMap modelMap) {
@@ -204,7 +208,7 @@ public class ClientController {
 			orderConvertDao.insertOrderConvert(orderId, 0);
 		}
 		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
-		pictureController.clearOriginalPictures(orderId, OrderConst.PATH_ORIGINAL, request);
+		taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_ORIGINAL, request));
 		return new SuccessResponse("Set Transfer Image Selected Success");
 	}
 	

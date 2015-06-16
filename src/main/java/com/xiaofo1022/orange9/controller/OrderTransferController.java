@@ -14,18 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
+import com.xiaofo1022.orange9.core.ImageDiskSaver;
+import com.xiaofo1022.orange9.dao.ClientDao;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderTransferDao;
+import com.xiaofo1022.orange9.mail.MailSender;
 import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.OrderTransferImage;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
+import com.xiaofo1022.orange9.response.FailureResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
-import com.xiaofo1022.orange9.thread.SaveTransferImageThread;
 import com.xiaofo1022.orange9.thread.TaskExecutor;
 import com.xiaofo1022.orange9.util.RequestUtil;
 
@@ -42,7 +46,11 @@ public class OrderTransferController {
 	@Autowired
 	private OrderConvertDao orderConvertDao;
 	@Autowired
+	private ClientDao clientDao;
+	@Autowired
 	private TaskExecutor taskExecutor;
+	@Autowired
+	private MailSender mailSender;
 	
 	@RequestMapping(value = "/getOrderList", method = RequestMethod.GET)
 	@ResponseBody
@@ -73,10 +81,13 @@ public class OrderTransferController {
 		if (!orderTransferDao.isExistTransferImageData(transferImageData.getOrderId(), transferImageData.getFileName())) {
 			orderTransferDao.insertOrderTransferImageData(transferImageData);
 		}
-		String serverPath = request.getSession().getServletContext().getRealPath("/");
-		transferImageData.setServerPath(serverPath);
-		taskExecutor.execute(new SaveTransferImageThread(transferImageData));
-		return new SuccessResponse("Add Transfer Image Data Success");
+		ImageDiskSaver.setBaseDir(request, OrderConst.PATH_ORIGINAL, transferImageData.getOrderId());
+		boolean result = ImageDiskSaver.saveImageToDisk(transferImageData.getFileName(), transferImageData.getBase64Data());
+		if (result) {
+			return new SuccessResponse("Add Transfer Image Data Success");
+		} else {
+			return new FailureResponse("Add Transfer Image Data Failure");
+		}
 	}
 	
 	@RequestMapping(value = "/setTransferImageIsDone/{orderId}/{tansferId}", method = RequestMethod.POST)

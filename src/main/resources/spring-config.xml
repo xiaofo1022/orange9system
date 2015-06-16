@@ -3,6 +3,15 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
 	   http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+	        <list>
+	            <value>classpath:db.properties</value>
+	            <value>classpath:mail.properties</value>
+	        </list>
+	    </property>
+	</bean>
 	<import resource="/spring-db-config.xml"/>
 	<import resource="/spring-mvc-config.xml"/>
+	<import resource="/spring-mail-config.xml"/>
 </beans>

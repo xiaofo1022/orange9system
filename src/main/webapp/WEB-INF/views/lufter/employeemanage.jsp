@@ -498,13 +498,13 @@
 	function getPerformanceChart(year, userId) {
 		$.get("<c:url value='/user/getUserPerformanceChart/" + year + "/" + userId + "'/>", function(data) {
 			if (data) {
-				createPerformanceChart(year, data.userName, data.performanceList);
+				createPerformanceChart(year, data.userName, data.performanceList, data.fixSkinList, data.fixBackgroundList, data.cutLiquifyList);
 				$("#performanceStatistics").modal("show");
 			}
 		});
 	}
 	
-	function createPerformanceChart(year, username, datalist) {
+	function createPerformanceChart(year, username, datalist, fixskinlist, fixbclist, cutlist) {
 		require(
 			[
 				'echarts',
@@ -520,6 +520,9 @@
 						text: (year + '年绩效统计'),
 						subtext: username
 					},
+					legend: {
+				        data:['总量','修皮肤及褶皱','修背景','裁图液化']
+				    },
 					tooltip : {
 						trigger: 'axis'
 					},
@@ -550,9 +553,57 @@
 					],
 					series : [
 						{
-							name:'业绩统计',
+							name:'总量',
 							type:'line',
 							data:datalist,
+							markPoint : {
+								data : [
+									{type : 'max', name: '最高'},
+									{type : 'min', name: '最低'}
+								]
+							},
+							markLine : {
+								data : [
+									{type : 'average', name: '平均'}
+								]
+							}
+						},
+						{
+							name:'修皮肤及褶皱',
+							type:'line',
+							data:fixskinlist,
+							markPoint : {
+								data : [
+									{type : 'max', name: '最高'},
+									{type : 'min', name: '最低'}
+								]
+							},
+							markLine : {
+								data : [
+									{type : 'average', name: '平均'}
+								]
+							}
+						},
+						{
+							name:'修背景',
+							type:'line',
+							data:fixbclist,
+							markPoint : {
+								data : [
+									{type : 'max', name: '最高'},
+									{type : 'min', name: '最低'}
+								]
+							},
+							markLine : {
+								data : [
+									{type : 'average', name: '平均'}
+								]
+							}
+						},
+						{
+							name:'裁图液化',
+							type:'line',
+							data:cutlist,
 							markPoint : {
 								data : [
 									{type : 'max', name: '最高'},

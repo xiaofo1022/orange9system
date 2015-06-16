@@ -12,7 +12,9 @@ public class OrderConst {
 	public static final String COLUMN_FIXED_BACKGROUND = "IS_FIXED_BACKGROUND";
 	public static final String COLUMN_CUT_LIQUIFY = "IS_CUT_LIQUIFY";
 	public static final String PATH_ORIGINAL = "original";
-	public static final String PATH_FIX_SKIN = "fixskin";
-	public static final String PATH_FIX_BACKGROUND = "fixbackground";
-	public static final String PATH_CUT_LIQUIFY = "cutliquify";
+	public static final String PATH_FIXED = "fixed";
+	public static final String PATH_FIX_SKIN = "post\\fixskin";
+	public static final String PATH_FIX_BACKGROUND = "post\\fixbackground";
+	public static final String PATH_CUT_LIQUIFY = "post\\cutliquify";
+	public static final String PATH_POST_ORIGINAL = "post\\original";
 }

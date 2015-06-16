@@ -311,6 +311,10 @@
 	background-color:#CDCED2;
 }
 
+.lofter-color {
+	color:#CDCED2;
+}
+
 .twitter-bc {
 	background-color:#1AB2E8;
 }
@@ -396,4 +400,12 @@
 .performance-bar {
 	min-width: 60px;
 	max-width: 405px;
+}
+
+.upload-filename-block {
+	border:1px solid #E5E5E5;
+	margin:5px;
+	margin-bottom:0;
+	padding:5px;
+	font-size:12px;
 }

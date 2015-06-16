@@ -1,11 +1,16 @@
 package com.xiaofo1022.orange9.controller;
 
+import java.util.Date;
+
 import com.xiaofo1022.orange9.core.ImageCompresser;
 
 public class JpgCompressTest {
 
 	public static void main(String[] args) {
-		new ImageCompresser().compressJpg("F:\\IMG_8085.jpg", "F:\\tmp");
+		Date start = new Date();
+		new ImageCompresser().compressJpg("C:\\BigPics\\temp\\IMG_0.jpg", "C:\\BigPics\\temp\\compress");
+		Date end = new Date();
+		System.out.println("Cost: " + (end.getTime() - start.getTime()));
 	}
 
 }

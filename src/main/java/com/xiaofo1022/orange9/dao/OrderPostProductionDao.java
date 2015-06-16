@@ -69,7 +69,7 @@ public class OrderPostProductionDao {
 	}
 	
 	public List<OrderTransferImageData> getImageDataList(String columnName, int orderId) {
-		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1 AND " + columnName + " = 0", orderId);
+		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1", orderId);
 	}
 	
 	public OrderPostProduction getPostProductionByOrder(String tableName, int orderId) {
@@ -79,6 +79,10 @@ public class OrderPostProductionDao {
 	public List<OrderPostProduction> getPostProductionShowList(String tableName, int ownerId) {
 		String sql = "SELECT A.* FROM " + tableName + " A LEFT JOIN ORDERS B ON A.ORDER_ID = B.ID WHERE B.OWNER_ID = ? AND A.IS_DONE = 0";
 		return commonDao.query(OrderPostProduction.class, sql, ownerId);
+	}
+	
+	public void setFixPostImageDone(String columnName, int orderId) {
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET " + columnName + " = 1 WHERE ORDER_ID = ?", orderId);
 	}
 	
 	public void setFixPostImageDone(String columnName, int orderId, String imageName) {

@@ -6,13 +6,11 @@ import java.util.Properties;
 public class GlobalData {
 	private static GlobalData instance;
 	private static Properties properties;
-	private String picbaseurl;
 	
 	private GlobalData() {
 		properties = new Properties();
 		try {
-			properties.load(this.getClass().getClassLoader().getResourceAsStream("server.properties"));
-			picbaseurl = properties.getProperty("picbaseurl");
+			properties.load(this.getClass().getClassLoader().getResourceAsStream("mail.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -25,7 +23,10 @@ public class GlobalData {
 		return instance;
 	}
 
-	public String getPicbaseurl() {
-		return picbaseurl;
+	public String getProperty(String key) {
+		if (properties.containsKey(key)) {
+			return properties.getProperty(key);
+		}
+		return "";
 	}
 }
