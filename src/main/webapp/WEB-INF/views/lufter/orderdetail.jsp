@@ -271,8 +271,10 @@
 					</div>
 					<div id="blink2-block" class="detail-bottom-block hidden clearfix">
 						<c:forEach items="${orderFixedImageDataList}" var="imageData">
-							<div class="pic-block photo-frame">
-								<img src="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>"/>
+							<div class="pic-block photo-frame gallery">
+								<a id="client-fixed-pic-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>">
+									<img src="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>"/>
+								</a>
 								<c:choose>
 									<c:when test="${imageData.isVerified == 1}">
 										<p id="fixed-pic-label-${imageData.id}" class='progress-color'>(${imageData.fileName})<span>审核通过</span></p>

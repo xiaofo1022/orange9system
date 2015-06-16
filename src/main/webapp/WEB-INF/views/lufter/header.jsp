@@ -53,20 +53,22 @@
 				<% } else { %>
 					<a class="blog-nav-item" href="<c:url value='/orderSummary'/>">订单一览</a>
 				<% } %>
-				<% if (pg.equals("client")) { %>
-					<a class="blog-nav-item active">客户管理</a>
-				<% } else { %>
-					<a class="blog-nav-item" href="<c:url value='/client'/>">客户管理</a>
-				<% } %>
-				<% if (pg.equals("goods")) { %>
-					<a class="blog-nav-item active">货品管理</a>
-				<% } else { %>
-					<a class="blog-nav-item" href="<c:url value='/orderGoods'/>">货品管理</a>
-				<% } %>
-				<% if (pg.equals("employee")) { %>
-					<a class="blog-nav-item active">员工管理</a>
-				<% } else { %>
-					<a class="blog-nav-item" href="<c:url value='/employee'/>">员工管理</a>
+				<% if (user.getIsAdmin() == 1) { %>
+					<% if (pg.equals("client")) { %>
+						<a class="blog-nav-item active">客户管理</a>
+					<% } else { %>
+						<a class="blog-nav-item" href="<c:url value='/client'/>">客户管理</a>
+					<% } %>
+					<% if (pg.equals("goods")) { %>
+						<a class="blog-nav-item active">货品管理</a>
+					<% } else { %>
+						<a class="blog-nav-item" href="<c:url value='/orderGoods'/>">货品管理</a>
+					<% } %>
+					<% if (pg.equals("employee")) { %>
+						<a class="blog-nav-item active">员工管理</a>
+					<% } else { %>
+						<a class="blog-nav-item" href="<c:url value='/employee'/>">员工管理</a>
+					<% } %>
 				<% } %>
 			<% } %>
 			<a class="blog-nav-item" onclick="showResetPassword()">账号</a>
