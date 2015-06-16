@@ -7,8 +7,6 @@ import com.xiaofo1022.orange9.dao.common.Column;
 public class OrderTransferImageData {
 	@Column("ID")
 	private int id;
-	@Column("ORDER_TRANSFER_IMAGE_ID")
-	private int orderTransferImageId;
 	@Column("INSERT_DATETIME")
 	private Date insertDatetime;
 	@Column("UPDATE_DATETIME")
@@ -36,12 +34,6 @@ public class OrderTransferImageData {
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public int getOrderTransferImageId() {
-		return orderTransferImageId;
-	}
-	public void setOrderTransferImageId(int orderTransferImageId) {
-		this.orderTransferImageId = orderTransferImageId;
 	}
 	public Date getInsertDatetime() {
 		return insertDatetime;
