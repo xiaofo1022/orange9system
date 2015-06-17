@@ -326,7 +326,7 @@
 	
 	reader.onload = function(event) {
 		var base64Data = event.target.result.split(",")[1];
-		AjaxUtil.post("<c:url value='/orderPostProduction/reuploadFixedImage/" + compId + "'/>", {orderId:compOrderId, fileName:compFileName, imageData:base64Data}, function(data) {
+		AjaxUtil.post("<c:url value='/orderPostProduction/reuploadFixedImage/" + compId + "'/>", {orderId:compOrderId, fileName:compFileName, base64Data:base64Data}, function(data) {
 			if (data.status == "success") {
 				location.reload(true);
 			}

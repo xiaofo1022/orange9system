@@ -207,8 +207,8 @@ public class ClientController {
 		if (!orderConvertDao.isExistConvertRecord(orderId)) {
 			orderConvertDao.insertOrderConvert(orderId, 0);
 		}
-		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
 		taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_ORIGINAL, request));
+		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
 		return new SuccessResponse("Set Transfer Image Selected Success");
 	}
 	

@@ -19,7 +19,7 @@
 <div class="login-pos">
 	<div class="login-header">
 		ORANGE 9
-		<p>Living For Real</p>
+		<p> - Living For Real - </p>
 	</div>
 	<div class="login-console">
 		<sf:form id="loginForm" modelAttribute="login" method="post">

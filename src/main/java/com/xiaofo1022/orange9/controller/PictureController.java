@@ -156,7 +156,7 @@ public class PictureController {
 	
 	@RequestMapping(value = "/downloadOriginalPicture/{orderId}", method = RequestMethod.GET)
 	public void downloadOriginalPicture(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
-		String serverPath = this.getPicturePath(request, orderId, OrderConst.PATH_ORIGINAL);
+		String serverPath = this.getPicturePath(request, orderId, OrderConst.PATH_POST_ORIGINAL);
 		this.downloadZipFile(orderId, serverPath, response);
 	}
 	

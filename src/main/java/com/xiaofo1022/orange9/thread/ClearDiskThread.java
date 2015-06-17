@@ -2,7 +2,9 @@ package com.xiaofo1022.orange9.thread;
 
 import java.io.File;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class ClearDiskThread implements Runnable {
 	private int orderId;
@@ -25,7 +27,9 @@ public class ClearDiskThread implements Runnable {
 	}
 	
 	private String getPicturePath(HttpServletRequest request, int orderId, String path) {
-		String serverPath = request.getSession().getServletContext().getRealPath("/");
+		HttpSession session = request.getSession(false);
+		ServletContext context = session.getServletContext();
+		String serverPath = context.getRealPath("/");
 		serverPath += "\\WEB-INF\\pictures\\" + path + "\\" + orderId;
 		return serverPath;
 	}
