@@ -15,18 +15,17 @@
     </bean>
     
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="username" value="${mail.user}" />
-		<property name="password" value="${mail.password}" />
-		<property name="javaMailProperties">
-			<props>
-	            <prop key="mail.smtp.auth">${mail.auth}</prop>
-	            <prop key="mail.user">${mail.user}}</prop>
-	            <prop key="mail.password">${mail.password}}</prop>
-				<prop key="mail.smtp.host">${mail.host}</prop>
-				<prop key="mail.smtp.port">${mail.port}</prop>
-				<prop key="mail.debug">${mail.debug}</prop>
-				<prop key="mail.smtp.timeout">${mail.timeout}</prop>
-			</props>
-		</property>
+	    <property name="protocol" value="smtp" />  
+        <property name="host" value="${mail.host}" />  
+        <property name="port" value="${mail.port}" />  
+        <property name="username" value="${mail.user}" />  
+        <property name="password" value="${mail.password}" />
+        <property name="javaMailProperties">  
+            <props>  
+                <prop key="mail.smtp.auth">true</prop>  
+                <prop key="mail.smtp.starttls.enable">false</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>  
+            </props>  
+        </property>
 	</bean>
 </beans>

@@ -2,9 +2,9 @@
 	text-align:center;
 	border: 1px solid #E3E3E5;
 	background-color: #FFF;
-	box-shadow: 1px 1px 3px rgba(209, 209, 210, 1.0);
+	box-shadow: 1px 1px 2px rgba(209, 209, 210, 1.0);
 	margin-bottom:10px;
-	width: 618px;
+	width: 611px;
 }
 
 .summary-label {
@@ -27,25 +27,31 @@
 .order-date-row {
 	width:100%;
 	margin-left:-1px;
-	margin-bottom:-1px;
+	margin-bottom:0px;
 }
 
 .order-date-header {
 	border-left:1px solid #E3E3E5;
 	border-bottom:1px solid #E3E3E5;
 	font-size:14px;
-	width:88px;
+	width:87px;
 	height:30px;
 	padding-top:3px;
 	float:left;
 	color:#888;
 }
 
+.border-right {
+	border-right: 1px solid #E3E3E5;
+}
+
 .order-date-block {
-	border-top:1px solid #E3E3E5;
 	border-left:1px solid #E3E3E5;
+	border-top:1px solid #E3E3E5;
 	border-bottom:1px solid #E3E3E5;
 	margin-top:-1px;
+	margin-right:-1px;
+	margin-left:0;
 	font-size:10px;
 	text-align:right;
 	width:88px;

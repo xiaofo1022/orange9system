@@ -212,8 +212,24 @@ public class ClientController {
 		return new SuccessResponse("Set Transfer Image Selected Success");
 	}
 	
+	@RequestMapping(value = "/uploadSelectedImage/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse uploadSelectedImage(@RequestBody List<String> fileNameList, BindingResult bindingResult, @PathVariable int orderId, HttpServletRequest request) {
+		if (fileNameList != null && fileNameList.size() > 0) {
+			for (String fileName : fileNameList) {
+				orderTransferDao.setTransferImageSelectedByFile(orderId, fileName);
+			}
+		}
+		return new SuccessResponse("Upload Selected Image Success");
+	}
+	
 	@RequestMapping(value = "/getFixedImageZipPackage/{orderId}", method = RequestMethod.GET)
 	public void getFixedImageZipPackage(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
 		pictureController.getFixedImageZipPackage(orderId, request, response);
+	}
+	
+	@RequestMapping(value = "/downloadOriginalCompressPicture/{orderId}", method = RequestMethod.GET)
+	public void downloadOriginalCompressPicture(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
+		pictureController.downloadOriginalCompressPicture(orderId, request, response);
 	}
 }

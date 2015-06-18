@@ -17,4 +17,5 @@ public class OrderConst {
 	public static final String PATH_FIX_BACKGROUND = "post\\fixbackground";
 	public static final String PATH_CUT_LIQUIFY = "post\\cutliquify";
 	public static final String PATH_POST_ORIGINAL = "post\\original";
+	public static final String PATH_ORIGINAL_COMPRESS = "original\\compress";
 }

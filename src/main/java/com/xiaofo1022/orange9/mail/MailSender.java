@@ -1,10 +1,14 @@
 package com.xiaofo1022.orange9.mail;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.mail.SimpleMailMessage;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
+
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 import com.xiaofo1022.orange9.core.GlobalData;
 import com.xiaofo1022.orange9.util.StringUtil;
@@ -22,24 +26,31 @@ public class MailSender {
 	}
 	
 	public boolean sendEmail(String address, String clientName, String orderNo) {
-		SimpleMailMessage mailMessage = new SimpleMailMessage();
-		mailMessage.setFrom(globalData.getProperty("mail.from"));
-		mailMessage.setTo(address);
-		mailMessage.setSubject(this.getSubject());
-		mailMessage.setText(this.getText(clientName, orderNo));
-		mailSender.send(mailMessage);
+		try {
+			MimeMessage mime = mailSender.createMimeMessage();  
+	        MimeMessageHelper helper = new MimeMessageHelper(mime, true, "GBK");  
+	        helper.setFrom(globalData.getProperty("mail.from"));
+	        helper.setTo(address);
+	        helper.setSubject(MimeUtility.encodeText(this.getSubject(), "GBK", "B"));
+	        helper.setText(this.getText(clientName, orderNo), true);
+			mailSender.send(mime);
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 	
-	private String getSubject() {
+	private String getSubject() throws UnsupportedEncodingException {
 		return globalData.getProperty("mail.client.chosen.subject");
 	}
 	
-	private String getText(String clientName, String orderNo) {
+	private String getText(String clientName, String orderNo) throws UnsupportedEncodingException {
 		String textTemplate = globalData.getProperty("mail.client.chosen.text");
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("ClientName", clientName);
 		paramMap.put("OrderNo", orderNo);
-		return StringUtil.replaceTextParams(textTemplate, paramMap);
+		String text = StringUtil.replaceTextParams(textTemplate, paramMap);
+		return new String(text.getBytes("UTF-8"), "GBK");
 	}
 }

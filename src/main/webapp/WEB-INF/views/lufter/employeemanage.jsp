@@ -228,7 +228,6 @@
 	getRoleList();
 	getUserList();
 	
-	var updateHiddenList = ["header"];
 	var userMap = {};
 	
 	function getUserList() {
@@ -251,20 +250,6 @@
 		});
 	}
 	
-	function changeFormView(isShow) {
-		for (var i in updateHiddenList) {
-			var hiddenId = "fg-" + updateHiddenList[i];
-			var hiddenNode = $("#" + hiddenId);
-			if (hiddenNode) {
-				if (isShow) {
-					hiddenNode.show();
-				} else {
-					hiddenNode.hide();
-				}
-			}
-		}
-	}
-	
 	var addEmployeeRules = {
 		name: { required: true },
 		phone: { required: true, digits: true },
@@ -275,14 +260,12 @@
 	
 	function showAddWindow() {
 		validator.url = "<c:url value='/user/addUser'/>";
-		changeFormView(true);
 		$("#addEmployee").modal("show");
 	}
 	
 	function showUpdateWindow(id) {
 		validator.url = "<c:url value='/user/updateUser'/>";
 		var user = userMap[id];
-		changeFormView(false);
 		for (var key in user) {
 			var formNode = $("#" + key);
 			if (formNode) {
@@ -293,6 +276,10 @@
 			$("#cb-admin").attr("checked", true);
 		} else {
 			$("#cb-admin").attr("checked", false);
+		}
+		if (user.header) {
+			$("#header").val(user.header.split(",")[1]);
+			$("#selected-header").attr("src", user.header);
 		}
 		$("#addEmployee").modal("show");
 	}

@@ -22,7 +22,6 @@ import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderTransferDao;
-import com.xiaofo1022.orange9.mail.MailSender;
 import com.xiaofo1022.orange9.modal.Count;
 import com.xiaofo1022.orange9.modal.OrderTransferImage;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
@@ -49,8 +48,6 @@ public class OrderTransferController {
 	private ClientDao clientDao;
 	@Autowired
 	private TaskExecutor taskExecutor;
-	@Autowired
-	private MailSender mailSender;
 	
 	@RequestMapping(value = "/getOrderList", method = RequestMethod.GET)
 	@ResponseBody

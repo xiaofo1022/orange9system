@@ -52,7 +52,9 @@
 				</c:when>
 				<c:otherwise>
 					<c:if test="${order.status.equals('等待客户选片')}">
-						<button class="btn btn-success btn-data-info ml10" onclick="submitSelectedPictures()">选片完成</button>
+						<button class="btn btn-primary btn-data-info ml10" onclick="downloadCompressZip(${order.orderId})">下载选片</button>
+						<button class="btn btn-info btn-data-info ml10" onclick="uploadSelectedImage()">选片上传</button>
+						<button class="btn btn-success btn-data-info ml10" onclick="submitSelectedPictures()">完成选片</button>
 					</c:if>
 				</c:otherwise>
 			</c:choose>
@@ -118,6 +120,7 @@
 	</div>
 </div>
 </div>
+<input class="hidden" multiple="multiple" type="file" id="complete-post-production"/>
 <c:choose>
 	<c:when test="${order.status.equals('等待客户选片')}">
 		<script src="<c:url value='/js/zoom-select.js'/>"></script>
@@ -218,6 +221,31 @@
 		$("#" + nav.id + "-block").removeClass("hidden");
 	}
 	
+	$("#complete-post-production").bind("change", function(event) {
+		var files = event.target.files;
+		if (files.length > 0) {
+			var orderId = $('#orderId').val();
+			var fileNameList = [];
+			for (var i in files) {
+				var file = files[i];
+				try {
+					var fileName = file.name.split(".")[0];
+					fileNameList.push(fileName);
+				} catch (exp) {
+				}
+			}
+			AjaxUtil.post("<c:url value='/client/uploadSelectedImage/" + orderId + "'/>", fileNameList, function(data) {
+				if (data.status == "success") {
+					location.reload(true);
+				}
+			});
+		}
+	});
+	
+	function uploadSelectedImage() {
+		$("#complete-post-production").click();
+	}
+	
 	getSelectedImageList();
 	
 	function getSelectedImageList() {
@@ -264,6 +292,10 @@
 	
 	function downloadZip(orderId) {
 		window.open("<c:url value='/client/getFixedImageZipPackage/" + orderId + "'/>");
+	}
+	
+	function downloadCompressZip(orderId) {
+		window.open("<c:url value='/client/downloadOriginalCompressPicture/" + orderId + "'/>");
 	}
 </script>
 </body>

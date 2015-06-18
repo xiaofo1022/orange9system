@@ -63,8 +63,8 @@ public class OrderPostProductionController {
 		if (loginUser != null) {
 			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_FIXED_SKIN, orderId);
 			postProductionDao.setPostProductionDone(orderId, OrderConst.TABLE_ORDER_FIX_SKIN);
-			postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId, loginUser.getBossId());
-			taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_POST_ORIGINAL, request));
+			postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId, loginUser.getBossId());
+			taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_FIX_BACKGROUND, request));
 		}
 		return new SuccessResponse("Set Fix Skin Next Step Success");
 	}
@@ -85,8 +85,8 @@ public class OrderPostProductionController {
 		if (loginUser != null) {
 			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_FIXED_BACKGROUND, orderId);
 			postProductionDao.setPostProductionDone(orderId, OrderConst.TABLE_ORDER_FIX_BACKGROUND);
-			postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId, loginUser.getBossId());
-			taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_FIX_SKIN, request));
+			postProductionDao.allotPostProduction(OrderConst.TABLE_ORDER_FIX_SKIN, orderId, loginUser.getBossId());
+			taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_POST_ORIGINAL, request));
 		}
 		return new SuccessResponse("Set Fix Background Next Step Success");
 	}
@@ -105,7 +105,7 @@ public class OrderPostProductionController {
 	public CommonResponse setCutLiquifyNextStep(@PathVariable int orderId, HttpServletRequest request) {
 		if (postProductionDao.isAllPictureFixed(orderId)) {
 			postProductionDao.setPostProductionDone(orderId, OrderConst.TABLE_ORDER_CUT_LIQUIFY);
-			taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_FIX_BACKGROUND, request));
+			taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_FIX_SKIN, request));
 			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.WAIT_FOR_VERIFY);
 			orderVerifyDao.insertOrderVerifyImage(orderId, 0);
 		}

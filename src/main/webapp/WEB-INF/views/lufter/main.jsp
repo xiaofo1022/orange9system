@@ -321,9 +321,18 @@
 					shootDate.setTime(data.shootDate);
 					var dateCol = $("#order-date-" + shootDate.getDate());
 					var colHtml = dateCol.html();
-					var dateBlock = getDateBlockOuter(shootDate.getDate(), getDateColHtml(data));
-					dateCol.html(colHtml + dateBlock);
+					dateCol.html(colHtml + getDateColHtml(data));
 				}
+				clearUnnecessaryBorder();
+			}
+		});
+	}
+	
+	function clearUnnecessaryBorder() {
+		$(".order-date-block").each(function(index, element) {
+			var childrenList = $(element).children();
+			if (childrenList.length > 3) {
+				childrenList.last().css("border-bottom", "0");
 			}
 		});
 	}
@@ -401,9 +410,13 @@
 				if (weekDay == j && startDay <= lastDay) {
 					startDay++;
 					var dt = startDate.getDate();
-					rowHtml += getDateBlockOuter(dt, "");
+					rowHtml += getDateBlockOuter(dt, "", j < 6);
 				} else {
-					rowHtml += ('<div class="order-date-block ghover"></div>');
+					if (j < 6) {
+						rowHtml += ('<div class="order-date-block border-right ghover"></div>');
+					} else {
+						rowHtml += ('<div class="order-date-block ghover"></div>');
+					}
 				}
 			}
 			rowBlock.html(rowHtml);
@@ -411,9 +424,14 @@
 		}
 	}
 	
-	function getDateBlockOuter(id, info) {
+	function getDateBlockOuter(id, info, isPreCol) {
 		if (info == "") {
-			var header = '<div id="order-date-' + id + '" class="order-date-block relative-pos ghover">';
+			var header = "";
+			if (isPreCol) {
+				header = '<div id="order-date-' + id + '" class="order-date-block border-right relative-pos ghover">';
+			} else {
+				header = '<div id="order-date-' + id + '" class="order-date-block relative-pos ghover">';
+			}
 			return header + '<div class="order-date-pos">' + id + '</div></div>';
 		} else {
 			return info + '<div class="order-date-pos">' + id + '</div>';

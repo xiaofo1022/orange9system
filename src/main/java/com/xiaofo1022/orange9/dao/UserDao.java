@@ -55,8 +55,8 @@ public class UserDao {
 	}
 	
 	public void updateUser(User user) {
-		commonDao.update("UPDATE USER SET UPDATE_DATETIME = ?, NAME = ?, ROLE_ID = ?, PHONE = ?, SALARY = ?, PERFORMANCE_PAY = ?, IS_ADMIN = ? WHERE ID = ?",
-			new Date(), user.getName(), user.getRoleId(), user.getPhone(), user.getSalary(), user.getPerformancePay(), user.getIsAdmin(), user.getId());
+		commonDao.update("UPDATE USER SET UPDATE_DATETIME = ?, NAME = ?, ROLE_ID = ?, PHONE = ?, SALARY = ?, PERFORMANCE_PAY = ?, IS_ADMIN = ?, HEADER = ? WHERE ID = ?",
+			new Date(), user.getName(), user.getRoleId(), user.getPhone(), user.getSalary(), user.getPerformancePay(), user.getIsAdmin(), user.getHeader(), user.getId());
 	}
 	
 	public void deleteUser(int userId) {

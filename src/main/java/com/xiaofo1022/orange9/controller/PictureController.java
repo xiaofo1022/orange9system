@@ -102,6 +102,12 @@ public class PictureController {
 		return serverPath;
 	}
 	
+	private String getCompressPicturePath(HttpServletRequest request, int orderId, String path) {
+		String serverPath = request.getSession().getServletContext().getRealPath("/");
+		serverPath += "\\WEB-INF\\pictures\\" + path + "\\" + orderId + "\\compress";
+		return serverPath;
+	}
+	
 	/*
 	private void openDeskFolder(File fileDir) {
 		try {
@@ -170,6 +176,24 @@ public class PictureController {
 	public void downloadFixBackgroundPicture(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
 		String serverPath = this.getPicturePath(request, orderId, OrderConst.PATH_FIX_BACKGROUND);
 		this.downloadZipFile(orderId, serverPath, response);
+	}
+	
+	@RequestMapping(value = "/downloadOriginalCompressPicture/{orderId}", method = RequestMethod.GET)
+	public void downloadOriginalCompressPicture(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
+		String serverPath = this.getCompressPicturePath(request, orderId, OrderConst.PATH_ORIGINAL);
+		File fileDir = new File(serverPath);
+		if (fileDir.exists() && fileDir.isDirectory()) {
+			File[] files = fileDir.listFiles();
+			if (files != null && files.length > 0) {
+				List<File> compressFileList = new ArrayList<File>(files.length);
+				for (File file : files) {
+					if (file.exists() && file.isFile()) {
+						compressFileList.add(file);
+					}
+				}
+				ZipUtil.downloadZipFile(compressFileList, response);
+			}
+		}
 	}
 	
 	public void downloadZipFile(int orderId, String serverPath, HttpServletResponse response) {

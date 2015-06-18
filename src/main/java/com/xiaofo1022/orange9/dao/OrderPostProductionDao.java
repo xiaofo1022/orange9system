@@ -31,8 +31,8 @@ public class OrderPostProductionDao {
 	private OrderTimeLimitDao orderTimeLimitDao;
 	
 	public void allotImage(int orderId, int bossId) {
-		int idleUserId = this.getIdleUserId(OrderConst.TABLE_ORDER_FIX_SKIN, bossId);
-		this.insertPostProductionRecord(OrderConst.TABLE_ORDER_FIX_SKIN, orderId, idleUserId);
+		int idleUserId = this.getIdleUserId(bossId);
+		this.insertPostProductionRecord(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId, idleUserId);
 	}
 	
 	public int insertPostProductionRecord(String tableName, int orderId, int userId) {
@@ -101,14 +101,21 @@ public class OrderPostProductionDao {
 		return count.getCnt();
 	}
 	
-	public int getIdleUserId(String tableName, int bossId) {
+	public int getUserPostCount(int userId) {
+		Count fixSkinCount = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + OrderConst.TABLE_ORDER_FIX_SKIN + " WHERE OPERATOR_ID = ?", userId);
+		Count fixBcCount = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + OrderConst.TABLE_ORDER_FIX_BACKGROUND + " WHERE OPERATOR_ID = ?", userId);
+		Count cutCount = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM " + OrderConst.TABLE_ORDER_CUT_LIQUIFY + " WHERE OPERATOR_ID = ?", userId);
+		return fixSkinCount.getCnt() + fixBcCount.getCnt() + cutCount.getCnt();
+	}
+	
+	public int getIdleUserId(int bossId) {
 		List<User> designerList = userDao.getUserListByRoleId(RoleConst.DESIGNER_ID, bossId);
 		int minUserId = 0;
 		if (designerList != null && designerList.size() > 0) {
 			int minCount = -1;
 			for (int i = 0; i < designerList.size(); i++) {
 				User designer = designerList.get(i);
-				int count = this.getUserPostCount(tableName, designer.getId());
+				int count = this.getUserPostCount(designer.getId());
 				if (count < minCount || minCount == -1) {
 					minCount = count;
 					minUserId = designer.getId();
@@ -119,7 +126,7 @@ public class OrderPostProductionDao {
 	}
 	
 	public void allotPostProduction(String tableName, int orderId, int bossId) {
-		int idleUserId = this.getIdleUserId(tableName, bossId);
+		int idleUserId = this.getIdleUserId(bossId);
 		if (idleUserId != 0) {
 			this.insertPostProductionRecord(tableName, orderId, idleUserId);
 		}

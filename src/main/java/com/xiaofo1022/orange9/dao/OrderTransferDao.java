@@ -47,6 +47,10 @@ public class OrderTransferDao {
 		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? ORDER BY ID", orderId);
 	}
 	
+	public OrderTransferImageData getTransferImageDataListByFile(int orderId, String fileName) {
+		return commonDao.getFirst(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND FILE_NAME = ?", orderId, fileName);
+	}
+	
 	public Count getTransferImageDataCount(int orderId) {
 		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ?", orderId);
 	}
@@ -78,6 +82,10 @@ public class OrderTransferDao {
 	
 	public void setTransferImageSelected(int tansferImgId) {
 		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET IS_SELECTED = 1, UPDATE_DATETIME = ? WHERE ID = ?", new Date(), tansferImgId);
+	}
+	
+	public void setTransferImageSelectedByFile(int orderId, String fileName) {
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET IS_SELECTED = 1, UPDATE_DATETIME = ? WHERE ORDER_ID = ? AND FILE_NAME = ?", new Date(), orderId, fileName);
 	}
 	
 	public String getTransferImageNames(int orderId) {

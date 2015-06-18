@@ -41,18 +41,18 @@
 			<p>导图</p>
 			<span class="nav-sidebar"></span>
 		</div>
-		<div class="order-link whover" onclick="toOrderFixSkin()">
-			<% if (link != null && link.equals("fixskin")) { %>
-				<span class="order-link-nav glyphicon glyphicon-star"></span>
-			<% } %>
-			<p>修皮肤及褶皱</p>
-			<span class="nav-sidebar"></span>
-		</div>
 		<div class="order-link whover" onclick="toOrderFixBackground()">
 			<% if (link != null && link.equals("fixbackground")) { %>
 				<span class="order-link-nav glyphicon glyphicon-star"></span>
 			<% } %>
 			<p>修背景</p>
+			<span class="nav-sidebar"></span>
+		</div>
+		<div class="order-link whover" onclick="toOrderFixSkin()">
+			<% if (link != null && link.equals("fixskin")) { %>
+				<span class="order-link-nav glyphicon glyphicon-star"></span>
+			<% } %>
+			<p>修皮肤及褶皱</p>
 			<span class="nav-sidebar"></span>
 		</div>
 		<div class="order-link whover" onclick="toOrderCutLiquify()">
