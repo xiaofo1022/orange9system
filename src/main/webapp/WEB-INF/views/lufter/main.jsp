@@ -15,7 +15,6 @@
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/lufter/summary.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" />
 <script src="<c:url value='/js/jquery.min.js'/>"></script>
-<script src="<c:url value='/js/jquery-ui.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <body>
 <jsp:include page="header.jsp" flush="true">

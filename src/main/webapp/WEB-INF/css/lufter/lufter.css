@@ -137,11 +137,29 @@
 
 .self-info {
 	height: 50px;
-	width: 190px;
+	width: 120px;
 	padding: 5px;
+	border-right: 1px solid #E3E3E5;
 	border-bottom: 1px solid #E3E3E5;
 }
 
+.leave-block {
+	height: 50px;
+	width: 70px;
+	padding: 5px;
+	padding-left: 0;
+	padding-top: 15px;
+	font-weight: bold;
+	text-align: center;
+	border-left: 1px solid #FFF;
+	border-bottom: 1px solid #E3E3E5;
+}
+
+.leave-block:hover {
+	cursor:pointer;
+	background-color:#FFF;
+}
+	
 .sidebar-module p {
 	margin: 0;
 }

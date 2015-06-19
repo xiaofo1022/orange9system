@@ -15,7 +15,6 @@
 <link href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/zoom.css'/>" rel="stylesheet"/>
 <script src="<c:url value='/js/jquery.min.js'/>"></script>
-<script src="<c:url value='/js/jquery-ui.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
 <script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
@@ -101,33 +100,37 @@
 <div class="row">
 	<div class="col-sm-8 blog-main">
 		<div class="data-block">
-			<input type="hidden" id="orderId" value="${orderDetail.id}"/>
-			<input type="hidden" id="clientId" value="${orderDetail.clientId}"/>
-			<input type="hidden" id="statusId" value="${orderDetail.statusId}"/>
-			<div class="data-info lofter-bc font-lg">
-				单号 ${orderDetail.orderNo}
-			</div>
-			<div class="data-info lofter-bc font-lg" style="width:242px;">
-				拍摄日期 ${orderDetail.shootDateLabel}
-			</div>
-			<div class="data-info lofter-bc">
+			<div class="clearfix">
+				<input type="hidden" id="orderId" value="${orderDetail.id}"/>
+				<input type="hidden" id="clientId" value="${orderDetail.clientId}"/>
+				<input type="hidden" id="statusId" value="${orderDetail.statusId}"/>
+				<div class="data-info lofter-bc font-lg">
+					单号 ${orderDetail.orderNo}
+				</div>
+				<div class="data-info lofter-bc font-lg" style="width:242px;">
+					拍摄日期 ${orderDetail.shootDateLabel}
+				</div>
 				<c:choose>
 					<c:when test="${user.isAdmin == 1}">
-						<select id="orderStatus" class="form-control" style="width:140px;display:inline;" onchange="updateOrderStatus()">
-							<c:forEach items="${orderStatusList}" var="orderStatus">
-								<c:choose>
-									<c:when test="${orderStatus.id == orderDetail.statusId}">
-										<option value="${orderStatus.id}" selected>${orderStatus.name}</option>
-									</c:when>
-									<c:otherwise>
-										<option value="${orderStatus.id}">${orderStatus.name}</option>
-									</c:otherwise>
-								</c:choose>
-							</c:forEach>
-						</select>
+						<div class="data-info lofter-bc">
+							<select id="orderStatus" class="form-control" style="width:140px;display:inline;" onchange="updateOrderStatus()">
+								<c:forEach items="${orderStatusList}" var="orderStatus">
+									<c:choose>
+										<c:when test="${orderStatus.id == orderDetail.statusId}">
+											<option value="${orderStatus.id}" selected>${orderStatus.name}</option>
+										</c:when>
+										<c:otherwise>
+											<option value="${orderStatus.id}">${orderStatus.name}</option>
+										</c:otherwise>
+									</c:choose>
+								</c:forEach>
+							</select>
+						</div>
 					</c:when>
 					<c:otherwise>
-						状态 ${orderDetail.orderStatus.name}
+						<div class="data-info lofter-bc font-lg">
+							状态 ${orderDetail.orderStatus.name}
+						</div>
 					</c:otherwise>
 				</c:choose>
 			</div>

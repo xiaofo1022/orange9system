@@ -20,6 +20,8 @@ public class OrderStatusDao {
 	@Autowired
 	private CommonDao commonDao;
 	@Autowired
+	private ClockInDao clockInDao;
+	@Autowired
 	private OrderDao orderDao;
 	@Autowired
 	private OrderPostProductionDao orderPostProductionDao;
@@ -42,6 +44,7 @@ public class OrderStatusDao {
 		statusCountMap.put(OrderStatusConst.FIX_SKIN, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_SKIN, bossId));
 		statusCountMap.put(OrderStatusConst.FIX_BACKGROUND, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_BACKGROUND, bossId));
 		statusCountMap.put(OrderStatusConst.CUT_LIQUIFY, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_CUT_LIQUIFY, bossId));
+		statusCountMap.put(OrderStatusConst.LEAVE_VERIFY, clockInDao.getUnconfirmLeaveRequestCount());
 		return statusCountMap;
 	}
 	

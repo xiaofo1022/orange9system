@@ -76,7 +76,7 @@
 		</nav>
 	</div>
 </div>
-
+<script src="<c:url value='/js/jquery-ui.js'/>"></script>
 <script>
 $("#changePasswordModal").on("hidden.bs.modal", function(e) {
 	$("#passwordForm")[0].reset();

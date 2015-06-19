@@ -186,7 +186,7 @@
 						本月考勤
 						<button class="btn btn-default ml10" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus">正常${userDetail.normalClockInList.size()}天</button>
 						<button id="btn-user-delay-${userDetail.id}" class="btn btn-danger ml10 user-delay" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="">迟到${userDetail.delayClockInList.size()}天</button>
-						<button class="btn btn-info ml10" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus">请假${userDetail.leaveClockInList.size()}天</button>
+						<button id="btn-user-leave-${userDetail.id}" class="btn btn-info ml10 user-leave" data-container="body" data-toggle="popover" data-placement="top" data-trigger="focus" data-content="">请假${userDetail.leaveClockInList.size()}天</button>
 						<button class="btn btn-success ml10" onclick="showCardChart(${userDetail.id}, '${userDetail.name}', '${userDetail.normalCount}', '${userDetail.delayCount}', '${userDetail.leaveCount}')">考勤统计</button>
 						<button class="btn btn-success ml10" onclick="showPerformanceChart(${userDetail.id})">绩效统计</button>
 					</div>
@@ -240,6 +240,7 @@
 				}
 				initPopover();
 				getDelayClockContent();
+				getLeaveClockContent();
 			}
 		});
 	}
@@ -294,6 +295,22 @@
 				for (var index in clockList) {
 					var clock = clockList[index];
 					result += (clock.clockDatetimeLabel + "<br/>");
+				}
+			}
+			$("#" + this.id).attr("data-content", result);
+		});
+	}
+	
+	function getLeaveClockContent() {
+		$(".user-leave").each(function(index, data) {
+			var userId = parseInt(this.id.replace("btn-user-leave-", ""));
+			var result = "";
+			var userData = userMap[userId];
+			if (userData) {
+				var clockList = userData.leaveClockInList;
+				for (var index in clockList) {
+					var clock = clockList[index];
+					result += (clock.clockDate + " " + clock.remark + "<br/>");
 				}
 			}
 			$("#" + this.id).attr("data-content", result);

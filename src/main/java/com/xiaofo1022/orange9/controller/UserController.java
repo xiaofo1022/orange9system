@@ -25,6 +25,7 @@ import com.xiaofo1022.orange9.dao.PerformanceDao;
 import com.xiaofo1022.orange9.dao.UserDao;
 import com.xiaofo1022.orange9.modal.ClockIn;
 import com.xiaofo1022.orange9.modal.Count;
+import com.xiaofo1022.orange9.modal.LeaveRequest;
 import com.xiaofo1022.orange9.modal.Performance;
 import com.xiaofo1022.orange9.modal.PerformanceChart;
 import com.xiaofo1022.orange9.modal.User;
@@ -182,5 +183,27 @@ public class UserController {
 	public CommonResponse deleteUser(@PathVariable int userId) {
 		userDao.deleteUser(userId);
 		return new SuccessResponse("Delete User Success");
+	}
+	
+	@RequestMapping(value = "/addLeaveRequest", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse addLeaveRequest(@ModelAttribute("leaveRequest") LeaveRequest leaveRequest, BindingResult bindingResult, HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			leaveRequest.setUserId(loginUser.getId());
+			clockInDao.addLeaveRequestRecord(leaveRequest);
+		}
+		return new SuccessResponse("Add Leave Request Success");
+	}
+	
+	@RequestMapping(value = "/confirmLeaveRequest/{id}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse confirmLeaveRequest(@PathVariable int id, HttpServletRequest request) {
+		LeaveRequest leaveRequest = clockInDao.getLeaveRequest(id);
+		if (leaveRequest != null) {
+			clockInDao.addLeaveRequest(leaveRequest);
+			clockInDao.confirmLeaveRequest(id);
+		}
+		return new SuccessResponse("Confirm Leave Request Success");
 	}
 }

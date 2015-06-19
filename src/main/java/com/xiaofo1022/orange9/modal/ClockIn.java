@@ -18,6 +18,13 @@ public class ClockIn {
 	private String clockDatetimeLabel;
 	@Column("REMARK")
 	private String remark;
+	@Column("IS_DELAY")
+	private int isDelay;
+	@Column("IS_ABSENCE")
+	private int isAbsence;
+	@Column("IS_LEAVE")
+	private int isLeave;
+	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	public int getId() {
@@ -59,5 +66,23 @@ public class ClockIn {
 	}
 	public void setClockDatetimeLabel(String clockDatetimeLabel) {
 		this.clockDatetimeLabel = clockDatetimeLabel;
+	}
+	public int getIsDelay() {
+		return isDelay;
+	}
+	public void setIsDelay(int isDelay) {
+		this.isDelay = isDelay;
+	}
+	public int getIsAbsence() {
+		return isAbsence;
+	}
+	public void setIsAbsence(int isAbsence) {
+		this.isAbsence = isAbsence;
+	}
+	public int getIsLeave() {
+		return isLeave;
+	}
+	public void setIsLeave(int isLeave) {
+		this.isLeave = isLeave;
 	}
 }

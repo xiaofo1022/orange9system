@@ -1,7 +1,6 @@
 package com.xiaofo1022.orange9.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -110,16 +109,23 @@ public class MainController {
 		if (user == null) {
 			return new FailureResponse(Message.LOGIN_FAILURE);
 		} else {
-			user.setLoginTime(new Date());
-			user.setRole(roleDao.getRole(user.getRoleId()));
-			HttpSession session = request.getSession(true);
-			session.setAttribute("user", user);
+			this.initUserInfo(user);
+			request.getSession(true).setAttribute("user", user);
 			if (user.getRoleId() == RoleConst.CLIENT_ID) {
 				return new SuccessResponse(Message.LOGIN_SUCCESS, "client/main/" + clientDao.getClientIdByAccountId(user.getId()));
 			} else {
 				return new SuccessResponse(Message.LOGIN_SUCCESS, "orderSummary");
 			}
 		}
+	}
+	
+	private void initUserInfo(User user) {
+		clockInDao.clockIn(user.getId());
+		ClockIn clockIn = clockInDao.getEmployeeClockIn(user.getId());
+		if (clockIn != null) {
+			user.setLoginTime(clockIn.getClockDatetime());
+		}
+		user.setRole(roleDao.getRole(user.getRoleId()));
 	}
 	
 	@RequestMapping(value="/employee", method=RequestMethod.GET)
@@ -132,10 +138,6 @@ public class MainController {
 	public String system2ordersummary(HttpServletRequest request, ModelMap modelMap) {
 		User user = RequestUtil.getLoginUser(request);
 		if (user != null) {
-			ClockIn clockIn = clockInDao.clockIn(user.getId());
-			if (clockIn != null) {
-				modelMap.addAttribute("clockIn", clockIn);
-			}
 			modelMap.addAttribute("modelNameList", orderDao.getModelNameList(user.getBossId()));
 			modelMap.addAttribute("dresserNameList", orderDao.getDresserNameList(user.getBossId()));
 			modelMap.addAttribute("stylistNameList", orderDao.getStylistNameList(user.getBossId()));
@@ -272,5 +274,14 @@ public class MainController {
 			modelMap.addAttribute("orderVerifyList", orderVerifyList);
 		}
 		return "lufter/orderverify";
+	}
+	
+	@RequestMapping(value="/leaveRequest", method=RequestMethod.GET)
+	public String leaveRequest(HttpServletRequest request, ModelMap modelMap) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			modelMap.addAttribute("leaveRequestList", clockInDao.getUnconfirmLeaveRequestList());
+		}
+		return "lufter/leaverequest";
 	}
 }

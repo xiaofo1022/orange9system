@@ -7,13 +7,16 @@ import java.util.List;
 
 import com.xiaofo1022.orange9.dao.common.Column;
 import com.xiaofo1022.orange9.dao.common.JoinTable;
-import com.xiaofo1022.orange9.util.DatetimeUtil;
 
 public class User {
 	@Column("ID")
 	private int id;
 	@Column("NAME")
 	private String name;
+	@Column("INSERT_DATETIME")
+	private Date insertDatetime;
+	@Column("UPDATE_DATETIME")
+	private Date updateDatetime;
 	@Column("ACCOUNT")
 	private String account;
 	@Column("PASSWORD")
@@ -54,7 +57,7 @@ public class User {
 	private int monthDoneCutLiquify;
 	private int monthDonePostProduction;
 	
-	public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 	
 	public int getId() {
 		return id;
@@ -130,13 +133,14 @@ public class User {
 	}
 	public void addClockIn(ClockIn clockIn) {
 		if (clockIn.getRemark() != null) {
-			this.leaveClockInList.add(clockIn);
+			if (clockIn.getIsLeave() == 1) {
+				this.leaveClockInList.add(clockIn);
+			}
 		} else {
-			Date standardClock = DatetimeUtil.getStandardClockDate(clockIn.getClockDatetime());
-			if (standardClock.getTime() - clockIn.getClockDatetime().getTime() > 0) {
-				this.normalClockInList.add(clockIn);
-			} else {
+			if (clockIn.getIsDelay() == 1) {
 				this.delayClockInList.add(clockIn);
+			} else {
+				this.normalClockInList.add(clockIn);
 			}
 		}
 	}
@@ -236,5 +240,17 @@ public class User {
 	}
 	public void setMonthDoneCutLiquify(int monthDoneCutLiquify) {
 		this.monthDoneCutLiquify = monthDoneCutLiquify;
+	}
+	public Date getInsertDatetime() {
+		return insertDatetime;
+	}
+	public void setInsertDatetime(Date insertDatetime) {
+		this.insertDatetime = insertDatetime;
+	}
+	public Date getUpdateDatetime() {
+		return updateDatetime;
+	}
+	public void setUpdateDatetime(Date updateDatetime) {
+		this.updateDatetime = updateDatetime;
 	}
 }

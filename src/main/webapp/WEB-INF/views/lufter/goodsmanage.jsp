@@ -14,7 +14,6 @@
 <link href="<c:url value='/css/lufter/lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" rel="stylesheet"/>
 <script src="<c:url value='/js/jquery.min.js'/>"></script>
-<script src="<c:url value='/js/jquery-ui.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
 <script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>

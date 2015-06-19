@@ -12,6 +12,7 @@
 <title>Orange 9</title>
 <link href="<c:url value='/css/bootstrap.lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/lufter/lufter.css'/>" rel="stylesheet"/>
+<link href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" rel="stylesheet"/>
 <script src="<c:url value='/js/jquery.min.js'/>"></script>
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>
