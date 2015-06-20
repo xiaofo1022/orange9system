@@ -128,4 +128,8 @@ public class ClockInDao {
 	public LeaveRequest getLeaveRequest(int id) {
 		return commonDao.getFirst(LeaveRequest.class, "SELECT * FROM EMPLOYEE_LEAVE_REQUEST WHERE ID = ?", id);
 	}
+	
+	public void denailLeaveRequest(int id, String remark) {
+		commonDao.update("UPDATE EMPLOYEE_LEAVE_REQUEST SET REMARK = ? WHERE ID = ?", remark, id);
+	}
 }

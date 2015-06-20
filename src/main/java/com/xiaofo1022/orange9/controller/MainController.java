@@ -112,7 +112,7 @@ public class MainController {
 			this.initUserInfo(user);
 			request.getSession(true).setAttribute("user", user);
 			if (user.getRoleId() == RoleConst.CLIENT_ID) {
-				return new SuccessResponse(Message.LOGIN_SUCCESS, "client/main/" + clientDao.getClientIdByAccountId(user.getId()));
+				return new SuccessResponse(Message.LOGIN_SUCCESS, "client/list/" + clientDao.getClientIdByAccountId(user.getId()));
 			} else {
 				return new SuccessResponse(Message.LOGIN_SUCCESS, "orderSummary");
 			}

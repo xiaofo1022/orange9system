@@ -88,21 +88,41 @@ public class ClientController {
 			} else {
 				order = orderDao.getOrderDetail(orderId);
 			}
-			clientOrder = new ClientOrder();
-			clientOrder.setOrderId(order.getId());
-			clientOrder.setOrderNo(order.getOrderNo());
-			clientOrder.setStatus(order.getOrderStatus().getName());
-			clientOrder.setClientId(clientId);
-			if (order.getOrderGoods() != null) {
-				clientOrder.setGoodsCount(order.getOrderGoods().getAllCount());
-			}
-			clientOrder.setShootDateLabel(order.getShootDateLabel());
-			clientOrder.setShootHalf(order.getShootHalf());
-			clientOrder.setOrderTransferImageDataList(orderTransferDao.getTransferImageDataListByOrder(order.getId()));
-			clientOrder.setOrderFixedImageDataList(orderPostProductionDao.getOrderFixedImageDataList(order.getId()));
+			clientOrder = this.createClientOrder(clientId, order);
 		}
 		modelMap.addAttribute("order", clientOrder);
 		modelMap.addAttribute("orderNoList", orderNoList);
+	}
+	
+	private ClientOrder createClientOrder(int clientId, Order order) {
+		ClientOrder clientOrder = new ClientOrder();
+		clientOrder.setOrderId(order.getId());
+		clientOrder.setOrderNo(order.getOrderNo());
+		clientOrder.setStatus(order.getOrderStatus().getName());
+		clientOrder.setClientId(clientId);
+		if (order.getOrderGoods() != null) {
+			clientOrder.setGoodsCount(order.getOrderGoods().getAllCount());
+		}
+		clientOrder.setShootDateLabel(order.getShootDateLabel());
+		clientOrder.setShootHalf(order.getShootHalf());
+		clientOrder.setOrderTransferImageDataList(orderTransferDao.getTransferImageDataListByOrder(order.getId()));
+		clientOrder.setOrderFixedImageDataList(orderPostProductionDao.getOrderFixedImageDataList(order.getId()));
+		return clientOrder;
+	}
+	
+	@RequestMapping(value = "/list/{clientId}", method = RequestMethod.GET)
+	public String getClientOrderList(@PathVariable int clientId, ModelMap map) {
+		List<Order> orderList = orderDao.getOrderListByClient(clientId);
+		List<ClientOrder> clientOrderList = null;
+		if (orderList != null && orderList.size() > 0) {
+			clientOrderList = new ArrayList<ClientOrder>(orderList.size());
+			for (Order order : orderList) {
+				clientOrderList.add(this.createClientOrder(clientId, order));
+			}
+		}
+		map.addAttribute("clientId", clientId);
+		map.addAttribute("clientOrderList", clientOrderList);
+		return "lufter/clientpagelist";
 	}
 	
 	@RequestMapping(value = "/getSelectedTransferImageDataList/{orderId}", method = RequestMethod.GET)

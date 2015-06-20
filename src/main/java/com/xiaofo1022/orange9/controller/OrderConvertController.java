@@ -16,6 +16,7 @@ import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
+import com.xiaofo1022.orange9.response.FailureResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
 import com.xiaofo1022.orange9.util.RequestUtil;
 
@@ -48,6 +49,9 @@ public class OrderConvertController {
 			HttpServletRequest request) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
+			if (!orderPostProductionDao.isExitDesigner(loginUser.getBossId())) {
+				return new FailureResponse("您还没有设计师, 请先创建一个设计师账号.");
+			}
 			orderConvertDao.setOrderConvertDone(convertId);
 			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.POST_PRODUCTION);
 			orderPostProductionDao.allotImage(orderId, loginUser.getBossId());

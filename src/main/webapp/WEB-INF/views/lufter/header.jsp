@@ -70,6 +70,8 @@
 						<a class="blog-nav-item" href="<c:url value='/employee'/>">员工管理</a>
 					<% } %>
 				<% } %>
+			<% } else { %>
+				<a class="blog-nav-item active">我的订单</a>
 			<% } %>
 			<a class="blog-nav-item" onclick="showResetPassword()">账号</a>
 			<a class="blog-nav-item" onclick="logout()">退出</a>

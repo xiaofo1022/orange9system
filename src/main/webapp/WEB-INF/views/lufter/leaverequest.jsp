@@ -18,10 +18,36 @@
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>
 <script src="<c:url value='/js/validation/validation-message-cn.js'/>"></script>
 <script src="<c:url value='/js/validation/validator.js'/>"></script>
+<script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <body>
 <jsp:include page="header.jsp" flush="true">
 	<jsp:param name="page" value=""/>
 </jsp:include>
+
+<div id="denailRequestModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">拒绝请假</h4>
+			</div>
+			<div class="modal-body">	
+				<sf:form id="denailForm" modelAttribute="denail" class="form-horizontal" method="post">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">理由</label>
+						<div class="col-sm-6">
+							<textarea id="denail-reason" rows="4" maxlength="1000" name="denail-reason" class="form-control"></textarea>
+						</div>
+					</div>
+				</sf:form>
+			</div>
+			<div class="modal-footer">
+				<button id="btnDenail" type="button" class="btn btn-primary" onclick="denailLeaveRequest()">确定</button>
+			</div>
+			<input type="hidden" id="request-id"/>
+		</div>
+	</div>
+</div>
 
 <div class="container">
 <div class="row">
@@ -34,7 +60,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="data-info twitter-bc" style="width:297px;">原因 ${leaveRequest.reason}</div>
-					<button class="btn btn-danger fright ml10" style="margin-top:15px;">拒绝</button>
+					<button class="btn btn-danger fright ml10" style="margin-top:15px;" onclick="showDenailWindow(${leaveRequest.id})">拒绝</button>
 					<button class="btn btn-success fright" style="margin-top:15px;" onclick="confirmLeaveRequest(${leaveRequest.id})">批准</button>
 				</div>
 			</div>
@@ -56,6 +82,25 @@
 				}
 			});
 		}
+	}
+	
+	function showDenailWindow(id) {
+		$("#request-id").val(id);
+		$("#denailRequestModal").modal("show");
+	}
+	
+	function denailLeaveRequest() {
+		var id = $("#request-id").val();
+		var remark = $("#denail-reason").val();
+		if (!remark) {
+			alert("请输入理由");
+			return;
+		}
+		AjaxUtil.post("<c:url value='/user/denailLeaveRequest/" + id + "'/>", {remark:remark}, function(data) {
+			if (data.status == "success") {
+				location.reload(true);
+			}
+		});
 	}
 </script>
 </body>

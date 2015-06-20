@@ -427,3 +427,9 @@
 	padding:5px;
 	font-size:12px;
 }
+
+.client-order-list-img {
+	width: 80px;
+	float: left;
+	margin: 10px;
+}

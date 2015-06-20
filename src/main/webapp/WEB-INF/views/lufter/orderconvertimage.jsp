@@ -86,7 +86,7 @@
 				if (data.status == "success") {
 					location.reload(true);
 				} else {
-					console.log(data);
+					alert(data.msg);
 				}
 			});
 		}

@@ -125,6 +125,15 @@ public class OrderPostProductionDao {
 		return minUserId;
 	}
 	
+	public boolean isExitDesigner(int bossId) {
+		List<User> designerList = userDao.getUserListByRoleId(RoleConst.DESIGNER_ID, bossId);
+		if (designerList != null && designerList.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void allotPostProduction(String tableName, int orderId, int bossId) {
 		int idleUserId = this.getIdleUserId(bossId);
 		if (idleUserId != 0) {

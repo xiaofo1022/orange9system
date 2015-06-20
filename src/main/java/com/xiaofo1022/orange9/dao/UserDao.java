@@ -43,7 +43,7 @@ public class UserDao {
 	}
 	
 	public List<User> getUserList(int bossId) {
-		return commonDao.query(User.class, "SELECT A.* FROM USER A LEFT JOIN ROLE B ON A.ROLE_ID = B.ID WHERE A.ACTIVE = 1 AND B.IS_SHOW = 1 AND A.BOSS_ID = ?", bossId);
+		return commonDao.query(User.class, "SELECT A.* FROM USER A LEFT JOIN ROLE B ON A.ROLE_ID = B.ID WHERE A.ACTIVE = 1 AND B.IS_SHOW = 1 AND A.BOSS_ID = ? ORDER BY A.ROLE_ID, A.ID", bossId);
 	}
 	
 	public List<User> getBossList() {

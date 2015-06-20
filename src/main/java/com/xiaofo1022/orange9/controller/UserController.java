@@ -206,4 +206,11 @@ public class UserController {
 		}
 		return new SuccessResponse("Confirm Leave Request Success");
 	}
+	
+	@RequestMapping(value = "/denailLeaveRequest/{id}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse denailLeaveRequest(@RequestBody LeaveRequest leaveRequest, BindingResult bindingResult, @PathVariable int id, HttpServletRequest request) {
+		clockInDao.denailLeaveRequest(id, leaveRequest.getRemark());
+		return new SuccessResponse("Denail Leave Request Success");
+	}
 }
