@@ -51,7 +51,14 @@
 					</c:choose>
 				</div>
 				<div class="clearfix">
-					<button class="btn btn-primary ml10 fright" onclick="orderDetail(${clientOrder.orderId})">订单详情</button>
+					<c:choose>
+						<c:when test="${clientOrder.status.equals('等待客户选片')}">
+							<button class="btn btn-success ml10 fright" onclick="orderDetail(${clientOrder.orderId})">进入选片</button>
+						</c:when>
+						<c:otherwise>
+							<button class="btn btn-primary ml10 fright" onclick="orderDetail(${clientOrder.orderId})">订单详情</button>
+						</c:otherwise>
+					</c:choose>
 					<c:choose>
 						<c:when test="${clientOrder.status.equals('完成')}">
 							<button class="btn btn-info ml10 fright" onclick="downloadZip(${clientOrder.orderId})">成片下载</button>
