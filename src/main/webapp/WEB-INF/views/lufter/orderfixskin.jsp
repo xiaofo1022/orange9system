@@ -10,6 +10,8 @@
 <meta name="description" content="">
 <meta name="author" content="xiaofo">
 <title>Orange 9</title>
+<link rel="icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" /> 
+<link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" />
 <link href="<c:url value='/css/bootstrap.lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/lufter/lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" rel="stylesheet"/>
@@ -20,11 +22,28 @@
 <jsp:include page="header.jsp" flush="true">
 	<jsp:param name="page" value=""/>
 </jsp:include>
-	
+
+<jsp:include page="allotimagemodal.jsp" flush="true"/>
+
 <div class="container">
 <div class="row">
 
 	<div class="col-sm-8 blog-main">
+		<c:if test="${unAllotOrderList != null && unAllotOrderList.size() > 0}">
+			<div class="data-block" style="min-height:0;">
+				<c:forEach items="${unAllotOrderList}" var="unAllotOrder">
+					<div class="clearfix">
+						<div class="data-info facebook-bc">
+							订单 <a href="<c:url value='/order/orderDetail/${unAllotOrder.id}'/>" target="_blank">${unAllotOrder.orderNo}</a>
+						</div>
+						<div class="data-info facebook-bc">
+							还有 ${unAllotOrder.unAllotCount} 张图未分
+						</div>
+						<button class="btn btn-primary btn-data-info" onclick="showAllotImageModal(${unAllotOrder.id}, ${unAllotOrder.unAllotCount})">分图</button>
+					</div>
+				</c:forEach>
+			</div>
+		</c:if>
 		<c:forEach items="${postProductionList}" var="postProduction">
 			<div class="data-block">
 				<div class="clearfix">
@@ -35,9 +54,7 @@
 				<div class="clearfix">
 					<div class="data-info facebook-bc order-detail-header" style="margin-left:0px;">设计师 ${postProduction.operator.name} <img src="${postProduction.operator.header}"/></div>
 					<c:if test="${user.isAdmin == 1 || user.id == postProduction.operatorId}">
-						<button id="btn-confirm-${postProduction.orderId}" class="btn btn-info btn-data-info" onclick="downloadZip(${postProduction.orderId})">打包下载</button>
-						<button id="btn-upload-${postProduction.orderId}" class="btn btn-success btn-data-info" onclick="completePostProduction(${postProduction.orderId})">批量上传</button>
-						<button class="btn btn-warning btn-data-info" onclick="nextStep(${postProduction.orderId})">修图完成</button>
+						<button class="btn btn-success btn-data-info" onclick="nextStep(${postProduction.orderId}, ${postProduction.operatorId})">修图完成</button>
 					</c:if>
 				</div>
 				<div class="clearfix">
@@ -56,6 +73,8 @@
 </div>
 </div>
 <script>
+	allotUri = "allotFixSkinImage";
+
 	function completePostProduction(orderId) {
 		compOrderId = orderId;
 		uploadUrl = "<c:url value='/picture/saveFixSkinPicture'/>";
@@ -66,10 +85,10 @@
 		window.open("<c:url value='/picture/downloadOriginalPicture/" + orderId + "'/>");
 	}
 	
-	function nextStep(orderId) {
+	function nextStep(orderId, operatorId) {
 		var result = confirm("是否确认完成修皮肤及褶皱？");
 		if (result) {
-			$.post("<c:url value='/orderPostProduction/setFixSkinNextStep/" + orderId + "'/>", null, function(data, status) {
+			$.post("<c:url value='/orderPostProduction/setFixSkinDone/" + orderId + "/" + operatorId + "'/>", null, function(data, status) {
 				if (data.status == "success") {
 					location.reload(true);
 				}

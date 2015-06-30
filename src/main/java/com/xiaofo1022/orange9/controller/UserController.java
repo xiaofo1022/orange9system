@@ -113,9 +113,9 @@ public class UserController {
 			user.addPerformance(performance.getBaseCount(), doneCount.getCnt(), performance.getPush());
 			
 		} else if (user.getRoleId() == RoleConst.DESIGNER_ID) {
-			Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_SKIN, OrderConst.COLUMN_FIXED_SKIN, startDate, endDate);
-			Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_FIX_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND, startDate, endDate);
-			Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.TABLE_ORDER_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY, startDate, endDate);
+			Count fixSkinDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.COLUMN_FIXED_SKIN, OrderConst.COLUMN_FIXED_SKIN_OPERATOR, startDate, endDate);
+			Count fixBackgroundDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.COLUMN_FIXED_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND_OPERATOR, startDate, endDate);
+			Count cutLiquifyDoneCount = orderPostProductionDao.getAllPostProductionDoneCount(user.getId(), OrderConst.COLUMN_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY_OPERATOR, startDate, endDate);
 			
 			user.setMonthDoneFixSkin(fixSkinDoneCount.getCnt());
 			user.setMonthDoneFixBackground(fixBackgroundDoneCount.getCnt());

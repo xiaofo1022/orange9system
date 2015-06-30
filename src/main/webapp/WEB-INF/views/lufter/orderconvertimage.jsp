@@ -10,6 +10,8 @@
 <meta name="description" content="">
 <meta name="author" content="xiaofo">
 <title>Orange 9</title>
+<link rel="icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" /> 
+<link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" />
 <link href="<c:url value='/css/bootstrap.lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/lufter/lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/jquery-ui/jquery-ui.css'/>" rel="stylesheet"/>
@@ -20,7 +22,7 @@
 <jsp:include page="header.jsp" flush="true">
 	<jsp:param name="page" value=""/>
 </jsp:include>
-	
+
 <div class="container">
 <div class="row">
 
@@ -40,7 +42,6 @@
 				<div class="clearfix">
 					<div class="data-info facebook-bc">图片</div>
 					<c:if test="${user.isAdmin == 1}">
-						<button id="btn-upload-${orderConvert.orderId}" class="btn btn-info btn-data-info" onclick="completePostProduction(${orderConvert.orderId})">上传</button>
 						<button id="btn-confirm-${orderConvert.orderId}" class="btn btn-success btn-data-info" onclick="confirmConvertComplete(${orderConvert.orderId}, ${orderConvert.id})">完成</button>
 					</c:if>
 				</div>

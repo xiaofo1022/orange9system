@@ -9,6 +9,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="xiaofo">
+<link rel="icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" /> 
+<link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" />
 <title>Orange 9</title>
 <link href="<c:url value='/css/bootstrap.lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/lufter/lufter.css'/>" rel="stylesheet"/>
@@ -17,10 +19,6 @@
 <script src="<c:url value='/js/bootstrap.min.js'/>"></script>
 <body class="login-body">
 <div class="login-pos">
-	<div class="login-header">
-		ORANGE 9
-		<p> - Living For Real - </p>
-	</div>
 	<div class="login-console">
 		<sf:form id="loginForm" modelAttribute="login" method="post">
 			<div class="form-group">
@@ -37,7 +35,7 @@
 </div>
 <div class="footer">
 	All Powered By <a href="http://www.douban.com/people/41193239/" target="_blank">Xiaofo</a>
-	| 九橙文化创意有限公司版权所有
+	| 杭州九橙文化创意有限公司版权所有
 	| ©2015
 </div>
 <script src="<c:url value='/js/validation/jquery.validate.js'/>"></script>

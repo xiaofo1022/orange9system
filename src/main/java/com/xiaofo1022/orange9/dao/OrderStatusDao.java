@@ -41,9 +41,10 @@ public class OrderStatusDao {
 			OrderStatusCount orderStatusCount = this.getOrderStatusCount(orderStatus.getId(), bossId);
 			statusCountMap.put(orderStatus.getName(), orderStatusCount == null ? 0 : orderStatusCount.getStatusCount());
 		}
-		statusCountMap.put(OrderStatusConst.FIX_SKIN, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_SKIN, bossId));
-		statusCountMap.put(OrderStatusConst.FIX_BACKGROUND, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_FIX_BACKGROUND, bossId));
-		statusCountMap.put(OrderStatusConst.CUT_LIQUIFY, orderPostProductionDao.getOrderPostProductionCount(OrderConst.TABLE_ORDER_CUT_LIQUIFY, bossId));
+		statusCountMap.put(OrderStatusConst.FIX_SKIN, orderPostProductionDao.getTransferPostProductionCount(OrderConst.COLUMN_FIXED_SKIN, bossId));
+		statusCountMap.put(OrderStatusConst.FIX_BACKGROUND, orderPostProductionDao.getTransferPostProductionCount(OrderConst.COLUMN_FIXED_BACKGROUND, bossId));
+		statusCountMap.put(OrderStatusConst.CUT_LIQUIFY, orderPostProductionDao.getTransferPostProductionCount(OrderConst.COLUMN_CUT_LIQUIFY, bossId));
+		statusCountMap.put(OrderStatusConst.UPLOAD_FIXED, orderPostProductionDao.getFixedDoneCount(bossId));
 		statusCountMap.put(OrderStatusConst.LEAVE_VERIFY, clockInDao.getUnconfirmLeaveRequestCount());
 		return statusCountMap;
 	}

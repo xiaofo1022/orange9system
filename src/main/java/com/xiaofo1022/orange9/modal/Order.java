@@ -58,6 +58,7 @@ public class Order {
 	private List<OrderGoods> orderGoodsList;
 	@SuppressWarnings("unused")
 	private long shootTime;
+	private int unAllotCount;
 	
 	public int getId() {
 		return id;
@@ -228,5 +229,11 @@ public class Order {
 	}
 	public void setOwnerId(int ownerId) {
 		this.ownerId = ownerId;
+	}
+	public int getUnAllotCount() {
+		return unAllotCount;
+	}
+	public void setUnAllotCount(int unAllotCount) {
+		this.unAllotCount = unAllotCount;
 	}
 }

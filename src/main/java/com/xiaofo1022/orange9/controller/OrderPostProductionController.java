@@ -1,5 +1,7 @@
 package com.xiaofo1022.orange9.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +22,7 @@ import com.xiaofo1022.orange9.dao.OrderHistoryDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
+import com.xiaofo1022.orange9.modal.AllotImage;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -46,12 +49,12 @@ public class OrderPostProductionController {
 	@Autowired
 	private PictureController pictureController;
 	
-	@RequestMapping(value = "/setFixSkinDone/{orderId}/{fileName}", method = RequestMethod.POST)
+	@RequestMapping(value = "/setFixSkinDone/{orderId}/{operatorId}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setFixSkinDone(@PathVariable int orderId, @PathVariable String fileName) {
-		// TODO If Chinese character, use json.
-		if (postProductionDao.isSelectedPicture(orderId, fileName)) {
-			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_FIXED_SKIN, orderId, fileName);
+	public CommonResponse setFixSkinDone(@PathVariable int orderId, @PathVariable int operatorId, HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_FIXED_SKIN, OrderConst.COLUMN_FIXED_SKIN_OPERATOR, orderId, operatorId);
 		}
 		return new SuccessResponse("Set Fix Skin Done Success");
 	}
@@ -69,11 +72,12 @@ public class OrderPostProductionController {
 		return new SuccessResponse("Set Fix Skin Next Step Success");
 	}
 	
-	@RequestMapping(value = "/setFixBackgroundDone/{orderId}/{fileName}", method = RequestMethod.POST)
+	@RequestMapping(value = "/setFixBackgroundDone/{orderId}/{operatorId}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setFixBackgroundDone(@PathVariable int orderId, @PathVariable String fileName) {
-		if (postProductionDao.isSelectedPicture(orderId, fileName)) {
-			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_FIXED_BACKGROUND, orderId, fileName);
+	public CommonResponse setFixBackgroundDone(@PathVariable int orderId, @PathVariable int operatorId, HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_FIXED_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND_OPERATOR, orderId, operatorId);
 		}
 		return new SuccessResponse("Set Fix Background Done Success");
 	}
@@ -91,11 +95,12 @@ public class OrderPostProductionController {
 		return new SuccessResponse("Set Fix Background Next Step Success");
 	}
 	
-	@RequestMapping(value = "/setCutLiquifyDone/{orderId}/{fileName}", method = RequestMethod.POST)
+	@RequestMapping(value = "/setCutLiquifyDone/{orderId}/{operatorId}", method = RequestMethod.POST)
 	@ResponseBody
-	public CommonResponse setCutLiquifyDone(@PathVariable int orderId, @PathVariable String fileName, HttpServletRequest request) {
-		if (postProductionDao.isSelectedPicture(orderId, fileName)) {
-			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_CUT_LIQUIFY, orderId, fileName);
+	public CommonResponse setCutLiquifyDone(@PathVariable int orderId, @PathVariable int operatorId, HttpServletRequest request) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			postProductionDao.setFixPostImageDone(OrderConst.COLUMN_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY_OPERATOR, orderId, operatorId);
 		}
 		return new SuccessResponse("Set Cut Liquify Done Success");
 	}
@@ -104,8 +109,6 @@ public class OrderPostProductionController {
 	@ResponseBody
 	public CommonResponse setCutLiquifyNextStep(@PathVariable int orderId, HttpServletRequest request) {
 		if (postProductionDao.isAllPictureFixed(orderId)) {
-			postProductionDao.setPostProductionDone(orderId, OrderConst.TABLE_ORDER_CUT_LIQUIFY);
-			taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_FIX_SKIN, request));
 			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.WAIT_FOR_VERIFY);
 			orderVerifyDao.insertOrderVerifyImage(orderId, 0);
 		}
@@ -143,5 +146,26 @@ public class OrderPostProductionController {
 	@RequestMapping(value = "/getFixedImageZipPackage/{orderId}", method = RequestMethod.GET)
 	public void getFixedImageZipPackage(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
 		pictureController.getFixedImageZipPackage(orderId, request, response);
+	}
+	
+	@RequestMapping(value = "/allotFixSkinImage/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse allotFixSkinImage(@PathVariable int orderId, @RequestBody List<AllotImage> allotList, BindingResult bindingResult, HttpServletRequest request) {
+		postProductionDao.allotImage(orderId, OrderConst.COLUMN_FIXED_SKIN, OrderConst.COLUMN_FIXED_SKIN_OPERATOR, allotList);
+		return new SuccessResponse("Allot Fix Skin Image Data Success");
+	}
+	
+	@RequestMapping(value = "/allotFixBackgroundImage/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse allotFixBackgroundImage(@PathVariable int orderId, @RequestBody List<AllotImage> allotList, BindingResult bindingResult, HttpServletRequest request) {
+		postProductionDao.allotImage(orderId, OrderConst.COLUMN_FIXED_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND_OPERATOR, allotList);
+		return new SuccessResponse("Allot Fix Background Image Data Success");
+	}
+	
+	@RequestMapping(value = "/allotCutLiquifyImage/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse allotCutLiquifyImage(@PathVariable int orderId, @RequestBody List<AllotImage> allotList, BindingResult bindingResult, HttpServletRequest request) {
+		postProductionDao.allotImage(orderId, OrderConst.COLUMN_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY_OPERATOR, allotList);
+		return new SuccessResponse("Allot Cut Liquify Image Data Success");
 	}
 }

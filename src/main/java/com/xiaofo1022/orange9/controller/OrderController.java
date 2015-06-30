@@ -105,9 +105,9 @@ public class OrderController {
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
 			modelMap.addAttribute("orderConvert", orderConvertDao.getOrderConvert(orderId));
-			modelMap.addAttribute("orderFixSkin", orderPostProductionDao.getPostProductionByOrder(OrderConst.TABLE_ORDER_FIX_SKIN, orderId));
-			modelMap.addAttribute("orderFixBackground", orderPostProductionDao.getPostProductionByOrder(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId));
-			modelMap.addAttribute("orderCutLiquify", orderPostProductionDao.getPostProductionByOrder(OrderConst.TABLE_ORDER_CUT_LIQUIFY, orderId));
+			modelMap.addAttribute("orderFixSkin", orderPostProductionDao.getPostProductionFixer(OrderConst.COLUMN_FIXED_SKIN_OPERATOR, orderId));
+			modelMap.addAttribute("orderFixBackground", orderPostProductionDao.getPostProductionFixer(OrderConst.COLUMN_FIXED_BACKGROUND_OPERATOR, orderId));
+			modelMap.addAttribute("orderCutLiquify", orderPostProductionDao.getPostProductionFixer(OrderConst.COLUMN_CUT_LIQUIFY_OPERATOR, orderId));
 			modelMap.addAttribute("orderTransferImageDataList", orderTransferDao.getTransferImageDataListByOrder(orderId));
 			modelMap.addAttribute("orderFixedImageDataList", orderPostProductionDao.getOrderFixedImageDataList(orderId));
 			modelMap.addAttribute("orderVerifier", orderVerifyDao.getOrderVerifyImage(orderId));

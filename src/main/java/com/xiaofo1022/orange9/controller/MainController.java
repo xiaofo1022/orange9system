@@ -199,7 +199,7 @@ public class MainController {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
 			modelMap.addAttribute("orderConvertList", orderConvertDao.getOrderConvertList(request, loginUser.getBossId()));
-			modelMap.addAttribute("userList", userDao.getUserList(loginUser.getBossId()));
+			modelMap.addAttribute("designerList", userDao.getUserListByRoleId(RoleConst.DESIGNER_ID, loginUser.getBossId()));
 			modelMap.addAttribute("limitMinutes", orderTimeLimitDao.getTimeLimit(TimeLimitConst.CONVERT_ID).getLimitMinutes());
 		}
 		return "lufter/orderconvertimage";
@@ -209,7 +209,9 @@ public class MainController {
 	public String system2fixskin(HttpServletRequest request, ModelMap modelMap) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
-			modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_SKIN, OrderConst.COLUMN_FIXED_SKIN, loginUser.getBossId()));
+			modelMap.addAttribute("designerList", userDao.getUserListByRoleId(RoleConst.DESIGNER_ID, loginUser.getBossId()));
+			modelMap.addAttribute("unAllotOrderList", orderPostProductionDao.getUnAllotOrderList(loginUser.getBossId(), OrderConst.COLUMN_FIXED_SKIN, OrderConst.COLUMN_FIXED_SKIN_OPERATOR));
+			modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionListByTransfer(OrderConst.COLUMN_FIXED_SKIN, OrderConst.COLUMN_FIXED_SKIN_OPERATOR, loginUser.getBossId()));
 		}
 		return "lufter/orderfixskin";
 	}
@@ -218,7 +220,9 @@ public class MainController {
 	public String system2fixbackground(HttpServletRequest request, ModelMap modelMap) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
-			modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_FIX_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND, loginUser.getBossId()));
+			modelMap.addAttribute("designerList", userDao.getUserListByRoleId(RoleConst.DESIGNER_ID, loginUser.getBossId()));
+			modelMap.addAttribute("unAllotOrderList", orderPostProductionDao.getUnAllotOrderList(loginUser.getBossId(), OrderConst.COLUMN_FIXED_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND_OPERATOR));
+			modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionListByTransfer(OrderConst.COLUMN_FIXED_BACKGROUND, OrderConst.COLUMN_FIXED_BACKGROUND_OPERATOR, loginUser.getBossId()));
 		}
 		return "lufter/orderfixbackground";
 	}
@@ -227,9 +231,20 @@ public class MainController {
 	public String system2cutliquify(HttpServletRequest request, ModelMap modelMap) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
-			modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionList(OrderConst.TABLE_ORDER_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY, loginUser.getBossId()));
+			modelMap.addAttribute("designerList", userDao.getUserListByRoleId(RoleConst.DESIGNER_ID, loginUser.getBossId()));
+			modelMap.addAttribute("unAllotOrderList", orderPostProductionDao.getUnAllotOrderList(loginUser.getBossId(), OrderConst.COLUMN_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY_OPERATOR));
+			modelMap.addAttribute("postProductionList", orderPostProductionDao.getPostProductionListByTransfer(OrderConst.COLUMN_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY_OPERATOR, loginUser.getBossId()));
 		}
 		return "lufter/ordercutliquify";
+	}
+	
+	@RequestMapping(value="/uploadFixed", method=RequestMethod.GET)
+	public String uploadFixed(HttpServletRequest request, ModelMap modelMap) {
+		User loginUser = RequestUtil.getLoginUser(request);
+		if (loginUser != null) {
+			modelMap.addAttribute("postProductionList", orderPostProductionDao.getUploadFixedImageOrderList(loginUser.getBossId()));
+		}
+		return "lufter/uploadfixedimage";
 	}
 	
 	@RequestMapping(value="/verifyImage", method=RequestMethod.GET)

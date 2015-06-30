@@ -26,6 +26,14 @@ public class OrderTransferImageData {
 	private int isFixedBackground;
 	@Column("IS_CUT_LIQUIFY")
 	private int isCutLiquify;
+	@Column("FIX_SKIN_OPERATOR_ID")
+	private int fixSkinOperatorId;
+	@Column("FIX_BACKGROUND_OPERATOR_ID")
+	private int fixBackgroundOperatorId;
+	@Column("CUT_LIQUIFY_OPERATOR_ID")
+	private int cutLiquifyOperatorId;
+	@Column("OPERATOR_ID")
+	private int operatorId;
 	
 	private String serverPath;
 	
@@ -100,5 +108,29 @@ public class OrderTransferImageData {
 	}
 	public void setIsCutLiquify(int isCutLiquify) {
 		this.isCutLiquify = isCutLiquify;
+	}
+	public int getFixSkinOperatorId() {
+		return fixSkinOperatorId;
+	}
+	public void setFixSkinOperatorId(int fixSkinOperatorId) {
+		this.fixSkinOperatorId = fixSkinOperatorId;
+	}
+	public int getFixBackgroundOperatorId() {
+		return fixBackgroundOperatorId;
+	}
+	public void setFixBackgroundOperatorId(int fixBackgroundOperatorId) {
+		this.fixBackgroundOperatorId = fixBackgroundOperatorId;
+	}
+	public int getCutLiquifyOperatorId() {
+		return cutLiquifyOperatorId;
+	}
+	public void setCutLiquifyOperatorId(int cutLiquifyOperatorId) {
+		this.cutLiquifyOperatorId = cutLiquifyOperatorId;
+	}
+	public int getOperatorId() {
+		return operatorId;
+	}
+	public void setOperatorId(int operatorId) {
+		this.operatorId = operatorId;
 	}
 }

@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <!DOCTYPE html>
@@ -23,27 +23,10 @@
 	<jsp:param name="page" value=""/>
 </jsp:include>
 
-<jsp:include page="allotimagemodal.jsp" flush="true"/>
-
 <div class="container">
 <div class="row">
 
 	<div class="col-sm-8 blog-main">
-		<c:if test="${unAllotOrderList != null && unAllotOrderList.size() > 0}">
-			<div class="data-block" style="min-height:0;">
-				<c:forEach items="${unAllotOrderList}" var="unAllotOrder">
-					<div class="clearfix">
-						<div class="data-info facebook-bc">
-							订单 <a href="<c:url value='/order/orderDetail/${unAllotOrder.id}'/>" target="_blank">${unAllotOrder.orderNo}</a>
-						</div>
-						<div class="data-info facebook-bc">
-							还有 ${unAllotOrder.unAllotCount} 张图未分
-						</div>
-						<button class="btn btn-primary btn-data-info" onclick="showAllotImageModal(${unAllotOrder.id}, ${unAllotOrder.unAllotCount})">分图</button>
-					</div>
-				</c:forEach>
-			</div>
-		</c:if>
 		<c:forEach items="${postProductionList}" var="postProduction">
 			<div class="data-block">
 				<div class="clearfix">
@@ -52,9 +35,9 @@
 					</div>
 				</div>
 				<div class="clearfix">
-					<div class="data-info facebook-bc order-detail-header" style="margin-left:0px;">设计师 ${postProduction.operator.name} <img src="${postProduction.operator.header}"/></div>
-					<c:if test="${user.isAdmin == 1 || user.id == postProduction.operatorId}">
-						<button class="btn btn-success btn-data-info" onclick="nextStep(${postProduction.orderId}, ${postProduction.operatorId})">修图完成</button>
+					<c:if test="${user.isAdmin == 1}">
+						<button class="btn btn-info btn-data-info" onclick="completePostProduction(${postProduction.orderId})">上传成片</button>
+						<button class="btn btn-success btn-data-info" onclick="nextStep(${postProduction.orderId})">完成上传</button>
 					</c:if>
 				</div>
 				<div class="clearfix">
@@ -65,31 +48,31 @@
 	</div>
 	
 	<jsp:include page="panel.jsp" flush="true">
-		<jsp:param name="link" value="fixbackground"/>
+		<jsp:param name="link" value="uploadfixed"/>
 	</jsp:include>
 	
 	<jsp:include page="uploadimagemodal.jsp" flush="true"/>
 </div>
 </div>
 <script>
-	allotUri = "allotFixBackgroundImage";
-	
 	function completePostProduction(orderId) {
 		compOrderId = orderId;
-		uploadUrl = "<c:url value='/picture/saveFixBackgroundPicture'/>";
+		uploadUrl = "<c:url value='/orderPostProduction/uploadFixedImage'/>";
 		$("#complete-post-production").click();
 	}
 	
-	function downloadZip(orderId) {
-		window.open("<c:url value='/picture/downloadFixSkinPicture/" + orderId + "'/>");
-	}
-	
-	function nextStep(orderId, operatorId) {
-		var result = confirm("是否确认完成修背景？");
+	function nextStep(orderId) {
+		var result = confirm("是否确认上传完成？");
 		if (result) {
-			$.post("<c:url value='/orderPostProduction/setFixBackgroundDone/" + orderId + "/" + operatorId + "'/>", null, function(data, status) {
-				if (data.status == "success") {
-					location.reload(true);
+			$.get("<c:url value='/picture/checkUploadedFixedImage/" + orderId + "'/>", function(data, status) {
+				if (data.result) {
+					$.post("<c:url value='/orderPostProduction/setCutLiquifyNextStep/" + orderId + "'/>", null, function(data, status) {
+						if (data.status == "success") {
+							location.reload(true);
+						}
+					});
+				} else {
+					alert(data.message);
 				}
 			});
 		}

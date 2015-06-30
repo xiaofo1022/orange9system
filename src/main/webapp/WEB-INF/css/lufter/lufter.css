@@ -15,9 +15,14 @@
 .logo {
 	color:#FFF;
 	font-size:48px;
-	margin-right:60px;
+	margin-right:20px;
 }
- 
+
+.logo img {
+	width: 120px;
+	margin-top: -10px;
+}
+
 .blog-masthead {
   background-color: #24292C;
   margin-bottom: 40px;
@@ -432,4 +437,10 @@
 	width: 80px;
 	float: left;
 	margin: 10px;
+}
+
+.allot-pick-number {
+	width:80px;
+	height:41px;
+	margin-top:5px;
 }

@@ -65,6 +65,13 @@
 			<p>裁图液化</p>
 			<span class="nav-sidebar"></span>
 		</div>
+		<div class="order-link whover" onclick="toUploadFixed()">
+			<% if (link != null && link.equals("uploadfixed")) { %>
+				<span class="order-link-nav glyphicon glyphicon-star"></span>
+			<% } %>
+			<p>上传成片</p>
+			<span class="nav-sidebar"></span>
+		</div>
 		<div class="order-link whover" onclick="toOrderVerify()">
 			<% if (link != null && link.equals("verify")) { %>
 				<span class="order-link-nav glyphicon glyphicon-star"></span>
@@ -204,5 +211,9 @@
 	
 	function toLeaveRequest() {
 		location.assign("<c:url value='/leaveRequest'/>");
+	}
+	
+	function toUploadFixed() {
+		location.assign("<c:url value='/uploadFixed'/>");
 	}
 </script>

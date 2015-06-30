@@ -1,5 +1,6 @@
 package com.xiaofo1022.orange9.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +12,9 @@ import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
+import com.xiaofo1022.orange9.modal.AllotImage;
 import com.xiaofo1022.orange9.modal.Count;
+import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderFixedImageData;
 import com.xiaofo1022.orange9.modal.OrderPostProduction;
 import com.xiaofo1022.orange9.modal.OrderTimeLimit;
@@ -29,6 +32,8 @@ public class OrderPostProductionDao {
 	private OrderTransferDao orderTransferDao;
 	@Autowired
 	private OrderTimeLimitDao orderTimeLimitDao;
+	@Autowired
+	private OrderDao orderDao;
 	
 	public void allotImage(int orderId, int bossId) {
 		int idleUserId = this.getIdleUserId(bossId);
@@ -50,12 +55,44 @@ public class OrderPostProductionDao {
 		}
 	}
 	
+	public int getTransferPostProductionCount(String fixedColumn, int ownerId) {
+		Count count = commonDao.getFirst(Count.class, "SELECT COUNT(A.ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA A LEFT JOIN ORDERS B ON A.ORDER_ID = B.ID WHERE A." + fixedColumn + " = 0 AND B.OWNER_ID = ? AND A.IS_SELECTED = 1 AND B.STATUS_ID = ?", ownerId, OrderStatusConst.POST_PRODUCTION);
+		if (count != null) {
+			return count.getCnt();
+		} else {
+			return 0;
+		}
+	}
+	
+	public int getFixedDoneCount(int ownerId) {
+		int count = 0;
+		List<Order> postOrderList = orderDao.getOrderListByStatus(OrderStatusConst.POST_PRODUCTION, ownerId);
+		if (postOrderList != null && postOrderList.size() > 0) {
+			for (Order order : postOrderList) {
+				if (this.isAllTransferPictureFixed(order.getId())) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	
+	public boolean isAllTransferPictureFixed(int orderId) {
+		Count fixedCount = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_FIXED_SKIN = 1 AND IS_FIXED_BACKGROUND = 1 AND IS_CUT_LIQUIFY = 1 AND IS_SELECTED = 1", orderId);
+		Count selectedCount = orderTransferDao.getSelectedTransferImageDataCount(orderId);
+		if (fixedCount.getCnt() == selectedCount.getCnt()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public List<OrderPostProduction> getPostProductionList(String tableName, String columnName, int ownerId) {
 		List<OrderPostProduction> postProductionList = this.getPostProductionShowList(tableName, ownerId);
 		if (postProductionList != null && postProductionList.size() > 0) {
 			Date now = new Date();
 			for (OrderPostProduction postProduction : postProductionList) {
-				List<OrderTransferImageData> imageDataList = this.getImageDataList(columnName, postProduction.getOrderId());
+				List<OrderTransferImageData> imageDataList = this.getImageDataList(postProduction.getOrderId());
 				String fileNames = orderTransferDao.getConnectImageName(imageDataList);
 				OrderTimeLimit timeLimit = orderTimeLimitDao.getTimeLimit(TimeLimitConst.getIdByTable(tableName));
 				postProduction.setImageCount(imageDataList.size());
@@ -68,12 +105,115 @@ public class OrderPostProductionDao {
 		return postProductionList;
 	}
 	
-	public List<OrderTransferImageData> getImageDataList(String columnName, int orderId) {
+	public List<OrderPostProduction> getPostProductionListByTransfer(String fixedColumn, String operatorColumn, int ownerId) {
+		List<OrderPostProduction> postProductionList = this.getPostProductionTransferList(fixedColumn, operatorColumn, ownerId);
+		if (postProductionList != null && postProductionList.size() > 0) {
+			for (OrderPostProduction postProduction : postProductionList) {
+				List<OrderTransferImageData> imageDataList = this.getImageDataListByOperator(postProduction.getOrderId(), postProduction.getOperatorId(), operatorColumn);
+				String fileNames = orderTransferDao.getConnectImageName(imageDataList);
+				postProduction.setImageCount(imageDataList.size());
+				postProduction.setFileNames(fileNames);
+				postProduction.setImageDataList(imageDataList);
+			}
+		}
+		return postProductionList;
+	}
+	
+	public List<OrderPostProduction> getUploadFixedImageOrderList(int ownerId) {
+		List<Order> postOrderList = orderDao.getOrderListByStatus(OrderStatusConst.POST_PRODUCTION, ownerId);
+		List<OrderPostProduction> resultList = null;
+		if (postOrderList != null && postOrderList.size() > 0) {
+			resultList = new ArrayList<OrderPostProduction>();
+			for (Order order : postOrderList) {
+				if (this.isAllTransferPictureFixed(order.getId())) {
+					List<OrderTransferImageData> imageDataList = this.getImageDataList(order.getId());
+					String fileNames = orderTransferDao.getConnectImageName(imageDataList);
+					OrderPostProduction postProduction = new OrderPostProduction();
+					postProduction.setOrderId(order.getId());
+					postProduction.setOrderNo(order.getOrderNo());
+					postProduction.setFileNames(fileNames);
+					postProduction.setImageDataList(imageDataList);
+					resultList.add(postProduction);
+				}
+			}
+		}
+		return resultList;
+	}
+	
+	public List<Order> getUnAllotOrderList(int ownerId, String fixedColumn, String operatorColumn) {
+		List<Order> postOrderList = orderDao.getOrderListByStatus(OrderStatusConst.POST_PRODUCTION, ownerId);
+		List<Order> resultList = new ArrayList<Order>();
+		if (postOrderList != null && postOrderList.size() > 0) {
+			for (Order order : postOrderList) {
+				int unAllotCount = this.getUnAllotOrderCount(order.getId(), fixedColumn, operatorColumn);
+				if (unAllotCount > 0) {
+					order.setUnAllotCount(unAllotCount);
+					resultList.add(order);
+				}
+			}
+		}
+		return resultList;
+	}
+	
+	public void allotImage(int orderId, String fixedColumn, String operatorColumn, List<AllotImage> allotList) {
+		List<OrderTransferImageData> unAllotImageList = this.getUnAllotTransferImageDataList(orderId, fixedColumn, operatorColumn);
+		int imageSize = unAllotImageList.size();
+		int imageIndex = 0;
+		if (unAllotImageList != null && imageSize > 0) {
+			for (AllotImage allotImage : allotList) {
+				if (allotImage.getAllotCount() > 0) {
+					int allotCount = 0;
+					for (int i = imageIndex; i < imageSize; i++) {
+						OrderTransferImageData transferImageData = unAllotImageList.get(i);
+						this.setTransferImageOperator(allotImage.getDesignerId(), transferImageData.getId(), operatorColumn);
+						allotCount++;
+						if (allotCount == allotImage.getAllotCount()) {
+							imageIndex = allotCount;
+							allotCount = 0;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void setTransferImageOperator(int operatorId, int imageId, String operatorColumn) {
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET " + operatorColumn + " = ? WHERE ID = ?", operatorId, imageId);
+	}
+	
+	public int getUnAllotOrderCount(int orderId, String fixedColumn, String operatorColumn) {
+		Count count = commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND " + fixedColumn + " = 0 AND " + operatorColumn + " = 0 AND IS_SELECTED = 1", orderId);
+		return count.getCnt();
+	}
+	
+	public List<OrderTransferImageData> getUnAllotTransferImageDataList(int orderId, String fixedColumn, String operatorColumn) {
+		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND " + fixedColumn + " = 0 AND " + operatorColumn + " = 0 AND IS_SELECTED = 1 ORDER BY ID", orderId);
+	}
+	
+	public List<OrderTransferImageData> getImageDataList(int orderId) {
 		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1", orderId);
+	}
+	
+	public List<OrderTransferImageData> getImageDataListByOperator(int orderId, int operatorId, String operatorColumn) {
+		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1 AND " + operatorColumn + " = ?", orderId, operatorId);
 	}
 	
 	public OrderPostProduction getPostProductionByOrder(String tableName, int orderId) {
 		return commonDao.getFirst(OrderPostProduction.class, "SELECT * FROM " + tableName + " WHERE ORDER_ID = ?", orderId);
+	}
+	
+	public OrderPostProduction getPostProductionFixer(String operatorColumn, int orderId) {
+		OrderTransferImageData imageData = commonDao.getFirst(OrderTransferImageData.class, "SELECT ORDER_ID, " + operatorColumn + " AS OPERATOR_ID FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND " + operatorColumn + " <> 0", orderId);
+		OrderPostProduction postProduction = null;
+		if (imageData != null) {
+			postProduction = new OrderPostProduction();
+			postProduction.setOrderId(imageData.getOrderId());
+			postProduction.setOrderNo(imageData.getOrderNo());
+			postProduction.setOperatorId(imageData.getOperatorId());
+			postProduction.setOperator(userDao.getUserById(imageData.getOperatorId()));
+		}
+		return postProduction;
 	}
 	
 	public List<OrderPostProduction> getPostProductionShowList(String tableName, int ownerId) {
@@ -81,8 +221,29 @@ public class OrderPostProductionDao {
 		return commonDao.query(OrderPostProduction.class, sql, ownerId);
 	}
 	
+	public List<OrderPostProduction> getPostProductionTransferList(String fixedColumn, String operatorColumn, int ownerId) {
+		List<OrderTransferImageData> imageDataList = commonDao.query(OrderTransferImageData.class, "SELECT A.ORDER_ID, A." + operatorColumn + " AS OPERATOR_ID FROM ORDER_TRANSFER_IMAGE_DATA A LEFT JOIN ORDERS B ON A.ORDER_ID = B.ID WHERE A.IS_SELECTED = 1 AND B.OWNER_ID = ? AND " + fixedColumn + " = 0 AND " + operatorColumn + " <> 0 GROUP BY ORDER_ID, " + operatorColumn, ownerId);
+		List<OrderPostProduction> resultList = null;
+		if (imageDataList != null && imageDataList.size() > 0) {
+			resultList = new ArrayList<OrderPostProduction>();
+			for (OrderTransferImageData imageData : imageDataList) {
+				OrderPostProduction postProduction = new OrderPostProduction();
+				postProduction.setOrderId(imageData.getOrderId());
+				postProduction.setOrderNo(imageData.getOrderNo());
+				postProduction.setOperatorId(imageData.getOperatorId());
+				postProduction.setOperator(userDao.getUserById(imageData.getOperatorId()));
+				resultList.add(postProduction);
+			}
+		}
+		return resultList;
+	}
+	
 	public void setFixPostImageDone(String columnName, int orderId) {
 		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET " + columnName + " = 1 WHERE ORDER_ID = ?", orderId);
+	}
+	
+	public void setFixPostImageDone(String fixedColumn, String operatorColumn, int orderId, int operatorId) {
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET " + fixedColumn + " = 1 WHERE ORDER_ID = ? AND " + operatorColumn + " = ?", orderId, operatorId);
 	}
 	
 	public void setFixPostImageDone(String columnName, int orderId, String imageName) {
@@ -191,8 +352,8 @@ public class OrderPostProductionDao {
 		return commonDao.getFirst(Count.class, "SELECT COUNT(A.ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA A LEFT JOIN " + tableName + " B ON A.ORDER_ID = B.ORDER_ID WHERE B.OPERATOR_ID = ? AND B.INSERT_DATETIME BETWEEN '" + startDate + " 00:00:00' AND '" + endDate + " 23:59:59'", userId);
 	}
 	
-	public Count getAllPostProductionDoneCount(int userId, String tableName, String columnName, String startDate, String endDate) {
-		return commonDao.getFirst(Count.class, "SELECT COUNT(A.ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA A LEFT JOIN " + tableName + " B ON A.ORDER_ID = B.ORDER_ID WHERE OPERATOR_ID = ? AND " + columnName + " = 1 AND B.INSERT_DATETIME BETWEEN '" + startDate + " 00:00:00' AND '" + endDate + " 23:59:59'", userId);
+	public Count getAllPostProductionDoneCount(int userId, String fixedColumn, String operatorColumn, String startDate, String endDate) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(A.ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA A LEFT JOIN ORDERS B ON A.ORDER_ID = B.ID WHERE A." + operatorColumn + " = ? AND " + fixedColumn + " = 1 AND B.INSERT_DATETIME BETWEEN '" + startDate + " 00:00:00' AND '" + endDate + " 23:59:59'", userId);
 	}
 	
 	public Count getOrderPostProductionDoneCount(int userId, String columnName, String startDate, String endDate) {

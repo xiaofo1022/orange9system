@@ -9,6 +9,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="xiaofo">
+<link rel="icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" /> 
+<link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" />
 <title>Orange 9</title>
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/bootstrap.lufter.css'/>" />
 <link rel="stylesheet" type="text/css" href="<c:url value='/css/lufter/lufter.css'/>" />

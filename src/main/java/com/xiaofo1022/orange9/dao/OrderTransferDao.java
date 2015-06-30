@@ -59,6 +59,10 @@ public class OrderTransferDao {
 		return commonDao.query(OrderTransferImageData.class, "SELECT * FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1 ORDER BY ID", orderId);
 	}
 	
+	public Count getSelectedTransferImageDataCount(int orderId) {
+		return commonDao.getFirst(Count.class, "SELECT COUNT(ID) AS CNT FROM ORDER_TRANSFER_IMAGE_DATA WHERE ORDER_ID = ? AND IS_SELECTED = 1", orderId);
+	}
+	
 	public void insertOrderTransferImageData(OrderTransferImageData transferImageData) {
 		Date now = new Date();
 		int id = commonDao.insert("INSERT INTO ORDER_TRANSFER_IMAGE_DATA (INSERT_DATETIME, UPDATE_DATETIME, ORDER_ID, FILE_NAME) VALUES (?, ?, ?, ?)",

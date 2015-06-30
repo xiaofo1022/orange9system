@@ -6,6 +6,7 @@ public class OrderStatusConst {
 	public static final String FIX_SKIN = "修皮肤及褶皱";
 	public static final String FIX_BACKGROUND = "修背景";
 	public static final String CUT_LIQUIFY = "裁图液化";
+	public static final String UPLOAD_FIXED = "上传成片";
 	public static final String LEAVE_VERIFY = "请假审批";
 	public static final int IS_DONE = 1;
 	public static final int SHOOTING = 1;

@@ -35,7 +35,7 @@ CREATE TABLE orange9.user (
 ENGINE=InnoDB;
 
 INSERT INTO orange9.user (ID,NAME,ROLE_ID,ACCOUNT,PASSWORD,SALARY,PERFORMANCE_PAY,HEADER,BOSS_ID,IS_ADMIN) VALUES 
-(1,'administrator',1,'administrator','administrator',0,0,NULL,NULL,1)
+(1,'administrator',1,'administrator','adminYc59131!#',0,0,NULL,NULL,1)
 ;
 
 CREATE TABLE orange9.orders (
@@ -350,3 +350,8 @@ CREATE TABLE orange9.employee_leave_request (
 ENGINE=InnoDB
 DEFAULT CHARSET=utf8
 COLLATE=utf8_general_ci;
+
+/* 2015-6-23 */
+ALTER TABLE orange9.order_transfer_image_data ADD FIX_SKIN_OPERATOR_ID INT DEFAULT 0;
+ALTER TABLE orange9.order_transfer_image_data ADD FIX_BACKGROUND_OPERATOR_ID INT DEFAULT 0;
+ALTER TABLE orange9.order_transfer_image_data ADD CUT_LIQUIFY_OPERATOR_ID INT DEFAULT 0;

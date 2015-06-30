@@ -10,6 +10,8 @@
 <meta name="description" content="">
 <meta name="author" content="xiaofo">
 <title>Orange 9</title>
+<link rel="icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" /> 
+<link rel="shortcut icon" href="<c:url value="/images/favicon.ico"/>" type="image/x-icon" />
 <link href="<c:url value='/css/bootstrap.lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/lufter/lufter.css'/>" rel="stylesheet"/>
 <link href="<c:url value='/css/lufter/upload.css'/>" rel="stylesheet"/>
