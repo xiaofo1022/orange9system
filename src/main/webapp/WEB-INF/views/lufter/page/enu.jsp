@@ -40,8 +40,22 @@
 					<img src="<c:url value='/images/show/enu/2.jpg'/>"/>
 					<span class="index-info-block sbg2">Show It</span>
 				</a>
-				<a id="index-enu-3" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/3.jpg'/>"/>
+				<a id="index-enu-5" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/enu/5.jpg'/>"/>
+					<span class="index-info-block sbg5">Show It</span>
+				</a>
+			</div>
+			<div class="clearfix">
+				<a id="index-enu-6" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/enu/6.jpg'/>"/>
+					<span class="index-info-block sbg1">Show It</span>
+				</a>
+				<a id="index-enu-7" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/enu/7.jpg'/>"/>
+					<span class="index-info-block sbg2">Show It</span>
+				</a>
+				<a id="index-enu-8" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/enu/8.jpg'/>"/>
 					<span class="index-info-block sbg3">Show It</span>
 				</a>
 			</div>
@@ -50,22 +64,8 @@
 					<img src="<c:url value='/images/show/enu/4.jpg'/>"/>
 					<span class="index-info-block sbg4">Show It</span>
 				</a>
-				<a id="index-enu-5" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/5.jpg'/>"/>
-					<span class="index-info-block sbg5">Show It</span>
-				</a>
-				<a id="index-enu-6" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/6.jpg'/>"/>
-					<span class="index-info-block sbg1">Show It</span>
-				</a>
-			</div>
-			<div class="clearfix">
-				<a id="index-enu-7" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/7.jpg'/>"/>
-					<span class="index-info-block sbg2">Show It</span>
-				</a>
-				<a id="index-enu-8" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/8.jpg'/>"/>
+				<a id="index-enu-3" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/enu/3.jpg'/>"/>
 					<span class="index-info-block sbg3">Show It</span>
 				</a>
 				<a id="index-enu-9" class="index-pic-link pos-relative fleft">
