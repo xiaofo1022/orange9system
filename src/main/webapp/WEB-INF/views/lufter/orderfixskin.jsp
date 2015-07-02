@@ -39,7 +39,9 @@
 						<div class="data-info facebook-bc">
 							还有 ${unAllotOrder.unAllotCount} 张图未分
 						</div>
-						<button class="btn btn-primary btn-data-info" onclick="showAllotImageModal(${unAllotOrder.id}, ${unAllotOrder.unAllotCount})">分图</button>
+						<c:if test="${user.isAdmin == 1}">
+							<button class="btn btn-primary btn-data-info" onclick="showAllotImageModal(${unAllotOrder.id}, ${unAllotOrder.unAllotCount})">分图</button>
+						</c:if>
 					</div>
 				</c:forEach>
 			</div>

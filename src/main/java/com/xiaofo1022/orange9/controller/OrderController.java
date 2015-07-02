@@ -68,6 +68,17 @@ public class OrderController {
 		return new SuccessResponse("Add Order Success");
 	}
 	
+	@RequestMapping(value = "/updateOrder/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse editOrder(@ModelAttribute("order") Order order, BindingResult bindingResult, @PathVariable int orderId, HttpServletRequest request) {
+		User user = RequestUtil.getLoginUser(request);
+		if (user != null) {
+			order.setId(orderId);
+			orderDao.updateOrder(order);
+		}
+		return new SuccessResponse("Edit Order Success");
+	}
+	
 	@RequestMapping(value = "/getOrderList", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Order> getOrderList() {
@@ -97,9 +108,10 @@ public class OrderController {
 	}
 	
 	@RequestMapping(value="/orderDetail/{orderId}", method=RequestMethod.GET)
-	public String orderDetail(@PathVariable int orderId, ModelMap modelMap) {
+	public String orderDetail(@PathVariable int orderId, ModelMap modelMap, HttpServletRequest request) {
 		Order orderDetail = orderDao.getOrderDetail(orderId);
-		if (orderDetail != null) {
+		User user = RequestUtil.getLoginUser(request);
+		if (orderDetail != null && user != null) {
 			modelMap.addAttribute("orderDetail", orderDetail);
 			modelMap.addAttribute("timeCost", orderDao.getOrderTimeCost(orderDetail));
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
@@ -112,6 +124,10 @@ public class OrderController {
 			modelMap.addAttribute("orderFixedImageDataList", orderPostProductionDao.getOrderFixedImageDataList(orderId));
 			modelMap.addAttribute("orderVerifier", orderVerifyDao.getOrderVerifyImage(orderId));
 			modelMap.addAttribute("userList", userDao.getUserList());
+			modelMap.addAttribute("modelNameList", orderDao.getModelNameList(user.getBossId()));
+			modelMap.addAttribute("dresserNameList", orderDao.getDresserNameList(user.getBossId()));
+			modelMap.addAttribute("stylistNameList", orderDao.getStylistNameList(user.getBossId()));
+			modelMap.addAttribute("brokerList", orderDao.getBrokerList(user.getBossId()));
 		}
 		return "lufter/orderdetail";
 	}
@@ -154,5 +170,12 @@ public class OrderController {
 		orderTransferDao.insertOrderTransfer(orderId, userId);
 		updateOrderStatusAction(orderId, OrderStatusConst.TRANSFER_IMAGE, null, request);
 		return new SuccessResponse("Set Order Transfer Success");
+	}
+	
+	@RequestMapping(value = "/getOrderDetail/{orderId}", method = RequestMethod.GET)
+	@ResponseBody
+	public Order getOrderDetail(@PathVariable int orderId) {
+		Order order = orderDao.getOrderDetail(orderId);
+		return order;
 	}
 }

@@ -113,6 +113,11 @@
 </div>
 </div>
 <script>
+	var addClientRules = {
+		clientName: { required: true },
+		clientPhone: { required: true, number: true }
+	};
+	
 	var clientValidator = new Validator("addClientForm", "btnAddClient", addClientRules, "<c:url value='/client/addClient'/>", addClientCallback);
 	
 	$("#addClient").on("hidden.bs.modal", function(event) {
@@ -120,11 +125,6 @@
 		clientValidator.url = "<c:url value='/client/addClient'/>";
 	});
 
-	var addClientRules = {
-		clientName: { required: true },
-		clientPhone: { required: true, number: true }
-	};
-	
 	function addClient() {
 		$("#addClientForm").submit();
 	}

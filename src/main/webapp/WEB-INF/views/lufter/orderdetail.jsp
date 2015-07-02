@@ -97,24 +97,152 @@
 		</div>
 	</div>
 </div>
-	
+
+<div id="editOrder" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header orange-model-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">订单编辑</h4>
+			</div>
+			<div class="modal-body">
+				<sf:form id="editOrderForm" class="form-horizontal" modelAttribute="order">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">拍摄日期</label>
+						<div class="col-sm-4">
+							<input type="text" class="form-control" name="shootDate" id="shootDate"/>
+						</div>
+						<div class="col-sm-3">
+							<select id="shootHalf" name="shootHalf" class="form-control">
+								<option value="AM">上午</option>
+								<option value="PM">下午</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">客户</label>
+						<div class="col-sm-4">
+							<select id="clientId" name="clientId" class="form-control"></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">模特</label>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<input type="text" maxlength="10" id="modelName" name="modelName" class="form-control"/>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+									<ul class="dropdown-menu" role="menu">
+										<c:forEach items="${modelNameList}" var="modelName">
+											<li><a onclick="setControl('modelName', '${modelName.name}')">${modelName.name}</a></li>
+										</c:forEach>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">搭配师</label>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<input type="text" maxlength="10" id="stylistName" name="stylistName" class="form-control"/>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+									<ul class="dropdown-menu" role="menu">
+										<c:forEach items="${stylistNameList}" var="stylistName">
+											<li><a onclick="setControl('stylistName', '${stylistName.name}')">${stylistName.name}</a></li>
+										</c:forEach>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">化妆师</label>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<input type="text" maxlength="10" id="dresserName" name="dresserName" class="form-control"/>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+									<ul class="dropdown-menu" role="menu">
+										<c:forEach items="${dresserNameList}" var="dresserName">
+											<li><a onclick="setControl('dresserName', '${dresserName.name}')">${dresserName.name}</a></li>
+										</c:forEach>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">经纪人</label>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<input type="text" maxlength="10" id="brokerName" name="brokerName" class="form-control"/>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+									<ul class="dropdown-menu" role="menu">
+										<c:forEach items="${brokerList}" var="broker">
+											<li><a onclick="setBroker('brokerName', '${broker.name}', 'brokerPhone', '${broker.phone}')">${broker.name}</a></li>
+										</c:forEach>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">联系方式</label>
+						<div class="col-sm-4">
+							<div class="input-group">
+								<input type="text" maxlength="11" id="brokerPhone" name="brokerPhone" class="form-control"/>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+									<ul class="dropdown-menu" role="menu">
+										<c:forEach items="${brokerList}" var="broker">
+											<li><a onclick="setControl('brokerPhone', '${broker.phone}')">${broker.phone}</a></li>
+										</c:forEach>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">摄影师</label>
+						<div class="col-sm-4">
+							<select id="photographerId" name="photographerId" class="form-control"></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">助理</label>
+						<div class="col-sm-4">
+							<select id="assistantId" name="assistantId" class="form-control"></select>
+						</div>
+					</div>
+				</sf:form>
+			</div>
+			<div class="modal-footer">
+				<button id="btnEditOrder" type="button" class="btn btn-primary" onclick="editOrder()">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="container">
 <div class="row">
 	<div class="col-sm-8 blog-main">
 		<div class="data-block">
 			<div class="clearfix">
 				<input type="hidden" id="orderId" value="${orderDetail.id}"/>
-				<input type="hidden" id="clientId" value="${orderDetail.clientId}"/>
+				<input type="hidden" id="clientHiddenId" value="${orderDetail.clientId}"/>
 				<input type="hidden" id="statusId" value="${orderDetail.statusId}"/>
-				<div class="data-info lofter-bc font-lg">
+				<div class="data-info lofter-bc">
 					单号 ${orderDetail.orderNo}
 				</div>
-				<div class="data-info lofter-bc font-lg" style="width:242px;">
-					拍摄日期 ${orderDetail.shootDateLabel}
+				<div class="data-info lofter-bc" style="width:210px;">
+					拍摄日期 ${orderDetail.shootDateLabel} ${orderDetail.shootHalf}
 				</div>
 				<c:choose>
 					<c:when test="${user.isAdmin == 1}">
-						<div class="data-info lofter-bc">
+						<div class="data-info lofter-bc" style="padding:4px;">
 							<select id="orderStatus" class="form-control" style="width:140px;display:inline;" onchange="updateOrderStatus()">
 								<c:forEach items="${orderStatusList}" var="orderStatus">
 									<c:choose>
@@ -130,18 +258,25 @@
 						</div>
 					</c:when>
 					<c:otherwise>
-						<div class="data-info lofter-bc font-lg">
+						<div class="data-info lofter-bc">
 							状态 ${orderDetail.orderStatus.name}
 						</div>
 					</c:otherwise>
 				</c:choose>
+				<c:if test="${orderDetail.statusId == 1}">
+					<button class="btn btn-success btn-data-info" onclick="showEditOrderWindow()">编辑</button>
+				</c:if>
 			</div>
 			<div class="clearfix">
 				<div class="data-info taobao-bc">客户</div>
 				<div class="data-info taobao-bc">${orderDetail.client.clientName}</div>
-				<div class="data-info taobao-bc">淘宝 <a href="http://${orderDetail.client.clientShopLink}" target="_blank">${orderDetail.client.clientShopName}</a></div>
+				<c:if test="${orderDetail.client.clientShopName != null && !orderDetail.client.clientShopName.equals('')}">
+					<div class="data-info taobao-bc">淘宝 <a href="http://${orderDetail.client.clientShopLink}" target="_blank">${orderDetail.client.clientShopName}</a></div>
+				</c:if>
 				<div class="data-info taobao-bc">${orderDetail.client.clientPhone}</div>
-				<div class="data-info taobao-bc">${orderDetail.client.clientEmail}</div>
+				<c:if test="${orderDetail.client.clientEmail != null && !orderDetail.client.clientEmail.equals('')}">
+					<div class="data-info taobao-bc">${orderDetail.client.clientEmail}</div>
+				</c:if>
 			</div>
 			<div class="clearfix">
 				<div class="data-info twitter-bc">货品 </div>
@@ -324,6 +459,93 @@
 <script src="<c:url value='/js/util/transferUploader.js'/>"></script>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>
 <script>
+	$('#shootDate').datepicker();
+
+	init();
+	
+	function init() {
+		getClientList();
+		getUserList();
+	}
+	
+	var addOrderRules = {
+		shootDate: { required: true },
+		clientId: { required: true },
+		modelName: { required: true },
+		brokerName: { required: true },
+		brokerPhone: { required: true, number: true },
+		photographerId: { required: true }
+	};
+	
+	var orderValidator = new Validator("editOrderForm", "btnEditOrder", addOrderRules, "<c:url value='/order/updateOrder/" + $("#orderId").val() + "'/>", editOrderCallback);
+	
+	function editOrder() {
+		$("#editOrderForm").submit();
+	}
+	
+	function editOrderCallback(response) {
+		if (response.status == "success") {
+			location.reload(true);
+		} else {
+			alert(response.msg);
+		}
+	}
+	
+	function showEditOrderWindow() {
+		var orderId = $("#orderId").val();
+		$.get("<c:url value='/order/getOrderDetail/" + orderId + "'/>", function(data) {
+			if (data) {
+				$("#shootDate").datepicker("setDate", new Date(data.shootDate));
+				$("#shootHalf").val(data.shootHalf);
+				$("#clientId").val(data.client.id);
+				$("#modelName").val(data.modelName);
+				$("#stylistName").val(data.stylistName);
+				$("#dresserName").val(data.dresserName);
+				$("#brokerName").val(data.brokerName);
+				$("#brokerPhone").val(data.brokerPhone);
+				$("#photographerId").val(data.photographerId);
+				if (data.assistantId) {
+					$("#assistantId").val(data.assistantId);
+				}
+				$("#editOrder").modal("show");
+			}
+		});
+	}
+	
+	function getClientList() {
+		$.get("<c:url value='/client/getClientList'/>", function(list, status) {
+			var clientSelect = $("#clientId");
+			var html = "";
+			for (var i in list) {
+				var data = list[i];
+				html += ("<option value=" + data.id + ">" + data.clientName + "</option>");
+			}
+			clientSelect.html(html);
+		});
+	}
+	
+	function getUserList() {
+		$.get("<c:url value='/user/getUserList'/>", function(list, status) {
+			if (list) {
+				$("#photographerId").html("");
+				$("#assistantId").html("");
+				var photographerHtml = "";
+				var assistantHtml = "<option>请选择 </option>";
+				for (var i in list) {
+					var data = list[i];
+					var option = "<option value='" + data.id + "'>" + data.name + "</option>";
+					if (data.roleId == 2) {
+						photographerHtml += option;
+					} else if (data.roleId == 4) {
+						assistantHtml += option;
+					}
+				}
+				$("#photographerId").html(photographerHtml);
+				$("#assistantId").html(assistantHtml);
+			}
+		});
+	}
+	
 	var compId;
 	var compOrderId;
 	var compFileName;
@@ -478,7 +700,7 @@
 	getMessage();
 	
 	function getMessage() {
-		$.get("<c:url value='/client/getClientMessageList/" + $("#clientId").val() + "/" + $("#orderId").val() + "'/>", function(list) {
+		$.get("<c:url value='/client/getClientMessageList/" + $("#clientHiddenId").val() + "/" + $("#orderId").val() + "'/>", function(list) {
 			if (list) {
 				$("#blink3-block").html("");
 				var messageHtml = "";

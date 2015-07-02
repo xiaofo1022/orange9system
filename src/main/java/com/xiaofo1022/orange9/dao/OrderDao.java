@@ -34,6 +34,11 @@ public class OrderDao {
 		orderHistoryDao.addOrderHistory(order, OrderStatusConst.CREATE_ORDER, null);
 	}
 	
+	public void updateOrder(Order order) {
+		commonDao.update("UPDATE ORDERS SET UPDATE_DATETIME = ?, SHOOT_DATE = ?, CLIENT_ID = ?, MODEL_NAME = ?, BROKER_NAME = ?, BROKER_PHONE = ?, SHOOT_HALF = ?, DRESSER_NAME = ?, STYLIST_NAME = ?, PHOTOGRAPHER_ID = ?, ASSISTANT_ID = ? WHERE ID = ?",
+				new Date(), order.getShootDate(), order.getClientId(), order.getModelName(), order.getBrokerName(), order.getBrokerPhone(), order.getShootHalf(), order.getDresserName(), order.getStylistName(), order.getPhotographerId(), order.getAssistantId(), order.getId());
+	}
+	
 	public List<Order> getOrderList() {
 		return commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE ACTIVE = 1 ORDER BY SHOOT_DATE, SHOOT_HALF");
 	}
