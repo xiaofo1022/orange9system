@@ -7,7 +7,7 @@
 <div class="index-row">
 	<nav class="index-nav">
 		<% if (link != null && link.equals("enu")) { %>
-			<a class="index-nav-item active">欧美</a>
+			<a class="index-nav-item active" href="<c:url value='/enu'/>">欧美</a>
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/enu'/>">欧美</a>
 		<% } %>

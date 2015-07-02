@@ -27,7 +27,7 @@
 			<div class="clearfix">
 				<a id="index-enu-7" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/7.jpg'/>"/>
-					<span class="index-info-block sbg2">Show It</span>
+					<span class="index-info-block sbg1">Show It</span>
 				</a>
 				<a id="index-enu-2" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/2.jpg'/>"/>
@@ -35,27 +35,27 @@
 				</a>
 				<a id="index-enu-5" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/5.jpg'/>"/>
-					<span class="index-info-block sbg5">Show It</span>
+					<span class="index-info-block sbg3">Show It</span>
 				</a>
 			</div>
 			<div class="clearfix">
 				<a id="index-enu-6" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/6.jpg'/>"/>
-					<span class="index-info-block sbg1">Show It</span>
+					<span class="index-info-block sbg4">Show It</span>
 				</a>
 				<a id="index-enu-1" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/1.jpg'/>"/>
-					<span class="index-info-block sbg1">Show It</span>
+					<span class="index-info-block sbg5">Show It</span>
 				</a>
 				<a id="index-enu-8" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/8.jpg'/>"/>
-					<span class="index-info-block sbg3">Show It</span>
+					<span class="index-info-block sbg1">Show It</span>
 				</a>
 			</div>
 			<div class="clearfix">
 				<a id="index-enu-4" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/4.jpg'/>"/>
-					<span class="index-info-block sbg4">Show It</span>
+					<span class="index-info-block sbg2">Show It</span>
 				</a>
 				<a id="index-enu-3" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/3.jpg'/>"/>
@@ -77,11 +77,13 @@ createIndexLink();
 function createIndexLink() {
 	$(".index-pic-link").mouseover(function(e) {
 		var current = $(e.currentTarget);
-		current.find("span.index-info-block").css("height", "120px");
+		var span = current.find("span.index-info-block");
+		span.css("opacity", "1.0");
 	});
 	$(".index-pic-link").mouseout(function(e) {
 		var current = $(e.currentTarget);
-		current.find("span.index-info-block").css("height", "0");
+		var span = current.find("span.index-info-block");
+		span.css("opacity", "0.0");
 	});
 	$(".index-pic-link").click(function(e) {
 		var current = $(e.currentTarget);

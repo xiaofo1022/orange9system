@@ -45,34 +45,36 @@
 	display:block;
 	position:absolute;
 	width:290px;
-	height:0;
+	height:374px;
 	left:0;
 	bottom:10px;
 	margin-left:10px;
 	color:#FFF;
 	font-size:12px;
-	transition: height 0.8s;
-	-moz-transition: height 0.8s;
-	-webkit-transition: height 0.8s;
-	-o-transition: height 0.8s;
+	opacity:0.0;
+	transition: opacity 0.3s;
+	-moz-transition: opacity 0.3s;
+	-webkit-transition: opacity 0.3s;
+	-o-transition: opacity 0.3s;
+	padding-top:50%;
 }
 
 .sbg1 {
-	background-color:rgba(288, 79, 91, 0.6);
+	background-color:rgba(288, 79, 91, 1.0);
 }
 
 .sbg2 {
-	background-color:rgba(41, 199, 167, 0.6);
+	background-color:rgba(41, 199, 167, 1.0);
 }
 
 .sbg3 {
-	background-color:rgba(75, 203, 210, 0.6);
+	background-color:rgba(75, 203, 210, 1.0);
 }
 
 .sbg4 {
-	background-color:rgba(232, 140, 166, 0.6);
+	background-color:rgba(232, 140, 166, 1.0);
 }
 
 .sbg5 {
-	background-color:rgba(250, 184, 69, 0.6);
+	background-color:rgba(250, 184, 69, 1.0);
 }
