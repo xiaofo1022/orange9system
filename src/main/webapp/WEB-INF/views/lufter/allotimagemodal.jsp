@@ -13,12 +13,12 @@
 			<div class="modal-body">
 				<c:forEach items="${designerList}" var="designer">
 					<div class="clearfix">
-						<div class="data-info facebook-bc order-detail-header" style="margin-left:0px;">
+						<div class="data-info facebook-bc order-detail-header" style="margin-left:0px;width:130px;">
 							${designer.name} <img src="${designer.header}"/>
 							<input id="designer-${designer.id}" class="designer-list" type="hidden" value="${designer.id}"/>
 						</div>
 						<div class="col-sm-4">
-							<input id="allot-count-${designer.id}" type="number" value="0" min="0" max="9999" step="1" class="form-control allot-pick-number"/>
+							<input id="allot-count-${designer.id}" type="number" value="0" min="0" max="9999" step="1" class="form-control allot-pick-number allot-counter"/>
 						</div>
 					</div>
 				</c:forEach>
@@ -32,17 +32,41 @@
 
 <script>
 	var allotUri = "";
-
+	var allotMaxCount = 0;
+	
+	initAllotCounter();
+	
+	function initAllotCounter() {
+		$(".allot-counter").change(function(e) {
+			caculateAllot();
+		});
+	}
+	
 	function showAllotImageModal(orderId, count) {
+		allotMaxCount = count;
 		$("#allot-order-id").val(orderId);
 		$("#unallot-count").text(count);
 		$("#allotImageModal").modal("show");
 	}
 	
+	function caculateAllot() {
+		var count = 0;
+		$(".allot-counter").each(function(index, data) {
+			var allotCount = $(data).val();
+			count += parseInt(allotCount);
+		});
+		var result = allotMaxCount - count;
+		if (result < 0) {
+			$("#unallot-count").css("color", "#E82030");
+		} else {
+			$("#unallot-count").css("color", "#000");
+		}
+		$("#unallot-count").text(result);
+	}
+	
 	function allotImage() {
 		var orderId = $("#allot-order-id").val();
 		var allotList = [];
-		var allotMaxCount = parseInt($("#unallot-count").text());
 		var count = 0;
 		$(".designer-list").each(function(index, data) {
 			var id = data.id;
@@ -56,6 +80,7 @@
 			alert("分图数量不能大于总数");
 			return;
 		}
+		$("#btnAllotImage").attr("disabled", true);
 		AjaxUtil.post("<c:url value='/orderPostProduction/" + allotUri + "/" + orderId + "'/>", allotList, function(data) {
 			location.reload(true);
 		});

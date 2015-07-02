@@ -233,7 +233,7 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/convertImage", method=RequestMethod.GET)
-	public String system2convertimage(HttpServletRequest request, ModelMap modelMap) {
+	public String convertImage(HttpServletRequest request, ModelMap modelMap) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
 			modelMap.addAttribute("orderConvertList", orderConvertDao.getOrderConvertList(request, loginUser.getBossId()));
@@ -280,7 +280,7 @@ public class MainController {
 	public String uploadFixed(HttpServletRequest request, ModelMap modelMap) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
-			modelMap.addAttribute("postProductionList", orderPostProductionDao.getUploadFixedImageOrderList(loginUser.getBossId()));
+			modelMap.addAttribute("postProductionList", orderPostProductionDao.getUploadFixedImageOrderList(loginUser.getBossId(), request));
 		}
 		return "lufter/uploadfixedimage";
 	}

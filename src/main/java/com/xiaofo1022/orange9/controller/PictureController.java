@@ -50,7 +50,7 @@ public class PictureController {
 	
 	@RequestMapping(value="/checkUploadedFixedImage/{orderId}", method=RequestMethod.GET)
 	@ResponseBody
-	public Result checkConvertImage(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
+	public Result checkUploadedFixedImage(@PathVariable int orderId, HttpServletRequest request, HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		String serverPath = this.getPicturePath(request, orderId, OrderConst.PATH_FIXED);
 		File fileDir = new File(serverPath);
@@ -65,6 +65,46 @@ public class PictureController {
 				return new Result(false, result);
 			}
 		}
+	}
+	
+	public Result getUnuploadFixedImageFileNames(int orderId, HttpServletRequest request) {
+		String serverPath = this.getPicturePath(request, orderId, OrderConst.PATH_FIXED);
+		File fileDir = new File(serverPath);
+		if (!fileDir.exists() && !fileDir.isDirectory()) {
+			fileDir.mkdirs();
+		}
+		return createUnuploadFileNames(orderId, fileDir);
+	}
+	
+	private Result createUnuploadFileNames(int orderId, File fileDir) {
+		Result result = new Result();
+		StringBuilder builder = new StringBuilder();
+		int unuploadCount = 0;
+		String fileNames = "";
+		if (fileDir.isDirectory()) {
+			List<String> picNameList = picDao.getSelectedImageNames(orderId);
+			if (picNameList != null && picNameList.size() > 0) {
+				Map<String, String> nameMap = this.getFolderPicNameMap(fileDir.listFiles());
+				int nameSize = picNameList.size();
+				for (int i = 0; i < nameSize; i++) {
+					String picName = picNameList.get(i);
+					if (!nameMap.containsKey(picName)) {
+						builder.append(picName);
+						unuploadCount++;
+						if (i < nameSize - 1) {
+							builder.append(" OR ");
+						}
+					}
+				}
+				fileNames = builder.toString();
+				if (fileNames.equals("")) {
+					fileNames = "已完成";
+				}
+			}
+		}
+		result.setFileNames(fileNames);
+		result.setUnuploadCount(unuploadCount);
+		return result;
 	}
 	
 	public String getUnuploadOriginalPictureName(int orderId, HttpServletRequest request) {
