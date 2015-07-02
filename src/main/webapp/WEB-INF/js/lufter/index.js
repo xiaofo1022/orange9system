@@ -10,7 +10,7 @@ function createIndexLink() {
 	$(".index-pic-link").click(function(e) {
 		var current = $(e.currentTarget);
 		var ids = current.attr("id").split("-");
-		location.assign(footerBaseUrl + ids[1] + "/" + ids[2]);
+		location.assign("/" + ids[1] + "/" + ids[2]);
 	});
 }
 createIndexLink();

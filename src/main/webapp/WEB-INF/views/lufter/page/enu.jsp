@@ -25,9 +25,9 @@
 		</jsp:include>
 		<div class="index-row">
 			<div class="clearfix">
-				<a id="index-enu-1" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/1.jpg'/>"/>
-					<span class="index-info-block sbg1">Show It</span>
+				<a id="index-enu-7" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/enu/7.jpg'/>"/>
+					<span class="index-info-block sbg2">Show It</span>
 				</a>
 				<a id="index-enu-2" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/2.jpg'/>"/>
@@ -43,9 +43,9 @@
 					<img src="<c:url value='/images/show/enu/6.jpg'/>"/>
 					<span class="index-info-block sbg1">Show It</span>
 				</a>
-				<a id="index-enu-7" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/7.jpg'/>"/>
-					<span class="index-info-block sbg2">Show It</span>
+				<a id="index-enu-1" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/enu/1.jpg'/>"/>
+					<span class="index-info-block sbg1">Show It</span>
 				</a>
 				<a id="index-enu-8" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/8.jpg'/>"/>
@@ -71,6 +71,24 @@
 	</div>
 </div>
 </div>
-<script src="<c:url value='/js/lufter/index.js'/>"></script>
+<script>
+createIndexLink();
+
+function createIndexLink() {
+	$(".index-pic-link").mouseover(function(e) {
+		var current = $(e.currentTarget);
+		current.find("span.index-info-block").css("height", "120px");
+	});
+	$(".index-pic-link").mouseout(function(e) {
+		var current = $(e.currentTarget);
+		current.find("span.index-info-block").css("height", "0");
+	});
+	$(".index-pic-link").click(function(e) {
+		var current = $(e.currentTarget);
+		var ids = current.attr("id").split("-");
+		location.assign("<c:url value='/" + ids[1] + "/" + ids[2] + "'/>");
+	});
+}
+</script>
 </body>
 </html>
