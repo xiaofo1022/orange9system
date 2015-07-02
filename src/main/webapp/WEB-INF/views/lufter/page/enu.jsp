@@ -20,16 +20,9 @@
 <div class="container">
 <div class="row">
 	<div class="col-sm-12 blog-main" style="width:100%;">
-		<jsp:include page="header.jsp" flush="true"/>
-		<div class="index-row">
-			<nav class="index-nav">
-				<a class="index-nav-item active">欧美</a>
-				<a class="index-nav-item" href="<c:url value='/jnk'/>">日韩</a>
-				<a class="index-nav-item" href="<c:url value='/sta'/>">静物</a>
-				<a class="index-nav-item" href="<c:url value='/tog'/>">拼拍</a>
-				<a class="index-nav-item" href="<c:url value='/lgn'/>">登录</a>
-			</nav>
-		</div>
+		<jsp:include page="header.jsp" flush="true">
+			<jsp:param value="enu" name="link"/>
+		</jsp:include>
 		<div class="index-row">
 			<div class="clearfix">
 				<a id="index-enu-1" class="index-pic-link pos-relative fleft">
