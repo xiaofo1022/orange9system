@@ -35,13 +35,14 @@
 					</div>
 				</div>
 				<div class="clearfix">
+					<div class="data-info facebook-bc" style="margin-left:0;">${postProduction.imageCount} 张未上传</div>
 					<c:if test="${user.isAdmin == 1}">
 						<button class="btn btn-info btn-data-info" onclick="completePostProduction(${postProduction.orderId})">上传成片</button>
 						<button class="btn btn-success btn-data-info" onclick="nextStep(${postProduction.orderId})">完成上传</button>
 					</c:if>
 				</div>
 				<div class="clearfix">
-					<div class="data-info facebook-bc" style="margin-left:0;">图片 ${postProduction.fileNames}</div>
+					<div class="data-info facebook-bc" style="margin-left:0;">${postProduction.fileNames}</div>
 				</div>
 			</div>
 		</c:forEach>

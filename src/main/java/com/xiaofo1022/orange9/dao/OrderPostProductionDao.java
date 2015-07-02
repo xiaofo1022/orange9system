@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +13,7 @@ import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
+import com.xiaofo1022.orange9.controller.PictureController;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.AllotImage;
 import com.xiaofo1022.orange9.modal.Count;
@@ -19,6 +22,7 @@ import com.xiaofo1022.orange9.modal.OrderFixedImageData;
 import com.xiaofo1022.orange9.modal.OrderPostProduction;
 import com.xiaofo1022.orange9.modal.OrderTimeLimit;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
+import com.xiaofo1022.orange9.modal.Result;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.util.DatetimeUtil;
 
@@ -34,6 +38,8 @@ public class OrderPostProductionDao {
 	private OrderTimeLimitDao orderTimeLimitDao;
 	@Autowired
 	private OrderDao orderDao;
+	@Autowired
+	private PictureController pictureController;
 	
 	public void allotImage(int orderId, int bossId) {
 		int idleUserId = this.getIdleUserId(bossId);
@@ -119,20 +125,19 @@ public class OrderPostProductionDao {
 		return postProductionList;
 	}
 	
-	public List<OrderPostProduction> getUploadFixedImageOrderList(int ownerId) {
+	public List<OrderPostProduction> getUploadFixedImageOrderList(int ownerId, HttpServletRequest request) {
 		List<Order> postOrderList = orderDao.getOrderListByStatus(OrderStatusConst.POST_PRODUCTION, ownerId);
 		List<OrderPostProduction> resultList = null;
 		if (postOrderList != null && postOrderList.size() > 0) {
 			resultList = new ArrayList<OrderPostProduction>();
 			for (Order order : postOrderList) {
 				if (this.isAllTransferPictureFixed(order.getId())) {
-					List<OrderTransferImageData> imageDataList = this.getImageDataList(order.getId());
-					String fileNames = orderTransferDao.getConnectImageName(imageDataList);
+					Result result = pictureController.getUnuploadFixedImageFileNames(order.getId(), request);
 					OrderPostProduction postProduction = new OrderPostProduction();
 					postProduction.setOrderId(order.getId());
 					postProduction.setOrderNo(order.getOrderNo());
-					postProduction.setFileNames(fileNames);
-					postProduction.setImageDataList(imageDataList);
+					postProduction.setFileNames(result.getFileNames());
+					postProduction.setImageCount(result.getUnuploadCount());
 					resultList.add(postProduction);
 				}
 			}
@@ -168,7 +173,7 @@ public class OrderPostProductionDao {
 						this.setTransferImageOperator(allotImage.getDesignerId(), transferImageData.getId(), operatorColumn);
 						allotCount++;
 						if (allotCount == allotImage.getAllotCount()) {
-							imageIndex = allotCount;
+							imageIndex += allotCount;
 							allotCount = 0;
 							break;
 						}

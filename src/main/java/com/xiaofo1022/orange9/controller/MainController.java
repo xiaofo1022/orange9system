@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -75,7 +76,44 @@ public class MainController {
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String index() {
-		return "lufter/login";
+		return "lufter/page/enu";
+	}
+	
+	@RequestMapping(value="/enu", method=RequestMethod.GET)
+	public String enu() {
+		return "lufter/page/enu";
+	}
+	
+	@RequestMapping(value="/enu/{id}", method=RequestMethod.GET)
+	public String enudetail(@PathVariable int id, ModelMap modelMap) {
+		modelMap.addAttribute("id", id);
+		return "lufter/page/detail/enudetail";
+	}
+	
+	@RequestMapping(value="/jnk", method=RequestMethod.GET)
+	public String jnk() {
+		return "lufter/page/jnk";
+	}
+	
+	@RequestMapping(value="/jnk/{id}", method=RequestMethod.GET)
+	public String jnkdetail(@PathVariable int id, ModelMap modelMap) {
+		modelMap.addAttribute("id", id);
+		return "lufter/page/detail/jnkdetail";
+	}
+	
+	@RequestMapping(value="/sta", method=RequestMethod.GET)
+	public String sta() {
+		return "lufter/page/sta";
+	}
+	
+	@RequestMapping(value="/tog", method=RequestMethod.GET)
+	public String tog() {
+		return "lufter/page/tog";
+	}
+	
+	@RequestMapping(value="/lgn", method=RequestMethod.GET)
+	public String lgn() {
+		return "lufter/page/lgn";
 	}
 	
 	@RequestMapping(value="/logout", method=RequestMethod.GET)
@@ -86,7 +124,7 @@ public class MainController {
 			session.removeAttribute("user");
 			session.invalidate();
 		}
-		return "/";
+		return "/lgn";
 	}
 	
 	@RequestMapping(value="/resetPassword", method=RequestMethod.POST)
@@ -195,7 +233,7 @@ public class MainController {
 	}
 	
 	@RequestMapping(value="/convertImage", method=RequestMethod.GET)
-	public String system2convertimage(HttpServletRequest request, ModelMap modelMap) {
+	public String convertImage(HttpServletRequest request, ModelMap modelMap) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
 			modelMap.addAttribute("orderConvertList", orderConvertDao.getOrderConvertList(request, loginUser.getBossId()));
@@ -242,7 +280,7 @@ public class MainController {
 	public String uploadFixed(HttpServletRequest request, ModelMap modelMap) {
 		User loginUser = RequestUtil.getLoginUser(request);
 		if (loginUser != null) {
-			modelMap.addAttribute("postProductionList", orderPostProductionDao.getUploadFixedImageOrderList(loginUser.getBossId()));
+			modelMap.addAttribute("postProductionList", orderPostProductionDao.getUploadFixedImageOrderList(loginUser.getBossId(), request));
 		}
 		return "lufter/uploadfixedimage";
 	}

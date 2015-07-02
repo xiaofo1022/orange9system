@@ -55,12 +55,13 @@
 				</div>
 				<div class="clearfix">
 					<div class="data-info facebook-bc order-detail-header" style="margin-left:0px;">设计师 ${postProduction.operator.name} <img src="${postProduction.operator.header}"/></div>
+					<div class="data-info facebook-bc">${postProduction.imageCount} 张图</div>
 					<c:if test="${user.isAdmin == 1 || user.id == postProduction.operatorId}">
 						<button class="btn btn-success btn-data-info" onclick="nextStep(${postProduction.orderId}, ${postProduction.operatorId})">修图完成</button>
 					</c:if>
 				</div>
 				<div class="clearfix">
-					<div class="data-info facebook-bc" style="margin-left:0;">图片 ${postProduction.fileNames}</div>
+					<div class="data-info facebook-bc" style="margin-left:0;">${postProduction.fileNames}</div>
 				</div>
 			</div>
 		</c:forEach>

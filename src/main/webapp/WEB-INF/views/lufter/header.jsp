@@ -85,8 +85,8 @@ $("#changePasswordModal").on("hidden.bs.modal", function(e) {
 });
 
 function logout() {
-	$.get("<c:url value='/logout'/>", function() {
-		location.replace("<c:url value='/'/>");
+	$.get("<c:url value='/logout'/>", function(data) {
+		location.replace("<c:url value='/lgn'/>");
 	});
 }
 
