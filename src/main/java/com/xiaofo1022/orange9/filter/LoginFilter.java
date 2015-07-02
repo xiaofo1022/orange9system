@@ -19,8 +19,8 @@ import com.xiaofo1022.orange9.modal.User;
 public class LoginFilter implements Filter {
 	private Pattern allowedResources;
 	private Pattern allowedClient;
-	private final static String resPattern = ".*((login)|(logout)|(images/)|(img/)|(css/)|(js/)|(fonts/)).*";
-	private final static String clientPattern = ".*((login)|(logout)|(client/)|(pictures/)|(images/)|(img/)|(css/)|(js/)|(fonts/)).*";
+	private final static String resPattern = ".*((enu)|(jnk)|(sta)|(tog)|(enu/)|(jnk/)|(sta/)|(tog/)|(lgn)|(login)|(logout)|(images/)|(img/)|(css/)|(js/)|(fonts/)).*";
+	private final static String clientPattern = ".*((client/)|(pictures/)).*";
 	
 	public void init(FilterConfig arg0) throws ServletException {
 		allowedResources = Pattern.compile(resPattern);
