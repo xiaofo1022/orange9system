@@ -106,9 +106,21 @@ public class MainController {
 		return "lufter/page/sta";
 	}
 	
+	@RequestMapping(value="/sta/{id}", method=RequestMethod.GET)
+	public String stadetail(@PathVariable int id, ModelMap modelMap) {
+		modelMap.addAttribute("id", id);
+		return "lufter/page/detail/stadetail";
+	}
+	
 	@RequestMapping(value="/tog", method=RequestMethod.GET)
 	public String tog() {
 		return "lufter/page/tog";
+	}
+	
+	@RequestMapping(value="/tog/{id}", method=RequestMethod.GET)
+	public String togdetail(@PathVariable int id, ModelMap modelMap) {
+		modelMap.addAttribute("id", id);
+		return "lufter/page/detail/togdetail";
 	}
 	
 	@RequestMapping(value="/lgn", method=RequestMethod.GET)

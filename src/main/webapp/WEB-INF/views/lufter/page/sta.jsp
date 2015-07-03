@@ -23,47 +23,30 @@
 		<jsp:include page="header.jsp" flush="true">
 			<jsp:param value="sta" name="link"/>
 		</jsp:include>
-		<div class="index-row">
-			<div class="clearfix">
-				<a class="index-pic-link pos-relative fleft">
+		<div class="clearfix">
+			<!-- Col 1 -->
+			<div class="index-col">
+				<a id="index-sta-4" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/sta/4.jpg'/>"/>
+					<span class="index-info-block sbg3">Show It</span>
+				</a>
+			</div>
+			<!-- Col 2 -->
+			<div class="index-col">
+				<a id="index-sta-1" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/sta/1.jpg'/>"/>
 					<span class="index-info-block sbg1">Show It</span>
 				</a>
-				<a class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/sta/2.jpg'/>"/>
-					<span class="index-info-block sbg2">Show It</span>
-				</a>
-				<a class="index-pic-link pos-relative fleft">
+				<a id="index-sta-3" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/sta/3.jpg'/>"/>
 					<span class="index-info-block sbg3">Show It</span>
 				</a>
 			</div>
-			<div class="clearfix">
-				<a class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/sta/4.jpg'/>"/>
-					<span class="index-info-block sbg4">Show It</span>
-				</a>
-				<a class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/sta/5.jpg'/>"/>
-					<span class="index-info-block sbg5">Show It</span>
-				</a>
-				<a class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/sta/6.jpg'/>"/>
-					<span class="index-info-block sbg1">Show It</span>
-				</a>
-			</div>
-			<div class="clearfix">
-				<a class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/sta/7.jpg'/>"/>
+			<!-- Col 3 -->
+			<div class="index-col">
+				<a id="index-sta-2" class="index-pic-link pos-relative fleft">
+					<img src="<c:url value='/images/show/sta/2.jpg'/>"/>
 					<span class="index-info-block sbg2">Show It</span>
-				</a>
-				<a class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/sta/8.jpg'/>"/>
-					<span class="index-info-block sbg3">Show It</span>
-				</a>
-				<a class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/sta/9.jpg'/>"/>
-					<span class="index-info-block sbg4">Show It</span>
 				</a>
 			</div>
 		</div>
@@ -71,6 +54,30 @@
 	</div>
 </div>
 </div>
-<script src="<c:url value='/js/lufter/index.js'/>"></script>
+<script>
+createIndexLink();
+
+function createIndexLink() {
+	$(".index-pic-link").mouseover(function(e) {
+		var current = $(e.currentTarget);
+		var span = current.find("span.index-info-block");
+		var img = current.find("img");
+		span.css("height", img.css("height"));
+		span.css("opacity", "1.0");
+	});
+	$(".index-pic-link").mouseout(function(e) {
+		var current = $(e.currentTarget);
+		var span = current.find("span.index-info-block");
+		var img = current.find("img");
+		span.css("height", img.css("height"));
+		span.css("opacity", "0.0");
+	});
+	$(".index-pic-link").click(function(e) {
+		var current = $(e.currentTarget);
+		var ids = current.attr("id").split("-");
+		location.assign("<c:url value='/" + ids[1] + "/" + ids[2] + "'/>");
+	});
+}
+</script>
 </body>
 </html>

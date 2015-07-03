@@ -11,16 +11,16 @@
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/enu'/>">欧美</a>
 		<% } %>
+		<% if (link != null && link.equals("sta")) { %>
+			<a class="index-nav-item active" href="<c:url value='/sta'/>">画册</a>
+		<% } else { %>
+			<a class="index-nav-item" href="<c:url value='/sta'/>">画册</a>
+		<% } %>
 		<% if (link != null && link.equals("fuckyou")) { %>
 		<% if (link != null && link.equals("jnk")) { %>
 			<a class="index-nav-item active">日韩</a>
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/jnk'/>">日韩</a>
-		<% } %>
-		<% if (link != null && link.equals("sta")) { %>
-			<a class="index-nav-item active">静物</a>
-		<% } else { %>
-			<a class="index-nav-item" href="<c:url value='/sta'/>">静物</a>
 		<% } %>
 		<% if (link != null && link.equals("tog")) { %>
 			<a class="index-nav-item active">拼拍</a>

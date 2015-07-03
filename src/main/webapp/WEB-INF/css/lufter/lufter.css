@@ -444,36 +444,3 @@
 	height:41px;
 	margin-top:5px;
 }
-
-/* Index links */
-.index-nav-item {
-  position: relative;
-  display: inline-block;
-  padding: 10px 20px;
-  font-weight: 500;
-  font-size: 12px;
-  color: #999;
-}
-.index-nav-item:hover,
-.index-nav-item:focus {
-  color: #FF9600;
-  text-decoration: none;
-}
-
-/* Active state gets a caret at the bottom */
-.index-nav .active {
-  color: #FF9600;
-}
-.index-nav .active:after {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 0;
-  margin-left: -5px;
-  vertical-align: middle;
-  content: " ";
-  border-right: 5px solid transparent;
-  border-bottom: 5px solid;
-  border-left: 5px solid transparent;
-}

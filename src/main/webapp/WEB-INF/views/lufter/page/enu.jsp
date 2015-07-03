@@ -23,8 +23,9 @@
 		<jsp:include page="header.jsp" flush="true">
 			<jsp:param value="enu" name="link"/>
 		</jsp:include>
-		<div class="index-row">
-			<div class="clearfix">
+		<div class="clearfix">
+			<!-- Col 1 -->
+			<div class="index-col">
 				<a id="index-enu-7" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/7.jpg'/>"/>
 					<span class="index-info-block sbg1">Show It</span>
@@ -38,7 +39,8 @@
 					<span class="index-info-block sbg3">Show It</span>
 				</a>
 			</div>
-			<div class="clearfix">
+			<!-- Col 2 -->
+			<div class="index-col">
 				<a id="index-enu-6" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/6.jpg'/>"/>
 					<span class="index-info-block sbg4">Show It</span>
@@ -52,7 +54,8 @@
 					<span class="index-info-block sbg1">Show It</span>
 				</a>
 			</div>
-			<div class="clearfix">
+			<!-- Col 3 -->
+			<div class="index-col">
 				<a id="index-enu-4" class="index-pic-link pos-relative fleft">
 					<img src="<c:url value='/images/show/enu/4.jpg'/>"/>
 					<span class="index-info-block sbg2">Show It</span>
@@ -78,11 +81,15 @@ function createIndexLink() {
 	$(".index-pic-link").mouseover(function(e) {
 		var current = $(e.currentTarget);
 		var span = current.find("span.index-info-block");
+		var img = current.find("img");
+		span.css("height", img.css("height"));
 		span.css("opacity", "1.0");
 	});
 	$(".index-pic-link").mouseout(function(e) {
 		var current = $(e.currentTarget);
 		var span = current.find("span.index-info-block");
+		var img = current.find("img");
+		span.css("height", img.css("height"));
 		span.css("opacity", "0.0");
 	});
 	$(".index-pic-link").click(function(e) {
