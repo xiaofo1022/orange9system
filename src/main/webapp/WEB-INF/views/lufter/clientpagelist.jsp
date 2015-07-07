@@ -36,7 +36,7 @@
 				</div>
 				<div class="clearfix">
 					<c:choose>
-						<c:when test="${clientOrder.status.equals('完成')}">
+						<c:when test="${clientOrder.status.equals('完成') && clientOrder.completeRemark == null}">
 							<c:forEach items="${clientOrder.orderFixedImageDataList}" var="imageData" varStatus="status">
 								<c:if test="${status.index < 9}">
 									<img class="client-order-list-img" src="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>"/>
@@ -62,7 +62,7 @@
 						</c:otherwise>
 					</c:choose>
 					<c:choose>
-						<c:when test="${clientOrder.status.equals('完成')}">
+						<c:when test="${clientOrder.status.equals('完成') && clientOrder.completeRemark == null}">
 							<button class="btn btn-info ml10 fright" onclick="downloadZip(${clientOrder.orderId})">成片下载</button>
 						</c:when>
 					</c:choose>

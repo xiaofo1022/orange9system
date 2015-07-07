@@ -23,6 +23,24 @@
 	<jsp:param name="page" value=""/>
 </jsp:include>
 
+<div id="skipModal" class="modal fade text-left" style="z-index:1999;" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<input type="hidden" id="order-id"/>
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">其他方式上传成片</h4>
+			</div>
+			<div class="modal-body">
+				<textarea id="reason" class="form-control" rows="4" maxlength="100"></textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-warning" onclick="skipOrderComplete()">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="container">
 <div class="row">
 
@@ -38,6 +56,7 @@
 					<div class="data-info facebook-bc" style="margin-left:0;">${postProduction.imageCount} 张未上传</div>
 					<c:if test="${user.isAdmin == 1}">
 						<button class="btn btn-info btn-data-info" onclick="completePostProduction(${postProduction.orderId})">上传成片</button>
+						<button class="btn btn-warning btn-data-info" onclick="showSkipModal(${postProduction.orderId})">其他方式</button>
 						<button class="btn btn-success btn-data-info" onclick="nextStep(${postProduction.orderId})">完成上传</button>
 					</c:if>
 				</div>
@@ -77,6 +96,21 @@
 				}
 			});
 		}
+	}
+	
+	function showSkipModal(orderId) {
+		$("#skipModal").modal("show");
+		$("#order-id").val(orderId);
+	}
+	
+	function skipOrderComplete() {
+		var orderId = $("#order-id").val();
+		var reason = $("#reason").val();
+		AjaxUtil.post("<c:url value='/orderPostProduction/skipOrderToComplete/" + orderId + "'/>", {reason:reason}, function(data, status) {
+			if (data.status == "success") {
+				location.reload(true);
+			}
+		});
 	}
 </script>
 </body>

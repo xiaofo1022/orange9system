@@ -13,6 +13,7 @@ public class ClientOrder {
 	private boolean first = false;
 	private int goodsCount;
 	private String status;
+	private String completeRemark;
 	
 	public int getOrderId() {
 		return orderId;
@@ -77,5 +78,11 @@ public class ClientOrder {
 	}
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
+	}
+	public String getCompleteRemark() {
+		return completeRemark;
+	}
+	public void setCompleteRemark(String completeRemark) {
+		this.completeRemark = completeRemark;
 	}
 }

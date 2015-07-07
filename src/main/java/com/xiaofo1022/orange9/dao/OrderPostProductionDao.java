@@ -46,6 +46,14 @@ public class OrderPostProductionDao {
 		this.insertPostProductionRecord(OrderConst.TABLE_ORDER_FIX_BACKGROUND, orderId, idleUserId);
 	}
 	
+	public void skipAllotImage(int orderId, String fixedColumn) {
+		commonDao.update("UPDATE ORDER_TRANSFER_IMAGE_DATA SET " + fixedColumn + " = 1 WHERE ORDER_ID = ?", orderId);
+	}
+	
+	public void setOrderCompleteRemark(int orderId, String remark) {
+		commonDao.update("UPDATE ORDERS SET COMPLETE_REMARK = ? WHERE ID = ?", remark, orderId);
+	}
+	
 	public int insertPostProductionRecord(String tableName, int orderId, int userId) {
 		Date now = new Date();
 		return commonDao.insert("INSERT INTO " + tableName + " (ORDER_ID, INSERT_DATETIME, UPDATE_DATETIME, OPERATOR_ID) VALUES (?, ?, ?, ?)",

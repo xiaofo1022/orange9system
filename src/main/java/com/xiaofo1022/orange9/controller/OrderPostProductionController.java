@@ -23,6 +23,7 @@ import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
 import com.xiaofo1022.orange9.modal.AllotImage;
+import com.xiaofo1022.orange9.modal.Denial;
 import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -167,5 +168,34 @@ public class OrderPostProductionController {
 	public CommonResponse allotCutLiquifyImage(@PathVariable int orderId, @RequestBody List<AllotImage> allotList, BindingResult bindingResult, HttpServletRequest request) {
 		postProductionDao.allotImage(orderId, OrderConst.COLUMN_CUT_LIQUIFY, OrderConst.COLUMN_CUT_LIQUIFY_OPERATOR, allotList);
 		return new SuccessResponse("Allot Cut Liquify Image Data Success");
+	}
+	
+	@RequestMapping(value = "/skipAllotFixBackground/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse skipAllotFixBackground(@PathVariable int orderId, HttpServletRequest request) {
+		postProductionDao.skipAllotImage(orderId, OrderConst.COLUMN_FIXED_BACKGROUND);
+		return new SuccessResponse("Skip allot fix background Success");
+	}
+	
+	@RequestMapping(value = "/skipAllotFixSkin/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse skipAllotFixSkin(@PathVariable int orderId, HttpServletRequest request) {
+		postProductionDao.skipAllotImage(orderId, OrderConst.COLUMN_FIXED_SKIN);
+		return new SuccessResponse("Skip allot fix skin Success");
+	}
+	
+	@RequestMapping(value = "/skipAllotCutLiquify/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse skipAllotCutLiquify(@PathVariable int orderId, HttpServletRequest request) {
+		postProductionDao.skipAllotImage(orderId, OrderConst.COLUMN_CUT_LIQUIFY);
+		return new SuccessResponse("Skip allot cut liquify Success");
+	}
+	
+	@RequestMapping(value = "/skipOrderToComplete/{orderId}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse skipOrderToComplete(@PathVariable int orderId, @RequestBody Denial denial, BindingResult bindingResult, HttpServletRequest request) {
+		postProductionDao.setOrderCompleteRemark(orderId, denial.getReason());
+		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.COMPLETE);
+		return new SuccessResponse("Skip order to complete Success");
 	}
 }

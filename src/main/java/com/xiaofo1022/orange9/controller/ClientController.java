@@ -105,6 +105,7 @@ public class ClientController {
 		}
 		clientOrder.setShootDateLabel(order.getShootDateLabel());
 		clientOrder.setShootHalf(order.getShootHalf());
+		clientOrder.setCompleteRemark(order.getCompleteRemark());
 		clientOrder.setOrderTransferImageDataList(orderTransferDao.getTransferImageDataListByOrder(order.getId()));
 		clientOrder.setOrderFixedImageDataList(orderPostProductionDao.getOrderFixedImageDataList(order.getId()));
 		return clientOrder;

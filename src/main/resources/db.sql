@@ -355,3 +355,6 @@ COLLATE=utf8_general_ci;
 ALTER TABLE orange9.order_transfer_image_data ADD FIX_SKIN_OPERATOR_ID INT DEFAULT 0;
 ALTER TABLE orange9.order_transfer_image_data ADD FIX_BACKGROUND_OPERATOR_ID INT DEFAULT 0;
 ALTER TABLE orange9.order_transfer_image_data ADD CUT_LIQUIFY_OPERATOR_ID INT DEFAULT 0;
+
+/* 2015-7-7 */
+ALTER TABLE orange9.orders ADD COMPLETE_REMARK VARCHAR(100);

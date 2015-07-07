@@ -50,7 +50,16 @@
 			</select>
 			<c:choose>
 				<c:when test="${order.status.equals('完成')}">
-					<button class="btn btn-info btn-data-info ml10" onclick="downloadZip(${order.orderId})">打包下载</button>
+					<c:choose>
+						<c:when test="${order.completeRemark == null}">
+							<button class="btn btn-info btn-data-info ml10" onclick="downloadZip(${order.orderId})">打包下载</button>
+						</c:when>
+						<c:otherwise>
+							<div class="data-info lofter-bc">
+								${order.completeRemark}
+							</div>
+						</c:otherwise>
+					</c:choose>
 				</c:when>
 				<c:otherwise>
 					<c:if test="${order.status.equals('等待客户选片')}">
@@ -81,14 +90,28 @@
 					<c:choose>
 						<c:when test="${order.status.equals('完成')}">
 							<div id="blink2-block" class="detail-bottom-block pic-blink-block">
-								<c:forEach items="${order.orderFixedImageDataList}" var="imageData">
-									<div class="pic-client-block photo-frame gallery">
-										<a id="client-pic-fixed-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>">
-											<img src="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>"/>
-										</a>
-										<p id="client-pic-fixed-label-${imageData.id}">(${imageData.fileName})</p>
-									</div>
-								</c:forEach>
+								<c:choose>
+									<c:when test="${order.completeRemark == null}">
+										<c:forEach items="${order.orderFixedImageDataList}" var="imageData">
+											<div class="pic-client-block photo-frame gallery">
+												<a id="client-pic-fixed-${imageData.id}" href="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>">
+													<img src="<c:url value='/pictures/fixed/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>"/>
+												</a>
+												<p id="client-pic-fixed-label-${imageData.id}">(${imageData.fileName})</p>
+											</div>
+										</c:forEach>
+									</c:when>
+									<c:otherwise>
+										<c:forEach items="${order.orderTransferImageDataList}" var="imageData">
+											<div class="pic-client-block photo-frame gallery">
+												<a id="client-pic-${imageData.id}" href="<c:url value='/pictures/original/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>">
+													<img src="<c:url value='/pictures/original/${imageData.orderId}/compress/${imageData.fileName}.jpg'/>"/>
+												</a>
+												<p id="client-pic-label-${imageData.id}">(${imageData.fileName})</p>
+											</div>
+										</c:forEach>
+									</c:otherwise>
+								</c:choose>
 							</div>
 						</c:when>
 						<c:otherwise>

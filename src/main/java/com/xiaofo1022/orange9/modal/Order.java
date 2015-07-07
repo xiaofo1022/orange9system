@@ -59,6 +59,8 @@ public class Order {
 	@SuppressWarnings("unused")
 	private long shootTime;
 	private int unAllotCount;
+	@Column("COMPLETE_REMARK")
+	private String completeRemark;
 	
 	public int getId() {
 		return id;
@@ -235,5 +237,11 @@ public class Order {
 	}
 	public void setUnAllotCount(int unAllotCount) {
 		this.unAllotCount = unAllotCount;
+	}
+	public String getCompleteRemark() {
+		return completeRemark;
+	}
+	public void setCompleteRemark(String completeRemark) {
+		this.completeRemark = completeRemark;
 	}
 }

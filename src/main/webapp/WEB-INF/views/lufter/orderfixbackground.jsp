@@ -41,6 +41,7 @@
 						</div>
 						<c:if test="${user.isAdmin == 1}">
 							<button class="btn btn-primary btn-data-info" onclick="showAllotImageModal(${unAllotOrder.id}, ${unAllotOrder.unAllotCount})">分图</button>
+							<button class="btn btn-primary btn-data-info" onclick="skipAllot(${unAllotOrder.id})">跳过</button>
 						</c:if>
 					</div>
 				</c:forEach>
@@ -85,6 +86,17 @@
 	
 	function downloadZip(orderId) {
 		window.open("<c:url value='/picture/downloadFixSkinPicture/" + orderId + "'/>");
+	}
+	
+	function skipAllot(orderId) {
+		var result = confirm("是否确认跳过分图？");
+		if (result) {
+			$.post("<c:url value='/orderPostProduction/skipAllotFixBackground/" + orderId + "'/>", null, function(data, status) {
+				if (data.status == "success") {
+					location.reload(true);
+				}
+			});
+		}
 	}
 	
 	function nextStep(orderId, operatorId) {
