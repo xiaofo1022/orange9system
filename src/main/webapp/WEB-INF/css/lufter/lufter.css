@@ -18,6 +18,10 @@
 	margin-right:20px;
 }
 
+.logo:hover {
+	cursor:pointer;
+}
+
 .logo img {
 	width: 120px;
 	margin-top: -10px;
@@ -276,6 +280,13 @@
 	font-weight:bold;
 }
 
+.index-position-info {
+	padding:5px;
+	box-shadow: 1px 1px 3px rgba(209, 209, 210, 1.0);
+	color:#FFF;
+	margin:5px 0;
+}
+
 .data-title {
 	padding:10px;
 	box-shadow: 1px 1px 3px rgba(209, 209, 210, 1.0);
@@ -443,4 +454,8 @@
 	width:80px;
 	height:41px;
 	margin-top:5px;
+}
+
+.index-manage-pic img {
+	width:135px;
 }

@@ -15,6 +15,30 @@ public class ImageDiskSaver {
 	public static String baseDir;
 	public static File fileDir;
 	
+	public static void setIndexDir(HttpServletRequest request, String appendPath) {
+		try {
+			baseDir = request.getSession().getServletContext().getRealPath("/") + "\\WEB-INF\\images\\show\\" + appendPath;
+			fileDir = new File(baseDir);
+			if (!fileDir.exists() && !fileDir.isDirectory()) {
+				fileDir.mkdirs();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void setIndexDir(HttpServletRequest request, String appendPath, String picname) {
+		try {
+			baseDir = request.getSession().getServletContext().getRealPath("/") + "\\WEB-INF\\images\\show\\" + appendPath + "\\" + picname;
+			fileDir = new File(baseDir);
+			if (!fileDir.exists() && !fileDir.isDirectory()) {
+				fileDir.mkdirs();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void setBaseDir(HttpServletRequest request, String appendPath, int orderId) {
 		try {
 			baseDir = request.getSession().getServletContext().getRealPath("/") + "\\WEB-INF\\pictures\\" + appendPath + "\\" + orderId;

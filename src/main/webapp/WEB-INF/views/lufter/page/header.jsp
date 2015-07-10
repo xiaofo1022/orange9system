@@ -16,17 +16,15 @@
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/sta'/>">画册</a>
 		<% } %>
-		<% if (link != null && link.equals("fuckyou")) { %>
 		<% if (link != null && link.equals("jnk")) { %>
 			<a class="index-nav-item active">日韩</a>
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/jnk'/>">日韩</a>
 		<% } %>
 		<% if (link != null && link.equals("tog")) { %>
-			<a class="index-nav-item active">拼拍</a>
+			<a class="index-nav-item active">街拍</a>
 		<% } else { %>
-			<a class="index-nav-item" href="<c:url value='/tog'/>">拼拍</a>
-		<% } %>
+			<a class="index-nav-item" href="<c:url value='/tog'/>">街拍</a>
 		<% } %>
 		<% if (link != null && link.equals("lgn")) { %>
 			<a class="index-nav-item active">登录</a>

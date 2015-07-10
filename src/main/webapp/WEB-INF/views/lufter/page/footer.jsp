@@ -6,5 +6,6 @@
 <div class="index-footer">
 	All Powered By <a href="http://www.douban.com/people/41193239/" target="_blank">Xiaofo</a>
 	| 杭州九橙文化创意有限公司版权所有
+	| 浙ICP备15023861号
 	| ©2015
 </div>

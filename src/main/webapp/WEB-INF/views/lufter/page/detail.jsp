@@ -20,17 +20,15 @@
 <div class="container">
 <div class="row">
 	<div class="col-sm-12 blog-main" style="width:100%;">
-		<jsp:include page="../header.jsp" flush="true">
-			<jsp:param value="enu" name="link"/>
+		<jsp:include page="header.jsp" flush="true">
+			<jsp:param value="${path}" name="link"/>
 		</jsp:include>
 		<div class="index-pic-row">
-			<img class="index-detail-img" src="<c:url value='/images/show/enu/${id}/1.jpg'/>"/>
-			<img class="index-detail-img" src="<c:url value='/images/show/enu/${id}/2.jpg'/>"/>
-			<img class="index-detail-img" src="<c:url value='/images/show/enu/${id}/3.jpg'/>"/>
-			<img class="index-detail-img" src="<c:url value='/images/show/enu/${id}/4.jpg'/>"/>
-			<img class="index-detail-img" src="<c:url value='/images/show/enu/${id}/5.jpg'/>"/>
+			<c:forEach items="${pictureList}" var="picture">
+				<img class="index-detail-img" src="<c:url value='/images/show/${path}/${picname}/${picture}.jpg'/>"/>
+			</c:forEach>
 		</div>
-		<jsp:include page="../footer.jsp" flush="true"/>
+		<jsp:include page="footer.jsp" flush="true"/>
 	</div>
 </div>
 </div>

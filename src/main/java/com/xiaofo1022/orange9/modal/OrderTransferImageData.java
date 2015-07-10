@@ -34,8 +34,8 @@ public class OrderTransferImageData {
 	private int cutLiquifyOperatorId;
 	@Column("OPERATOR_ID")
 	private int operatorId;
-	
 	private String serverPath;
+	private int index;
 	
 	public int getId() {
 		return id;
@@ -132,5 +132,11 @@ public class OrderTransferImageData {
 	}
 	public void setOperatorId(int operatorId) {
 		this.operatorId = operatorId;
+	}
+	public int getIndex() {
+		return index;
+	}
+	public void setIndex(int index) {
+		this.index = index;
 	}
 }

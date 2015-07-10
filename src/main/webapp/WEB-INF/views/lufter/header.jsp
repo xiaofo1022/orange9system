@@ -43,10 +43,26 @@
 	</div>
 </div>
 
+<div id="indexModal" class="modal fade text-left" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">首页管理</h4>
+			</div>
+			<div class="modal-body">	
+			</div>
+			<div class="modal-footer">
+				<button id="btnConfirmIndex" type="button" class="btn btn-primary">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="blog-masthead">
 	<div class="container">
 		<nav class="blog-nav">
-			<span class="logo"><img src="<c:url value='/images/logo2-1.png'/>"/></span>
+			<span class="logo" onclick="backToIndex()"><img src="<c:url value='/images/logo2-1.png'/>"/></span>
 			<% if (!roleName.equals("CLIENT")) {%>
 				<% if (pg.equals("summary")) { %>
 					<a class="blog-nav-item active">订单一览</a>
@@ -69,6 +85,11 @@
 					<% } else { %>
 						<a class="blog-nav-item" href="<c:url value='/employee'/>">员工管理</a>
 					<% } %>
+					<% if (pg.equals("index")) { %>
+						<a class="blog-nav-item active">首页管理</a>
+					<% } else { %>
+						<a class="blog-nav-item" href="<c:url value='/indexmanage'/>">首页管理</a>
+					<% } %>
 				<% } %>
 			<% } else { %>
 				<a class="blog-nav-item active">我的订单</a>
@@ -83,6 +104,10 @@
 $("#changePasswordModal").on("hidden.bs.modal", function(e) {
 	$("#passwordForm")[0].reset();
 });
+
+function backToIndex() {
+	location.assign("<c:url value='/'/>");
+}
 
 function logout() {
 	$.get("<c:url value='/logout'/>", function(data) {
@@ -121,5 +146,9 @@ function resetPassword() {
 			alert(data.msg);
 		}
 	});
+}
+
+function showIndexModal() {
+	$("#indexModal").modal("show");
 }
 </script>

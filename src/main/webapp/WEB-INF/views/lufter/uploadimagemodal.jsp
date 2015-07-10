@@ -26,7 +26,7 @@
 </div>
 
 <script>
-	var compOrderId;
+	var compOrderId = 0;
 	var completeCount = 0;
 	var allCount = 0;
 	var uploadUrl = "";
@@ -65,7 +65,7 @@
 				fileReader.onload = function(event) {
 					var base64Data = event.target.result.split(",")[1];
 					var frontName = this.frontName;
-					AjaxUtil.post(uploadUrl, {orderId:orderId, fileName:this.frontName, base64Data:base64Data}, function(data) {
+					AjaxUtil.post(uploadUrl, {index:index, orderId:orderId, fileName:this.frontName, base64Data:base64Data}, function(data) {
 						var uploadSpan = $("#upload-span-" + index);
 						if (data && data.status == "success") {
 							completeCount++;

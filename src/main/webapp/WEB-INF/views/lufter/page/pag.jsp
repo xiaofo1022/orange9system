@@ -21,53 +21,34 @@
 <div class="row">
 	<div class="col-sm-12 blog-main" style="width:100%;">
 		<jsp:include page="header.jsp" flush="true">
-			<jsp:param value="enu" name="link"/>
+			<jsp:param name="link" value="${path}"/>
 		</jsp:include>
 		<div class="clearfix">
-			<!-- Col 1 -->
 			<div class="index-col">
-				<a id="index-enu-7" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/7.jpg'/>"/>
-					<span class="index-info-block sbg1">Show It</span>
-				</a>
-				<a id="index-enu-2" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/2.jpg'/>"/>
-					<span class="index-info-block sbg2">Show It</span>
-				</a>
-				<a id="index-enu-5" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/5.jpg'/>"/>
-					<span class="index-info-block sbg3">Show It</span>
-				</a>
+				<c:forEach items="${pictureCol1List}" var="picture" varStatus="index">
+					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
+						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
+						<span class="index-info-block sbg1">Show It</span>
+					</a>
+				</c:forEach>
 			</div>
-			<!-- Col 2 -->
+			
 			<div class="index-col">
-				<a id="index-enu-6" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/6.jpg'/>"/>
-					<span class="index-info-block sbg4">Show It</span>
-				</a>
-				<a id="index-enu-1" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/1.jpg'/>"/>
-					<span class="index-info-block sbg5">Show It</span>
-				</a>
-				<a id="index-enu-8" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/8.jpg'/>"/>
-					<span class="index-info-block sbg1">Show It</span>
-				</a>
+				<c:forEach items="${pictureCol2List}" var="picture" varStatus="index">
+					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
+						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
+						<span class="index-info-block sbg1">Show It</span>
+					</a>
+				</c:forEach>
 			</div>
-			<!-- Col 3 -->
+			
 			<div class="index-col">
-				<a id="index-enu-4" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/4.jpg'/>"/>
-					<span class="index-info-block sbg2">Show It</span>
-				</a>
-				<a id="index-enu-3" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/3.jpg'/>"/>
-					<span class="index-info-block sbg3">Show It</span>
-				</a>
-				<a id="index-enu-9" class="index-pic-link pos-relative fleft">
-					<img src="<c:url value='/images/show/enu/9.jpg'/>"/>
-					<span class="index-info-block sbg4">Show It</span>
-				</a>
+				<c:forEach items="${pictureCol3List}" var="picture" varStatus="index">
+					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
+						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
+						<span class="index-info-block sbg1">Show It</span>
+					</a>
+				</c:forEach>
 			</div>
 		</div>
 		<jsp:include page="footer.jsp" flush="true"/>
@@ -95,7 +76,7 @@ function createIndexLink() {
 	$(".index-pic-link").click(function(e) {
 		var current = $(e.currentTarget);
 		var ids = current.attr("id").split("-");
-		location.assign("<c:url value='/" + ids[1] + "/" + ids[2] + "'/>");
+		location.assign("<c:url value='/picdetail/" + ids[1] + "/" + ids[2] + "'/>");
 	});
 }
 </script>

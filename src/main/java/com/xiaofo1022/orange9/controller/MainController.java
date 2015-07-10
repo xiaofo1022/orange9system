@@ -23,6 +23,7 @@ import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.common.TimeLimitConst;
 import com.xiaofo1022.orange9.dao.ClientDao;
 import com.xiaofo1022.orange9.dao.ClockInDao;
+import com.xiaofo1022.orange9.dao.IndexDao;
 import com.xiaofo1022.orange9.dao.LoginDao;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
 import com.xiaofo1022.orange9.dao.OrderDao;
@@ -73,54 +74,50 @@ public class MainController {
 	private RoleDao roleDao;
 	@Autowired
 	private UserController userController;
+	@Autowired
+	private IndexDao indexDao;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String index() {
-		return "lufter/page/enu";
+	public String index(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("path", "enu");
+		indexDao.createIndexModalMap(request, "enu", modelMap);
+		return "lufter/page/pag";
 	}
 	
 	@RequestMapping(value="/enu", method=RequestMethod.GET)
-	public String enu() {
-		return "lufter/page/enu";
-	}
-	
-	@RequestMapping(value="/enu/{id}", method=RequestMethod.GET)
-	public String enudetail(@PathVariable int id, ModelMap modelMap) {
-		modelMap.addAttribute("id", id);
-		return "lufter/page/detail/enudetail";
+	public String enu(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("path", "enu");
+		indexDao.createIndexModalMap(request, "enu", modelMap);
+		return "lufter/page/pag";
 	}
 	
 	@RequestMapping(value="/jnk", method=RequestMethod.GET)
-	public String jnk() {
-		return "lufter/page/jnk";
-	}
-	
-	@RequestMapping(value="/jnk/{id}", method=RequestMethod.GET)
-	public String jnkdetail(@PathVariable int id, ModelMap modelMap) {
-		modelMap.addAttribute("id", id);
-		return "lufter/page/detail/jnkdetail";
+	public String jnk(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("path", "jnk");
+		indexDao.createIndexModalMap(request, "jnk", modelMap);
+		return "lufter/page/pag";
 	}
 	
 	@RequestMapping(value="/sta", method=RequestMethod.GET)
-	public String sta() {
-		return "lufter/page/sta";
-	}
-	
-	@RequestMapping(value="/sta/{id}", method=RequestMethod.GET)
-	public String stadetail(@PathVariable int id, ModelMap modelMap) {
-		modelMap.addAttribute("id", id);
-		return "lufter/page/detail/stadetail";
+	public String sta(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("path", "sta");
+		indexDao.createIndexModalMap(request, "sta", modelMap);
+		return "lufter/page/pag";
 	}
 	
 	@RequestMapping(value="/tog", method=RequestMethod.GET)
-	public String tog() {
-		return "lufter/page/tog";
+	public String tog(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("path", "tog");
+		indexDao.createIndexModalMap(request, "tog", modelMap);
+		return "lufter/page/pag";
 	}
 	
-	@RequestMapping(value="/tog/{id}", method=RequestMethod.GET)
-	public String togdetail(@PathVariable int id, ModelMap modelMap) {
-		modelMap.addAttribute("id", id);
-		return "lufter/page/detail/togdetail";
+	@RequestMapping(value="/picdetail/{path}/{picname}", method=RequestMethod.GET)
+	public String picdetail(@PathVariable String path, @PathVariable String picname, HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("path", path);
+		modelMap.addAttribute("picname", picname);
+		modelMap.addAttribute("pictureList", indexDao.getIndexDetailPicnameList(request, path, picname));
+		return "lufter/page/detail";
 	}
 	
 	@RequestMapping(value="/lgn", method=RequestMethod.GET)
@@ -176,6 +173,19 @@ public class MainController {
 			user.setLoginTime(clockIn.getClockDatetime());
 		}
 		user.setRole(roleDao.getRole(user.getRoleId()));
+	}
+	
+	@RequestMapping(value="/indexmanage", method=RequestMethod.GET)
+	public String indexmanage(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.put("enu", indexDao.getIndexShowMap(request, "enu"));
+		modelMap.put("enunextpic", indexDao.getUnusedPictureName(request, "enu"));
+		modelMap.put("jnk", indexDao.getIndexShowMap(request, "jnk"));
+		modelMap.put("jnknextpic", indexDao.getUnusedPictureName(request, "jnk"));
+		modelMap.put("sta", indexDao.getIndexShowMap(request, "sta"));
+		modelMap.put("stanextpic", indexDao.getUnusedPictureName(request, "sta"));
+		modelMap.put("tog", indexDao.getIndexShowMap(request, "tog"));
+		modelMap.put("tognextpic", indexDao.getUnusedPictureName(request, "tog"));
+		return "lufter/indexmanage";
 	}
 	
 	@RequestMapping(value="/employee", method=RequestMethod.GET)

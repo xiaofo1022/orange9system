@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.core.ImageDiskSaver;
+import com.xiaofo1022.orange9.dao.IndexDao;
 import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.PicDao;
 import com.xiaofo1022.orange9.modal.OrderFixedImageData;
+import com.xiaofo1022.orange9.modal.OrderTransferImageData;
 import com.xiaofo1022.orange9.modal.PictureData;
 import com.xiaofo1022.orange9.modal.Result;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -41,6 +43,8 @@ public class PictureController {
 	private PicDao picDao;
 	@Autowired
 	private OrderPostProductionDao postProductionDao;
+	@Autowired
+	private IndexDao indexDao;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	@ResponseBody
@@ -339,6 +343,37 @@ public class PictureController {
 				fileList.add(new File(fixedPath + "\\" + imageData.getOrderId() + "\\" + imageData.getFileName() + ".jpg"));
 			}
 			ZipUtil.downloadZipFile(fileList, response);
+		}
+	}
+	
+	@RequestMapping(value = "/deleteIndexPicture/{path}/{picname}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse deleteIndexPicture(@PathVariable String path, @PathVariable String picname, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			indexDao.deleteIndexPicture(request, path, picname);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new SuccessResponse("Delete Success");
+	}
+	
+	@RequestMapping(value = "/uploadIndexPicture/{path}/{picname}", method = RequestMethod.POST)
+	@ResponseBody
+	public CommonResponse uploadIndexPicture(@PathVariable String path, @PathVariable String picname, @RequestBody OrderTransferImageData transferImageData, BindingResult bindingResult, HttpServletRequest request) {
+		boolean result = false;
+		
+		if (transferImageData.getIndex() == 0) {
+			ImageDiskSaver.setIndexDir(request, path);
+			result = ImageDiskSaver.saveImageToDisk(picname, transferImageData.getBase64Data());
+		} else {
+			ImageDiskSaver.setIndexDir(request, path, picname);
+			result = ImageDiskSaver.saveImageToDisk(transferImageData.getFileName(), transferImageData.getBase64Data());
+		}
+		
+		if (result) {
+			return new SuccessResponse("Upload Index Picture Success");
+		} else {
+			return new FailureResponse("Upload Index Picture Failure");
 		}
 	}
 }
