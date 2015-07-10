@@ -11,11 +11,6 @@
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/enu'/>">欧美</a>
 		<% } %>
-		<% if (link != null && link.equals("sta")) { %>
-			<a class="index-nav-item active" href="<c:url value='/sta'/>">画册</a>
-		<% } else { %>
-			<a class="index-nav-item" href="<c:url value='/sta'/>">画册</a>
-		<% } %>
 		<% if (link != null && link.equals("jnk")) { %>
 			<a class="index-nav-item active">日韩</a>
 		<% } else { %>
@@ -25,6 +20,11 @@
 			<a class="index-nav-item active">街拍</a>
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/tog'/>">街拍</a>
+		<% } %>
+		<% if (link != null && link.equals("sta")) { %>
+			<a class="index-nav-item active" href="<c:url value='/sta'/>">海报</a>
+		<% } else { %>
+			<a class="index-nav-item" href="<c:url value='/sta'/>">海报</a>
 		<% } %>
 		<% if (link != null && link.equals("lgn")) { %>
 			<a class="index-nav-item active">登录</a>

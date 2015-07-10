@@ -36,10 +36,10 @@
 						<a id="blink2" onclick="changeBottomNavView(this)">日韩</a>
 					</li>
 					<li role="presentation" class="detail-bottom-nav">
-						<a id="blink3" onclick="changeBottomNavView(this)">画册</a>
+						<a id="blink4" onclick="changeBottomNavView(this)">街拍</a>
 					</li>
 					<li role="presentation" class="detail-bottom-nav">
-						<a id="blink4" onclick="changeBottomNavView(this)">街拍</a>
+						<a id="blink3" onclick="changeBottomNavView(this)">海报</a>
 					</li>
 				</ul>
 				<div id="blink1-block" class="detail-bottom-block index-manage-pic clearfix">
