@@ -54,11 +54,11 @@
 				</div>
 				<div class="clearfix">
 					<c:choose>
-						<c:when test="${clientOrder.status.equals('等待客户选片')}">
-							<button class="btn btn-success ml10 fright" onclick="orderDetail(${clientOrder.orderId})">进入选片</button>
+						<c:when test="${clientOrder.status.equals('完成')}">
+							<button class="btn btn-primary ml10 fright" onclick="orderDetail(${clientOrder.orderId})">订单详情</button>
 						</c:when>
 						<c:otherwise>
-							<button class="btn btn-primary ml10 fright" onclick="orderDetail(${clientOrder.orderId})">订单详情</button>
+							<button class="btn btn-success ml10 fright" onclick="orderDetail(${clientOrder.orderId})">进入选片</button>
 						</c:otherwise>
 					</c:choose>
 					<c:choose>

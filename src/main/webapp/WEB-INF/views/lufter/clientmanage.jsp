@@ -93,9 +93,13 @@
 					</c:if>
 				</div>
 				<div class="clearfix">
-					<div class="data-info taobao-bc">淘宝 <a href="http://${client.clientShopLink}" target="_blank">${client.clientShopName}</a></div>
+					<c:if test="${client.clientShopName != null && !client.clientShopName.equals('')}">
+						<div class="data-info taobao-bc">淘宝 <a href="http://${client.clientShopLink}" target="_blank">${client.clientShopName}</a></div>
+					</c:if>
 					<div class="data-info taobao-bc">电话 ${client.clientPhone}</div>
-					<div class="data-info taobao-bc">邮箱 ${client.clientEmail}</div>
+					<c:if test="${client.clientEmail != null && !client.clientEmail.equals('')}">
+						<div class="data-info taobao-bc">邮箱 ${client.clientEmail}</div>
+					</c:if>
 				</div>
 				<div class="clearfix">
 					<button class="btn btn-danger ml10 fright"  onclick="deleteClient(${client.id})">删除</button>

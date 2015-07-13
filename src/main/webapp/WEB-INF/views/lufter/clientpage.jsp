@@ -62,11 +62,9 @@
 					</c:choose>
 				</c:when>
 				<c:otherwise>
-					<c:if test="${order.status.equals('等待客户选片')}">
-						<button class="btn btn-primary btn-data-info ml10" onclick="downloadCompressZip(${order.orderId})">下载选片</button>
-						<button class="btn btn-info btn-data-info ml10" onclick="uploadSelectedImage()">选片上传</button>
-						<button class="btn btn-success btn-data-info ml10" onclick="submitSelectedPictures()">完成选片</button>
-					</c:if>
+					<button class="btn btn-primary btn-data-info ml10" onclick="downloadCompressZip(${order.orderId})">下载选片</button>
+					<button class="btn btn-info btn-data-info ml10" onclick="uploadSelectedImage()">选片上传</button>
+					<button class="btn btn-success btn-data-info ml10" onclick="submitSelectedPictures()">完成选片</button>
 				</c:otherwise>
 			</c:choose>
 			
@@ -147,11 +145,11 @@
 </div>
 <input class="hidden" multiple="multiple" type="file" id="complete-post-production"/>
 <c:choose>
-	<c:when test="${order.status.equals('等待客户选片')}">
-		<script src="<c:url value='/js/zoom-select.js'/>"></script>
+	<c:when test="${order.status.equals('完成')}">
+		<script src="<c:url value='/js/zoom.js'/>"></script>
 	</c:when>
 	<c:otherwise>
-		<script src="<c:url value='/js/zoom.js'/>"></script>
+		<script src="<c:url value='/js/zoom-select.js'/>"></script>
 	</c:otherwise>
 </c:choose>
 <script src="<c:url value='/js/util/ajax-util.js'/>"></script>

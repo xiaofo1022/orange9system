@@ -39,9 +39,13 @@
 				<div class="clearfix">
 					<div class="data-info taobao-bc">客户</div>
 					<div class="data-info taobao-bc">${order.client.clientName}</div>
-					<div class="data-info taobao-bc">淘宝 <a href="http://${order.client.clientShopLink}" target="_blank">${order.client.clientShopName}</a></div>
-					<div class="data-info taobao-bc">${order.client.clientPhone}</div>
-					<div class="data-info taobao-bc">${order.client.clientEmail}</div>
+					<c:if test="${client.clientShopName != null && !client.clientShopName.equals('')}">
+						<div class="data-info taobao-bc">淘宝 <a href="http://${order.client.clientShopLink}" target="_blank">${order.client.clientShopName}</a></div>
+					</c:if>
+					<div class="data-info taobao-bc">电话 ${order.client.clientPhone}</div>
+					<c:if test="${client.clientEmail != null && !client.clientEmail.equals('')}">
+						<div class="data-info taobao-bc">邮箱 ${order.client.clientEmail}</div>
+					</c:if>
 				</div>
 			</div>
 		</c:forEach>
