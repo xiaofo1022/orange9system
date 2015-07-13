@@ -28,7 +28,7 @@
 				<c:forEach items="${pictureCol1List}" var="picture" varStatus="index">
 					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
 						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
-						<span class="index-info-block sbg1">Show It</span>
+						<span class="index-info-block">Show It</span>
 					</a>
 				</c:forEach>
 			</div>
@@ -37,7 +37,7 @@
 				<c:forEach items="${pictureCol2List}" var="picture" varStatus="index">
 					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
 						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
-						<span class="index-info-block sbg1">Show It</span>
+						<span class="index-info-block">Show It</span>
 					</a>
 				</c:forEach>
 			</div>
@@ -46,7 +46,7 @@
 				<c:forEach items="${pictureCol3List}" var="picture" varStatus="index">
 					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
 						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
-						<span class="index-info-block sbg1">Show It</span>
+						<span class="index-info-block">Show It</span>
 					</a>
 				</c:forEach>
 			</div>
@@ -56,17 +56,32 @@
 </div>
 </div>
 <script>
+var sbgs = ["sbg1", "sbg2", "sbg3", "sbg4", "sbg5"];
+
 createIndexLink();
 
+function getRandomSbg() {
+	var rand = Math.floor(Math.random() * sbgs.length);
+	return sbgs[rand];
+}
+
 function createIndexLink() {
-	$(".index-pic-link").mouseover(function(e) {
+	$(".index-pic-link").mouseenter(function(e) {
+		var sgb = getRandomSbg();
 		var current = $(e.currentTarget);
 		var span = current.find("span.index-info-block");
 		var img = current.find("img");
+		var spanclass = span.attr("class");
+		var sbgclass = spanclass.split(" ");
+		if (sbgclass.length > 1) {
+			var sbgclass = spanclass.split(" ")[1];
+			span.removeClass(sbgclass);
+		}
+		span.addClass(sgb);
 		span.css("height", img.css("height"));
 		span.css("opacity", "1.0");
 	});
-	$(".index-pic-link").mouseout(function(e) {
+	$(".index-pic-link").mouseleave(function(e) {
 		var current = $(e.currentTarget);
 		var span = current.find("span.index-info-block");
 		var img = current.find("img");

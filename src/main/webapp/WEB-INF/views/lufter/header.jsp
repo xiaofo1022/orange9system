@@ -62,7 +62,9 @@
 <div class="blog-masthead">
 	<div class="container">
 		<nav class="blog-nav">
-			<span class="logo" onclick="backToIndex()"><img src="<c:url value='/images/logo2-1.png'/>"/></span>
+			<a href="<c:url value='/'/>" target="_blank">
+				<span class="logo"><img src="<c:url value='/images/logo2-1.png'/>"/></span>
+			</a>
 			<% if (!roleName.equals("CLIENT")) {%>
 				<% if (pg.equals("summary")) { %>
 					<a class="blog-nav-item active">订单一览</a>

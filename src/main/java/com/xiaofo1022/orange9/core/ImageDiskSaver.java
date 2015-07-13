@@ -14,9 +14,11 @@ public class ImageDiskSaver {
 	public static ImageCompresser compresser = new ImageCompresser();
 	public static String baseDir;
 	public static File fileDir;
+	public static boolean isCompress;
 	
 	public static void setIndexDir(HttpServletRequest request, String appendPath) {
 		try {
+			isCompress = false;
 			baseDir = request.getSession().getServletContext().getRealPath("/") + "\\WEB-INF\\images\\show\\" + appendPath;
 			fileDir = new File(baseDir);
 			if (!fileDir.exists() && !fileDir.isDirectory()) {
@@ -29,6 +31,7 @@ public class ImageDiskSaver {
 	
 	public static void setIndexDir(HttpServletRequest request, String appendPath, String picname) {
 		try {
+			isCompress = false;
 			baseDir = request.getSession().getServletContext().getRealPath("/") + "\\WEB-INF\\images\\show\\" + appendPath + "\\" + picname;
 			fileDir = new File(baseDir);
 			if (!fileDir.exists() && !fileDir.isDirectory()) {
@@ -41,6 +44,7 @@ public class ImageDiskSaver {
 	
 	public static void setBaseDir(HttpServletRequest request, String appendPath, int orderId) {
 		try {
+			isCompress = true;
 			baseDir = request.getSession().getServletContext().getRealPath("/") + "\\WEB-INF\\pictures\\" + appendPath + "\\" + orderId;
 			fileDir = new File(baseDir);
 			if (!fileDir.exists() && !fileDir.isDirectory()) {
@@ -54,7 +58,9 @@ public class ImageDiskSaver {
 	public static boolean saveImageToDisk(String fileName, String base64Data) {
 		try {
 			saveOriginalImage(fileName, base64Data);
-			saveCompressImageToDisk(fileName);
+			if (isCompress) {
+				saveCompressImageToDisk(fileName);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

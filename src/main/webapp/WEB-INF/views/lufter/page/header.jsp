@@ -12,12 +12,12 @@
 			<a class="index-nav-item" href="<c:url value='/enu'/>">欧美</a>
 		<% } %>
 		<% if (link != null && link.equals("jnk")) { %>
-			<a class="index-nav-item active">日韩</a>
+			<a class="index-nav-item active" href="<c:url value='/jnk'/>">日韩</a>
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/jnk'/>">日韩</a>
 		<% } %>
 		<% if (link != null && link.equals("tog")) { %>
-			<a class="index-nav-item active">街拍</a>
+			<a class="index-nav-item active" href="<c:url value='/tog'/>">街拍</a>
 		<% } else { %>
 			<a class="index-nav-item" href="<c:url value='/tog'/>">街拍</a>
 		<% } %>
