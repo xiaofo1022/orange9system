@@ -3,6 +3,7 @@ package com.xiaofo1022.orange9.common;
 public class OrderStatusConst {
 	public static final String STATUS_CHANGE = "状态变为：";
 	public static final String CREATE_ORDER = "创建";
+	public static final String CONVERT = "导图";
 	public static final String FIX_SKIN = "修皮肤及褶皱";
 	public static final String FIX_BACKGROUND = "修背景";
 	public static final String CUT_LIQUIFY = "裁图液化";

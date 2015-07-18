@@ -1,6 +1,5 @@
 package com.xiaofo1022.orange9.dao;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,11 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.controller.PictureController;
 import com.xiaofo1022.orange9.dao.common.CommonDao;
 import com.xiaofo1022.orange9.modal.Count;
-import com.xiaofo1022.orange9.modal.Order;
 import com.xiaofo1022.orange9.modal.OrderConvertImage;
 
 @Repository
@@ -40,30 +37,19 @@ public class OrderConvertDao {
 		}
 	}
 	
-	public OrderConvertImage getOrderConvert(int orderId) {
-		return commonDao.getFirst(OrderConvertImage.class, "SELECT * FROM ORDER_CONVERT_IMAGE WHERE ORDER_ID = ? AND IS_DONE = 0", orderId);
+	public List<OrderConvertImage> getOrderConvert(int ownerId) {
+		return commonDao.query(OrderConvertImage.class, "SELECT A.* FROM ORDER_CONVERT_IMAGE A LEFT JOIN ORDERS B ON A.ORDER_ID = B.ID WHERE A.IS_DONE = 0 AND B.OWNER_ID = ?", ownerId);
 	}
 	
 	public List<OrderConvertImage> getOrderConvertList(HttpServletRequest request, int ownerId) {
-		List<OrderConvertImage> resultList = null;
-		List<Order> orderList = commonDao.query(Order.class, "SELECT * FROM ORDERS WHERE STATUS_ID = ? AND OWNER_ID = ?", OrderStatusConst.CONVERT_IMAGE, ownerId);
-		if (orderList != null && orderList.size() > 0) {
-			resultList = new ArrayList<OrderConvertImage>(orderList.size());
-			for (Order order : orderList) {
-				OrderConvertImage orderConvert = this.getOrderConvert(order.getId());
-				if (orderConvert == null) {
-					orderConvert = new OrderConvertImage();
-					orderConvert.setOrderId(order.getId());
-				} else {
-					orderConvert.setFileNames(pictureController.getUnuploadOriginalPictureName(order.getId(), request));
-				}
-				resultList.add(orderConvert);
-			}
+		List<OrderConvertImage> orderConvertList = this.getOrderConvert(ownerId);
+		for (OrderConvertImage orderConvert : orderConvertList) {
+			orderConvert.setFileNames(pictureController.getUnuploadOriginalPictureName(orderConvert.getOrderId(), request));
 		}
-		return resultList;
+		return orderConvertList;
 	}
 	
 	public void setOrderConvertDone(int convertId) {
-		commonDao.update("UPDATE ORDER_CONVERT_IMAGE SET IS_DONE = 1 AND UPDATE_DATETIME = ? WHERE ID = ?", new Date(), convertId);
+		commonDao.update("UPDATE ORDER_CONVERT_IMAGE SET IS_DONE = 1, UPDATE_DATETIME = ? WHERE ID = ?", new Date(), convertId);
 	}
 }

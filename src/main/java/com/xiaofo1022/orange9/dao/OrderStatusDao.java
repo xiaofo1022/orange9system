@@ -25,6 +25,8 @@ public class OrderStatusDao {
 	private OrderDao orderDao;
 	@Autowired
 	private OrderPostProductionDao orderPostProductionDao;
+	@Autowired
+	private OrderConvertDao orderConvertDao;
 	
 	public List<OrderStatus> getOrderStatusList() {
 		return commonDao.query(OrderStatus.class, "SELECT * FROM ORDER_STATUS ORDER BY ID");
@@ -41,6 +43,7 @@ public class OrderStatusDao {
 			OrderStatusCount orderStatusCount = this.getOrderStatusCount(orderStatus.getId(), bossId);
 			statusCountMap.put(orderStatus.getName(), orderStatusCount == null ? 0 : orderStatusCount.getStatusCount());
 		}
+		statusCountMap.put(OrderStatusConst.CONVERT, orderConvertDao.getOrderConvert(bossId).size());
 		statusCountMap.put(OrderStatusConst.FIX_SKIN, orderPostProductionDao.getTransferPostProductionCount(OrderConst.COLUMN_FIXED_SKIN, bossId));
 		statusCountMap.put(OrderStatusConst.FIX_BACKGROUND, orderPostProductionDao.getTransferPostProductionCount(OrderConst.COLUMN_FIXED_BACKGROUND, bossId));
 		statusCountMap.put(OrderStatusConst.CUT_LIQUIFY, orderPostProductionDao.getTransferPostProductionCount(OrderConst.COLUMN_CUT_LIQUIFY, bossId));

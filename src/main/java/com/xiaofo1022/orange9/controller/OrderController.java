@@ -116,7 +116,6 @@ public class OrderController {
 			modelMap.addAttribute("timeCost", orderDao.getOrderTimeCost(orderDetail));
 			modelMap.addAttribute("orderStatusList", orderStatusDao.getOrderStatusList());
 			modelMap.addAttribute("orderHistoryList", orderHistoryDao.getOrderHistoryList(orderId));
-			modelMap.addAttribute("orderConvert", orderConvertDao.getOrderConvert(orderId));
 			modelMap.addAttribute("orderFixSkin", orderPostProductionDao.getPostProductionFixer(OrderConst.COLUMN_FIXED_SKIN_OPERATOR, orderId));
 			modelMap.addAttribute("orderFixBackground", orderPostProductionDao.getPostProductionFixer(OrderConst.COLUMN_FIXED_BACKGROUND_OPERATOR, orderId));
 			modelMap.addAttribute("orderCutLiquify", orderPostProductionDao.getPostProductionFixer(OrderConst.COLUMN_CUT_LIQUIFY_OPERATOR, orderId));

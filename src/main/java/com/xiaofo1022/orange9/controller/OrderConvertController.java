@@ -50,7 +50,6 @@ public class OrderConvertController {
 		if (loginUser != null) {
 			orderConvertDao.setOrderConvertDone(convertId);
 			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.POST_PRODUCTION);
-			//orderPostProductionDao.allotImage(orderId, loginUser.getBossId());
 		}
 		return new SuccessResponse("Set Order Convert Done Success");
 	}

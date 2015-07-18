@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.Message;
-import com.xiaofo1022.orange9.common.OrderConst;
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.dao.ClientDao;
@@ -39,7 +38,6 @@ import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
-import com.xiaofo1022.orange9.thread.ClearDiskThread;
 import com.xiaofo1022.orange9.thread.TaskExecutor;
 import com.xiaofo1022.orange9.util.RequestUtil;
 
@@ -225,11 +223,11 @@ public class ClientController {
 				orderTransferDao.setTransferImageSelected(id);
 			}
 		}
-		if (!orderConvertDao.isExistConvertRecord(orderId)) {
-			orderConvertDao.insertOrderConvert(orderId, 0);
+		orderConvertDao.insertOrderConvert(orderId, 0);
+		Order order = orderDao.getOrderDetail(orderId);
+		if (order.getStatusId() < OrderStatusConst.CONVERT_IMAGE) {
+			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
 		}
-		taskExecutor.execute(new ClearDiskThread(orderId, OrderConst.PATH_ORIGINAL, request));
-		orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.CONVERT_IMAGE);
 		return new SuccessResponse("Set Transfer Image Selected Success");
 	}
 	
