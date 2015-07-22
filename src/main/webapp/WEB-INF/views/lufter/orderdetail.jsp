@@ -263,7 +263,7 @@
 						</div>
 					</c:otherwise>
 				</c:choose>
-				<c:if test="${orderDetail.statusId == 1}">
+				<c:if test="${orderDetail.statusId == 1 && user.isAdmin == 1}">
 					<button class="btn btn-success btn-data-info" onclick="showEditOrderWindow()">编辑</button>
 				</c:if>
 			</div>
@@ -310,7 +310,7 @@
 						<c:if test="${orderDetail.orderGoods.otherCount > 0}">
 							<div class="data-info twitter-bc">其他 ${orderDetail.orderGoods.otherCount}件</div>
 						</c:if>
-						<c:if test="${user.isAdmin == 1}">
+						<c:if test="${user.isAdmin == 1 || user.role.name.equals('ASSISTANT')}">
 							<button class="btn btn-info btn-data-info twitter-bc"
 								onclick="showUpdateOrderGoodsWindow(
 									${orderDetail.id}, 

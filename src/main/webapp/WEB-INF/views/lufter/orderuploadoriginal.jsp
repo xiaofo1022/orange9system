@@ -47,8 +47,10 @@
 				<div class="clearfix">
 					<div class="data-info facebook-bc order-detail-header">摄影师 ${orderTransfer.operator.name} <img src="${orderTransfer.operator.header}"/></div>
 					<div class="data-info facebook-bc">已上传 ${orderTransfer.imageDataCount} 张</div>
-					<button id="btn-upload-${orderTransfer.orderId}" class="btn btn-info btn-data-info" onclick="completePostProduction(${orderTransfer.id}, ${orderTransfer.orderId})">上传</button>
-					<button id="btn-confirm-${orderTransfer.orderId}" class="btn btn-success btn-data-info" onclick="setTransferComplete(${orderTransfer.id}, ${orderTransfer.orderId})">完成</button>
+					<c:if test="${user.isAdmin == 1 || user.role.name.equals('ASSISTANT')}">
+						<button id="btn-upload-${orderTransfer.orderId}" class="btn btn-info btn-data-info" onclick="completePostProduction(${orderTransfer.id}, ${orderTransfer.orderId})">上传</button>
+						<button id="btn-confirm-${orderTransfer.orderId}" class="btn btn-success btn-data-info" onclick="setTransferComplete(${orderTransfer.id}, ${orderTransfer.orderId})">完成</button>
+					</c:if>
 				</div>
 				<div id="time-progress-bar-${orderTransfer.id}" class="progress" style="margin-bottom:0;">
 					<div id="time-bar-${orderTransfer.id}" class="progress-bar progress-bar-success" role="progressbar"

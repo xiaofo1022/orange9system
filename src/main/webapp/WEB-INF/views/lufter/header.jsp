@@ -71,17 +71,24 @@
 				<% } else { %>
 					<a class="blog-nav-item" href="<c:url value='/orderSummary'/>">订单一览</a>
 				<% } %>
+				
 				<% if (user.getIsAdmin() == 1) { %>
 					<% if (pg.equals("client")) { %>
 						<a class="blog-nav-item active">客户管理</a>
 					<% } else { %>
 						<a class="blog-nav-item" href="<c:url value='/client'/>">客户管理</a>
 					<% } %>
+				<% } %>
+				
+				<% if (user.getIsAdmin() == 1 || roleName.equals("ASSISTANT")) { %>
 					<% if (pg.equals("goods")) { %>
 						<a class="blog-nav-item active">货品管理</a>
 					<% } else { %>
 						<a class="blog-nav-item" href="<c:url value='/orderGoods'/>">货品管理</a>
 					<% } %>
+				<% } %>
+				
+				<% if (user.getIsAdmin() == 1) { %>
 					<% if (pg.equals("employee")) { %>
 						<a class="blog-nav-item active">员工管理</a>
 					<% } else { %>

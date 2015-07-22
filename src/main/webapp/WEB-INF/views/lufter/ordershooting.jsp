@@ -102,7 +102,7 @@
 				</div>
 				<div class="clearfix">
 					<div class="data-info facebook-bc order-detail-header">摄影师 ${orderShoot.photographer.name} <img src="${orderShoot.photographer.header}"/></div>
-					<c:if test="${orderShoot.photographer.id == user.id || user.isAdmin == 1}">
+					<c:if test="${orderShoot.photographer.id == user.id || user.isAdmin == 1 || user.role.name.equals('ASSISTANT')}">
 						<button id="btn-convert-done-${orderShoot.id}" class="btn btn-success btn-data-info" onclick="confirmShootComplete(${orderShoot.id}, ${orderShoot.photographerId})">完成</button>
 					</c:if>
 				</div>
