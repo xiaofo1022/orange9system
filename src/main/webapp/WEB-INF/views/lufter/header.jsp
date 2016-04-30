@@ -94,10 +94,12 @@
 					<% } else { %>
 						<a class="blog-nav-item" href="<c:url value='/employee'/>">员工管理</a>
 					<% } %>
-					<% if (pg.equals("index")) { %>
-						<a class="blog-nav-item active">首页管理</a>
-					<% } else { %>
-						<a class="blog-nav-item" href="<c:url value='/indexmanage'/>">首页管理</a>
+					<% if (true) { %>
+						<% if (pg.equals("index")) { %>
+							<a class="blog-nav-item active">首页管理</a>
+						<% } else { %>
+							<a class="blog-nav-item" href="<c:url value='/indexmanage/enu'/>">首页管理</a>
+						<% } %>
 					<% } %>
 				<% } %>
 			<% } else { %>

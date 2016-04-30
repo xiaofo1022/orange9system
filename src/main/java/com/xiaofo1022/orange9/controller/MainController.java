@@ -34,6 +34,7 @@ import com.xiaofo1022.orange9.dao.OrderTransferDao;
 import com.xiaofo1022.orange9.dao.OrderVerifyDao;
 import com.xiaofo1022.orange9.dao.RoleDao;
 import com.xiaofo1022.orange9.dao.UserDao;
+import com.xiaofo1022.orange9.dao.WebPicDao;
 import com.xiaofo1022.orange9.modal.ClockIn;
 import com.xiaofo1022.orange9.modal.Login;
 import com.xiaofo1022.orange9.modal.Order;
@@ -41,6 +42,8 @@ import com.xiaofo1022.orange9.modal.OrderFixedImageData;
 import com.xiaofo1022.orange9.modal.OrderVerifyImage;
 import com.xiaofo1022.orange9.modal.Password;
 import com.xiaofo1022.orange9.modal.User;
+import com.xiaofo1022.orange9.modal.WebPic;
+import com.xiaofo1022.orange9.modal.WebPicModal;
 import com.xiaofo1022.orange9.response.CommonResponse;
 import com.xiaofo1022.orange9.response.FailureResponse;
 import com.xiaofo1022.orange9.response.SuccessResponse;
@@ -76,7 +79,9 @@ public class MainController {
   private UserController userController;
   @Autowired
   private IndexDao indexDao;
-
+  @Autowired
+  private WebPicDao webPicDao;
+  
   @RequestMapping(value = "/", method = RequestMethod.GET)
   public String index(HttpServletRequest request, ModelMap modelMap) {
     modelMap.addAttribute("path", "enu");
@@ -112,11 +117,10 @@ public class MainController {
     return "lufter/page/pag";
   }
 
-  @RequestMapping(value = "/picdetail/{path}/{picname}", method = RequestMethod.GET)
-  public String picdetail(@PathVariable String path, @PathVariable String picname, HttpServletRequest request, ModelMap modelMap) {
-    modelMap.addAttribute("path", path);
-    modelMap.addAttribute("picname", picname);
-    modelMap.addAttribute("pictureList", indexDao.getIndexDetailPicnameList(request, path, picname));
+  @RequestMapping(value = "/picdetail/{type}/{picindex}", method = RequestMethod.GET)
+  public String picdetail(@PathVariable String type, @PathVariable String picindex, HttpServletRequest request, ModelMap modelMap) {
+    modelMap.addAttribute("path", type);
+    modelMap.addAttribute("pictureList", webPicDao.getPicsDetail(type, Integer.valueOf(picindex)));
     return "lufter/page/detail";
   }
 
@@ -175,16 +179,25 @@ public class MainController {
     user.setRole(roleDao.getRole(user.getRoleId()));
   }
 
-  @RequestMapping(value = "/indexmanage", method = RequestMethod.GET)
-  public String indexmanage(HttpServletRequest request, ModelMap modelMap) {
-    modelMap.put("enu", indexDao.getIndexShowMap(request, "enu"));
-    modelMap.put("enunextpic", indexDao.getUnusedPictureName(request, "enu"));
-    modelMap.put("jnk", indexDao.getIndexShowMap(request, "jnk"));
-    modelMap.put("jnknextpic", indexDao.getUnusedPictureName(request, "jnk"));
-    modelMap.put("sta", indexDao.getIndexShowMap(request, "sta"));
-    modelMap.put("stanextpic", indexDao.getUnusedPictureName(request, "sta"));
-    modelMap.put("tog", indexDao.getIndexShowMap(request, "tog"));
-    modelMap.put("tognextpic", indexDao.getUnusedPictureName(request, "tog"));
+  @RequestMapping(value = "/indexmanage/{type}", method = RequestMethod.GET)
+  public String indexmanage(@PathVariable String type, HttpServletRequest request, ModelMap modelMap) {
+    int startIndex = 0;
+    int picIndex = webPicDao.getLastPicIndex(type);
+    List<WebPicModal> webPics = new ArrayList<WebPicModal>();
+    while (startIndex < picIndex) {
+      startIndex++;
+      List<WebPic> pics = webPicDao.getPicsByTypeAndIndex(type, startIndex);
+      if (pics != null && pics.size() > 0) {
+        WebPicModal picModal = new WebPicModal();
+        picModal.setIndex(startIndex);
+        picModal.setType(type);
+        picModal.setFolderPic(pics.get(0));
+        picModal.setWebPics(pics);
+        webPics.add(picModal);
+      }
+    }
+    modelMap.put("pictype", type);
+    modelMap.put("webpics", webPics);
     return "lufter/indexmanage";
   }
 

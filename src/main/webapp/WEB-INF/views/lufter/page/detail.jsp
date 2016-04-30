@@ -26,7 +26,7 @@
 		</jsp:include>
 		<div class="index-pic-row">
 			<c:forEach items="${pictureList}" var="picture">
-				<img class="index-detail-img" src="<c:url value='/images/show/${path}/${picname}/${picture}.jpg'/>"/>
+				<img class="index-detail-img" src="http://o6fmbp0tj.bkt.clouddn.com/${picture.picKey}"/>
 			</c:forEach>
 		</div>
 		<jsp:include page="footer.jsp" flush="true"/>

@@ -6,13 +6,19 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.ModelMap;
 
 import com.xiaofo1022.orange9.modal.IndexPicture;
+import com.xiaofo1022.orange9.modal.WebPic;
 
 @Repository
 public class IndexDao {
+  
+  @Autowired
+  private WebPicDao webPicDao;
+  
   public String getUnusedPictureName(HttpServletRequest request, String path) {
     String showPath = this.getShowPath(request, path);
     int picindex = 1;
@@ -113,16 +119,16 @@ public class IndexDao {
     }
   }
 
-  public void createIndexModalMap(HttpServletRequest request, String path, ModelMap modelMap) {
-    List<IndexPicture> pictureList = this.getIndexShowMap(request, path);
+  public void createIndexModalMap(HttpServletRequest request, String type, ModelMap modelMap) {
+    List<WebPic> pictureList = webPicDao.getFolderPics(type);
     if (pictureList != null && pictureList.size() > 0) {
-      List<IndexPicture> pictureCol1List = new ArrayList<IndexPicture>();
-      List<IndexPicture> pictureCol2List = new ArrayList<IndexPicture>();
-      List<IndexPicture> pictureCol3List = new ArrayList<IndexPicture>();
+      List<WebPic> pictureCol1List = new ArrayList<WebPic>();
+      List<WebPic> pictureCol2List = new ArrayList<WebPic>();
+      List<WebPic> pictureCol3List = new ArrayList<WebPic>();
 
       int colIndex = 0;
 
-      for (IndexPicture picture : pictureList) {
+      for (WebPic picture : pictureList) {
         if (colIndex == 0) {
           pictureCol1List.add(picture);
         } else if (colIndex == 1) {

@@ -27,8 +27,8 @@
 		<div class="clearfix">
 			<div class="index-col">
 				<c:forEach items="${pictureCol1List}" var="picture" varStatus="index">
-					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
-						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
+					<a id="index-${picture.picType}-${picture.picIndex}" class="index-pic-link pos-relative fleft">
+						<img src="<c:url value='http://o6fmbp0tj.bkt.clouddn.com/${picture.picKey}'/>"/>
 						<span class="index-info-block">Show It</span>
 					</a>
 				</c:forEach>
@@ -36,8 +36,8 @@
 			
 			<div class="index-col">
 				<c:forEach items="${pictureCol2List}" var="picture" varStatus="index">
-					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
-						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
+					<a id="index-${picture.picType}-${picture.picIndex}" class="index-pic-link pos-relative fleft">
+						<img src="<c:url value='http://o6fmbp0tj.bkt.clouddn.com/${picture.picKey}'/>"/>
 						<span class="index-info-block">Show It</span>
 					</a>
 				</c:forEach>
@@ -45,8 +45,8 @@
 			
 			<div class="index-col">
 				<c:forEach items="${pictureCol3List}" var="picture" varStatus="index">
-					<a id="index-${path}-${picture.indexPicname}" class="index-pic-link pos-relative fleft">
-						<img src="<c:url value='/images/show/${path}/${picture.indexPicname}.jpg'/>"/>
+					<a id="index-${picture.picType}-${picture.picIndex}" class="index-pic-link pos-relative fleft">
+						<img src="<c:url value='http://o6fmbp0tj.bkt.clouddn.com/${picture.picKey}'/>"/>
 						<span class="index-info-block">Show It</span>
 					</a>
 				</c:forEach>
