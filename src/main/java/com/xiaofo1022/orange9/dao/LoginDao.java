@@ -9,10 +9,11 @@ import com.xiaofo1022.orange9.modal.User;
 
 @Repository
 public class LoginDao {
-	@Autowired
-	private CommonDao commonDao;
-	
-	public User getUser(Login login) {
-		return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE (ACCOUNT = ? OR PHONE = ?) AND PASSWORD = ?", login.getUsername(), login.getUsername(), login.getPassword());
-	}
+  @Autowired
+  private CommonDao commonDao;
+
+  public User getUser(Login login) {
+    return commonDao.getFirst(User.class, "SELECT * FROM USER WHERE (ACCOUNT = ? OR PHONE = ?) AND PASSWORD = ?", login.getUsername(), login.getUsername(),
+        login.getPassword());
+  }
 }

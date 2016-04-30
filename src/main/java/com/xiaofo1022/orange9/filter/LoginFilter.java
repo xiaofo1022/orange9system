@@ -17,47 +17,48 @@ import com.xiaofo1022.orange9.common.RoleConst;
 import com.xiaofo1022.orange9.modal.User;
 
 public class LoginFilter implements Filter {
-	private Pattern allowedResources;
-	private Pattern allowedClient;
-	private final static String resPattern = ".*((enu)|(jnk)|(sta)|(tog)|(enu/)|(jnk/)|(sta/)|(tog/)|(lgn)|(login)|(logout)|(images/)|(img/)|(css/)|(js/)|(fonts/)).*";
-	private final static String clientPattern = ".*((client/)|(pictures/)).*";
-	
-	public void init(FilterConfig arg0) throws ServletException {
-		allowedResources = Pattern.compile(resPattern);
-		allowedClient = Pattern.compile(clientPattern);
-	}
-	
-	public void destroy() {}
-	
-	public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2) throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) arg0;
-		String uri = request.getRequestURI();
-		String baseUri = request.getContextPath()+ "/";
-		User user = null;
-		boolean canEnterSystem = false;
-		
-		if (!uri.equals(baseUri) && !allowedResources.matcher(uri).matches()) {
-			HttpSession session = request.getSession(false);
-			if (session != null) {
-				user = (User) session.getAttribute("user");
-				if (user != null) {
-					if (user.getRoleId() == RoleConst.CLIENT_ID && !allowedClient.matcher(uri).matches()) {
-						canEnterSystem = false;
-					} else {
-						canEnterSystem = true;
-					}
-				}
-			}
-		} else {
-			canEnterSystem = true;
-		}
-		
-		if (canEnterSystem) {
-			arg2.doFilter(arg0, arg1);
-		} else {
-			HttpServletResponse response = (HttpServletResponse) arg1;
-			response.sendRedirect(response.encodeRedirectURL(baseUri));
-			return;
-		}
-	}
+  private Pattern allowedResources;
+  private Pattern allowedClient;
+  private final static String resPattern = ".*((enu)|(jnk)|(sta)|(tog)|(enu/)|(jnk/)|(sta/)|(tog/)|(lgn)|(login)|(logout)|(images/)|(img/)|(css/)|(js/)|(fonts/)).*";
+  private final static String clientPattern = ".*((client/)|(pictures/)).*";
+
+  public void init(FilterConfig arg0) throws ServletException {
+    allowedResources = Pattern.compile(resPattern);
+    allowedClient = Pattern.compile(clientPattern);
+  }
+
+  public void destroy() {
+  }
+
+  public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2) throws IOException, ServletException {
+    HttpServletRequest request = (HttpServletRequest) arg0;
+    String uri = request.getRequestURI();
+    String baseUri = request.getContextPath() + "/";
+    User user = null;
+    boolean canEnterSystem = false;
+
+    if (!uri.equals(baseUri) && !allowedResources.matcher(uri).matches()) {
+      HttpSession session = request.getSession(false);
+      if (session != null) {
+        user = (User) session.getAttribute("user");
+        if (user != null) {
+          if (user.getRoleId() == RoleConst.CLIENT_ID && !allowedClient.matcher(uri).matches()) {
+            canEnterSystem = false;
+          } else {
+            canEnterSystem = true;
+          }
+        }
+      }
+    } else {
+      canEnterSystem = true;
+    }
+
+    if (canEnterSystem) {
+      arg2.doFilter(arg0, arg1);
+    } else {
+      HttpServletResponse response = (HttpServletResponse) arg1;
+      response.sendRedirect(response.encodeRedirectURL(baseUri));
+      return;
+    }
+  }
 }

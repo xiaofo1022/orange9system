@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xiaofo1022.orange9.common.OrderStatusConst;
 import com.xiaofo1022.orange9.dao.OrderConvertDao;
-import com.xiaofo1022.orange9.dao.OrderPostProductionDao;
 import com.xiaofo1022.orange9.dao.OrderStatusDao;
 import com.xiaofo1022.orange9.modal.User;
 import com.xiaofo1022.orange9.response.CommonResponse;
@@ -23,34 +22,26 @@ import com.xiaofo1022.orange9.util.RequestUtil;
 @RequestMapping("/orderConvert")
 @Transactional
 public class OrderConvertController {
-	@Autowired
-	private OrderConvertDao orderConvertDao;
-	@Autowired
-	private OrderStatusDao orderStatusDao;
-	@Autowired
-	private OrderPostProductionDao orderPostProductionDao;
-	
-	@RequestMapping(value = "/setOrderConvertor/{orderId}/{userId}", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResponse setOrderConvertor(
-			@PathVariable int orderId, 
-			@PathVariable int userId, 
-			HttpServletRequest request) {
-		orderConvertDao.insertOrderConvert(orderId, userId);
-		return new SuccessResponse("Set Order Convertor Success");
-	}
-	
-	@RequestMapping(value = "/setOrderConvertDone/{orderId}/{convertId}", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResponse setOrderConvertDone(
-			@PathVariable int orderId, 
-			@PathVariable int convertId, 
-			HttpServletRequest request) {
-		User loginUser = RequestUtil.getLoginUser(request);
-		if (loginUser != null) {
-			orderConvertDao.setOrderConvertDone(convertId);
-			orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.POST_PRODUCTION);
-		}
-		return new SuccessResponse("Set Order Convert Done Success");
-	}
+  @Autowired
+  private OrderConvertDao orderConvertDao;
+  @Autowired
+  private OrderStatusDao orderStatusDao;
+
+  @RequestMapping(value = "/setOrderConvertor/{orderId}/{userId}", method = RequestMethod.POST)
+  @ResponseBody
+  public CommonResponse setOrderConvertor(@PathVariable int orderId, @PathVariable int userId, HttpServletRequest request) {
+    orderConvertDao.insertOrderConvert(orderId, userId);
+    return new SuccessResponse("Set Order Convertor Success");
+  }
+
+  @RequestMapping(value = "/setOrderConvertDone/{orderId}/{convertId}", method = RequestMethod.POST)
+  @ResponseBody
+  public CommonResponse setOrderConvertDone(@PathVariable int orderId, @PathVariable int convertId, HttpServletRequest request) {
+    User loginUser = RequestUtil.getLoginUser(request);
+    if (loginUser != null) {
+      orderConvertDao.setOrderConvertDone(convertId);
+      orderStatusDao.updateOrderStatus(orderId, RequestUtil.getLoginUser(request), OrderStatusConst.POST_PRODUCTION);
+    }
+    return new SuccessResponse("Set Order Convert Done Success");
+  }
 }

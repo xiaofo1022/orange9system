@@ -8,9 +8,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Column {
-	String value() default "";
-	boolean isImage() default false;
-	boolean isFormatDate() default false;
-	boolean isFormatDatetime() default false;
-	boolean isOrderNo() default false;
+  String value() default "";
+
+  boolean isImage() default false;
+
+  boolean isFormatDate() default false;
+
+  boolean isFormatDatetime() default false;
+
+  boolean isOrderNo() default false;
 }

@@ -19,46 +19,46 @@ import com.xiaofo1022.orange9.response.SuccessResponse;
 @RequestMapping("/orderGoods")
 @Transactional
 public class OrderGoodsController {
-	@Autowired
-	private OrderGoodsDao orderGoodsDao;
-	
-	@RequestMapping(value = "/receiveGoods", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResponse receiveGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
-		orderGoodsDao.insertReceiveOrderGoods(orderGoods);
-		orderGoodsDao.setOrderShootGoods(orderGoods);
-		return new SuccessResponse("Receive Goods Success");
-	}
-	
-	@RequestMapping(value = "/deliverGoods", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResponse deliverGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
-		orderGoodsDao.insertDeliverOrderGoods(orderGoods);
-		return new SuccessResponse("Deliver Goods Success");
-	}
-	
-	@RequestMapping(value = "/updateShootGoods", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResponse updateShootGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
-		OrderGoods existGoods = orderGoodsDao.getOrderShootGoods(orderGoods.getOrderId());
-		if (existGoods == null) {
-			orderGoodsDao.addOrderShootGoods(orderGoods);
-		} else {
-			orderGoodsDao.updateOrderShootGoods(orderGoods);
-		}
-		return new SuccessResponse("Update Shoot Goods Success");
-	}
-	
-	@RequestMapping(value = "/addShootGoods", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResponse addShootGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
-		orderGoodsDao.addOrderShootGoods(orderGoods);
-		return new SuccessResponse("Add Shoot Goods Success");
-	}
-	
-	@RequestMapping(value = "/getOrderGoods/{orderId}", method = RequestMethod.GET)
-	@ResponseBody
-	public OrderGoods getOrderGoods(@PathVariable int orderId) {
-		return orderGoodsDao.getOrderShootGoods(orderId);
-	}
+  @Autowired
+  private OrderGoodsDao orderGoodsDao;
+
+  @RequestMapping(value = "/receiveGoods", method = RequestMethod.POST)
+  @ResponseBody
+  public CommonResponse receiveGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
+    orderGoodsDao.insertReceiveOrderGoods(orderGoods);
+    orderGoodsDao.setOrderShootGoods(orderGoods);
+    return new SuccessResponse("Receive Goods Success");
+  }
+
+  @RequestMapping(value = "/deliverGoods", method = RequestMethod.POST)
+  @ResponseBody
+  public CommonResponse deliverGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
+    orderGoodsDao.insertDeliverOrderGoods(orderGoods);
+    return new SuccessResponse("Deliver Goods Success");
+  }
+
+  @RequestMapping(value = "/updateShootGoods", method = RequestMethod.POST)
+  @ResponseBody
+  public CommonResponse updateShootGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
+    OrderGoods existGoods = orderGoodsDao.getOrderShootGoods(orderGoods.getOrderId());
+    if (existGoods == null) {
+      orderGoodsDao.addOrderShootGoods(orderGoods);
+    } else {
+      orderGoodsDao.updateOrderShootGoods(orderGoods);
+    }
+    return new SuccessResponse("Update Shoot Goods Success");
+  }
+
+  @RequestMapping(value = "/addShootGoods", method = RequestMethod.POST)
+  @ResponseBody
+  public CommonResponse addShootGoods(@ModelAttribute("orderGoods") OrderGoods orderGoods, BindingResult result) {
+    orderGoodsDao.addOrderShootGoods(orderGoods);
+    return new SuccessResponse("Add Shoot Goods Success");
+  }
+
+  @RequestMapping(value = "/getOrderGoods/{orderId}", method = RequestMethod.GET)
+  @ResponseBody
+  public OrderGoods getOrderGoods(@PathVariable int orderId) {
+    return orderGoodsDao.getOrderShootGoods(orderId);
+  }
 }

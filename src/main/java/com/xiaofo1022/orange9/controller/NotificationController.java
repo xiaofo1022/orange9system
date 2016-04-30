@@ -21,31 +21,31 @@ import com.xiaofo1022.orange9.util.RequestUtil;
 @Controller
 @RequestMapping("/notification")
 public class NotificationController {
-	@Autowired
-	private NotificationDao notificationDao;
-	
-	@RequestMapping(value = "/addNotification", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResponse addNotification(@RequestBody Notification notification, BindingResult result, HttpServletRequest request) {
-		notificationDao.insertNotification(notification);
-		return new SuccessResponse("Add Notification Success");
-	}
-	
-	@RequestMapping(value = "/getNotification", method = RequestMethod.GET)
-	@ResponseBody
-	public Notification getNotification(HttpServletRequest request) {
-		User user = RequestUtil.getLoginUser(request);
-		if (user != null) {
-			return notificationDao.getNotification(user.getId());
-		} else {
-			return null;
-		}
-	}
-	
-	@RequestMapping(value = "/readNotification/{id}", method = RequestMethod.POST)
-	@ResponseBody
-	public CommonResponse readNotification(@PathVariable int id, HttpServletRequest request) {
-		notificationDao.readNotification(id);
-		return new SuccessResponse("Read Notification Success");
-	}
+  @Autowired
+  private NotificationDao notificationDao;
+
+  @RequestMapping(value = "/addNotification", method = RequestMethod.POST)
+  @ResponseBody
+  public CommonResponse addNotification(@RequestBody Notification notification, BindingResult result, HttpServletRequest request) {
+    notificationDao.insertNotification(notification);
+    return new SuccessResponse("Add Notification Success");
+  }
+
+  @RequestMapping(value = "/getNotification", method = RequestMethod.GET)
+  @ResponseBody
+  public Notification getNotification(HttpServletRequest request) {
+    User user = RequestUtil.getLoginUser(request);
+    if (user != null) {
+      return notificationDao.getNotification(user.getId());
+    } else {
+      return null;
+    }
+  }
+
+  @RequestMapping(value = "/readNotification/{id}", method = RequestMethod.POST)
+  @ResponseBody
+  public CommonResponse readNotification(@PathVariable int id, HttpServletRequest request) {
+    notificationDao.readNotification(id);
+    return new SuccessResponse("Read Notification Success");
+  }
 }

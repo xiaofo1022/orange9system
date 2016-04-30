@@ -10,10 +10,10 @@ import com.xiaofo1022.orange9.modal.Performance;
 
 @Repository
 public class PerformanceDao {
-	@Autowired
-	private CommonDao commonDao;
-	
-	public List<Performance> getPerformanceList() {
-		return commonDao.query(Performance.class, "SELECT * FROM PERFORMANCE ORDER BY ID");
-	}
+  @Autowired
+  private CommonDao commonDao;
+
+  public List<Performance> getPerformanceList() {
+    return commonDao.query(Performance.class, "SELECT * FROM PERFORMANCE ORDER BY ID");
+  }
 }

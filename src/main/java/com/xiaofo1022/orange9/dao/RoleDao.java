@@ -10,14 +10,14 @@ import com.xiaofo1022.orange9.modal.Role;
 
 @Repository
 public class RoleDao {
-	@Autowired
-	private CommonDao commonDao;
-	
-	public List<Role> getRoleList() {
-		return commonDao.query(Role.class, "SELECT * FROM ROLE WHERE IS_SHOW = 1");
-	}
-	
-	public Role getRole(int roleId) {
-		return commonDao.getFirst(Role.class, "SELECT * FROM ROLE WHERE ID = ?", roleId);
-	}
+  @Autowired
+  private CommonDao commonDao;
+
+  public List<Role> getRoleList() {
+    return commonDao.query(Role.class, "SELECT * FROM ROLE WHERE IS_SHOW = 1");
+  }
+
+  public Role getRole(int roleId) {
+    return commonDao.getFirst(Role.class, "SELECT * FROM ROLE WHERE ID = ?", roleId);
+  }
 }

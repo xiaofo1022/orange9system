@@ -14,12 +14,12 @@ import com.xiaofo1022.orange9.modal.Role;
 @Controller
 @RequestMapping("/role")
 public class RoleController {
-	@Autowired
-	private RoleDao roleDao;
-	
-	@RequestMapping(value="/getRoleList", method=RequestMethod.GET)
-	@ResponseBody
-	public List<Role> getRoleList() {
-		return roleDao.getRoleList();
-	}
+  @Autowired
+  private RoleDao roleDao;
+
+  @RequestMapping(value = "/getRoleList", method = RequestMethod.GET)
+  @ResponseBody
+  public List<Role> getRoleList() {
+    return roleDao.getRoleList();
+  }
 }

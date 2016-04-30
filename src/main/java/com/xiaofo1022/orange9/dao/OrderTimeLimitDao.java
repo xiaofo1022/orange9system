@@ -8,10 +8,10 @@ import com.xiaofo1022.orange9.modal.OrderTimeLimit;
 
 @Repository
 public class OrderTimeLimitDao {
-	@Autowired
-	private CommonDao commonDao;
-	
-	public OrderTimeLimit getTimeLimit(int limitId) {
-		return commonDao.getFirst(OrderTimeLimit.class, "SELECT * FROM ORDER_TIME_LIMIT WHERE ID = ?", limitId);
-	}
+  @Autowired
+  private CommonDao commonDao;
+
+  public OrderTimeLimit getTimeLimit(int limitId) {
+    return commonDao.getFirst(OrderTimeLimit.class, "SELECT * FROM ORDER_TIME_LIMIT WHERE ID = ?", limitId);
+  }
 }
